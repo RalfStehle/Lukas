@@ -7,19 +7,6 @@
     android:shrinkColumns="*">
 
     <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10pt">
-
-        <TextView
-            android:id="@+id/textviewMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Version 04.01.23 1.0.0.3" />
-
-    </TableRow>
-
-    <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10pt"
@@ -28,6 +15,8 @@
 
         <Button
             android:id="@+id/StartScanButton"
+            android:layout_marginTop="4pt"
+            android:layout_marginBottom="4pt"
             android:layout_weight="1"
             android:text="Connect"
             android:visibility="visible" />
@@ -42,6 +31,8 @@
 
         <Button
             android:id="@+id/StopScanButton"
+            android:layout_marginTop="4pt"
+            android:layout_marginBottom="4pt"
             android:layout_weight="1"
             android:text="Stop"
             android:visibility="gone" />

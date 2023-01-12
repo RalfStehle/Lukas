@@ -1,5 +1,6 @@
 package de.stehle.legoan;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,12 @@ import java.util.List;
 
 public class TrainHubListAdapter extends BaseAdapter {
     private final List<TrainHub> trains;
+    private Activity activity;
     private LayoutInflater layoutInflater;
 
-    public TrainHubListAdapter(List<TrainHub> trains) {
+    public TrainHubListAdapter(List<TrainHub> trains, Activity activity) {
         this.trains = trains;
+        this.activity = activity;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class TrainHubListAdapter extends BaseAdapter {
 
             view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
 
-            new Connector(trains.get(i), view).connect();
+            new Connector(trains.get(i), view, activity).connect();
         }
 
         return view;
@@ -50,24 +53,26 @@ public class TrainHubListAdapter extends BaseAdapter {
     class Connector implements ChangeListener {
         private final TrainHub hub;
         private final View view;
+        private final Activity activity;
 
-        Connector(TrainHub hub, View view) {
+        Connector(TrainHub hub, View view, Activity activity) {
             this.hub = hub;
             this.view = view;
+            this.activity = activity;
         }
 
         public void connect() {
             hub.subscribe(this);
 
-            view.findViewById(R.id.stopButton).setOnClickListener(view1 -> {
+            view.findViewById(R.id.StopButton).setOnClickListener(view1 -> {
                 hub.stop();
             });
 
-            view.findViewById(R.id.slowerButton).setOnClickListener(view1 -> {
+            view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> {
                 hub.decrementSpeed();
             });
 
-            view.findViewById(R.id.fasterButton).setOnClickListener(view1 -> {
+            view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> {
                 hub.incrementSpeed();
             });
 
@@ -75,19 +80,21 @@ public class TrainHubListAdapter extends BaseAdapter {
         }
 
         private void updateValues() {
-            ((TextView)view.findViewById(R.id.nameContent))
+            ((TextView)view.findViewById(R.id.NameContent))
                     .setText(hub.getName());
 
-            ((TextView)view.findViewById(R.id.connectedContent))
+            ((TextView)view.findViewById(R.id.ConnectedContent))
                     .setText(hub.isConnected() ? "Yes" : "No");
 
-            ((TextView)view.findViewById(R.id.batteryContent))
+            ((TextView)view.findViewById(R.id.BatteryContent))
                     .setText(Integer.toString(hub.getBattery()).concat(" %"));
         }
 
         @Override
         public void notifyChanged() {
-            this.updateValues();
+            activity.runOnUiThread(() -> {
+                this.updateValues();
+            });
         }
     }
 }

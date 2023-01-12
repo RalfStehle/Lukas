@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        trainsAdapter = new TrainHubListAdapter(trains);
+        trainsAdapter = new TrainHubListAdapter(trains, this);
         trainsListView = (ListView) findViewById(R.id.devicesListView);
         trainsListView.setAdapter(trainsAdapter);
     }
@@ -113,11 +113,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Functionality limited");
         builder.setMessage("Since location or bluetooth access has not been granted, this app will not be able to discover beacons when in the background.");
         builder.setPositiveButton(android.R.string.ok, null);
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-            }
-        });
         builder.show();
     }
 

@@ -66,7 +66,7 @@ public class TrainHub extends BluetoothGattCallback {
         }
 
         // send(new byte[]{0x0a, 0x00, (byte) 0x41, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00});  // Set Colour Mode
-        send(new byte[]{0x08, 0x00, (byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
+        send(new byte[]{0x00, (byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
     }
 
     public void stop() {
@@ -92,7 +92,7 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     private void setSpeed(int speed) {
-        send(new byte[]{0x08, 0x00, (byte) 0x81, 0x00, 0x11, 0x51, 0x00, (byte) speeds[speed]}); // Port A
+        send(new byte[]{0x00, (byte) 0x81, 0x00, 0x11, 0x51, 0x00, (byte) speeds[speed]}); // Port A
     }
 
     public static boolean canConnect(ScanResult scanResult) {
@@ -129,7 +129,11 @@ public class TrainHub extends BluetoothGattCallback {
             return false;
         }
 
-        devicesCharacteristic.setValue(data);
+        byte[] finalData = new byte[data.length + 1];
+        finalData[0] = (byte)data.length;
+        System.arraycopy(data, 0, finalData, 1, data.length);
+
+        devicesCharacteristic.setValue(finalData);
 
         return bluetoothGatt.writeCharacteristic(devicesCharacteristic);
     }

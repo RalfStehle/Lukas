@@ -7,11 +7,11 @@
 
     <TableRow>
 
-        <TextView
-            android:id="@+id/textviewMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Version 4" />
+    <TextView
+        android:id="@+id/textviewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version 04.01.23 1.0.0.3" />
 
     </TableRow>
     <TableRow
@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Scan" />
+            android:text="Connect" />
         <Button
             android:id="@+id/StopScanButton"
             android:layout_width="0dp"
@@ -54,21 +54,21 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Activate" />
+            android:text="1" />
         <Button
             android:id="@+id/writeBytes2"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="LED" />
+            android:text="2" />
         <Button
             android:id="@+id/writeBytes3"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Motor" />
+            android:text="3" />
 
     </TableRow>
     <TableRow
@@ -82,14 +82,14 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Rename" />
+            android:text="4" />
         <Button
             android:id="@+id/writeBytes5"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="send" />
+            android:text="5" />
         <Button
             android:id="@+id/writeBytes6"
             android:layout_width="0dp"

@@ -3,40 +3,18 @@ plugins {
 }
 
 android {
-    namespace 'de.project.hubi'
+    namespace 'de.stehle.legoan'
     compileSdk 32
 
+    defaultConfig {
+        applicationId "de.stehle.legoan"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
 
-    def versionPropsFile = file('version.properties')
-
-    if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-
-        versionProps.load(new FileInputStream(versionPropsFile))
-
-        def versBuild = versionProps['VERSION_BUILD'].toInteger() + 1
-        versionProps['VERSION_BUILD'] = versBuild.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
-
-        def versName = versionProps['VERSION_NAME'].toString()
-        versionProps['VERSION_NAME'] = versName.toString()
-
-        def versCode = versionProps['VERSION_CODE'].toInteger() + 1
-        versionProps['VERSION_CODE'] = versCode.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
-
-        defaultConfig {
-            applicationId "de.stehle.legoan"
-            minSdk 21
-            targetSdk 32
-            versionName versName
-            versionCode versCode
-
-            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        }
-
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
 
     buildTypes {
         release {
@@ -56,6 +34,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }

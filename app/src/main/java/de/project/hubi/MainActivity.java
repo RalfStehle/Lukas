@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         });
         writeBytes3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                sendByte(new byte[] {0x08, 0x00, (byte)0x81, 0x00, 0x11, 0x51, 0x00, (byte)0x36}, 1); // Motor A 0x36=50%  7E=100%
+                sendByte(new byte[] {0x08, 0x00, (byte)0x81, 0x00, 0x11, 0x60, 0x00, (byte)0x36}, 1); // Motor A 0x36=50%  7E=100%
                 sendByte(new byte[] {0x08, 0x00, (byte)0x81, 0x01, 0x11, 0x51, 0x00, (byte)0x36}, 1); // Motor B 50%
             }
         });
@@ -185,17 +185,17 @@ public class MainActivity extends AppCompatActivity {
         });
         writeBytes5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //sendByte(new byte[] {0x4, 0x00, 0x06, 0x02}, 1);     // 0x06 Batterie-Status 0x02 Enable Updates
-                sendByte(new byte[] {0x4, 0x00, 0x06, 0x05}, 1);    // 0x06 Batterie-Status 0x05 Request Updates
-                //sendByte(new byte[] {0x4, 0x00, 0x06, 0x06}, 1);     // 0x06 Batterie-Status 0x06 Update Upstream
+                //sendByte(new byte[] {0x4, 0x00, 0x06, 0x02}, 1);        // 0x06 Batterie-Status 0x02 Enable Updates
+                sendByte(new byte[] {0x4, 0x00, 0x06, 0x05}, 1);     // 0x06 Batterie-Status 0x05 Request Updates
+                sendByte(new byte[] {0x4, 0x00, 0x06, 0x02}, 1);     // 0x06 Batterie-Status 0x02 Enable Updates
                 sendByte(new byte[] {}, 2); // activate Notifications (BluetoothGattCallback/onCharacteristicChanged UND BroadcastUpdate)
             }
         });
         writeBytes6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                sendByte(new byte[] {0x4, 0x00, 0x06, 0x02}, 1);     // 0x01 Advertising Name 0x05 Request Updates
+                sendByte(new byte[] {0x06, 0x00, (byte)0x45, 0x3b, 0x00, 0x00}, 1);     // 0x01 Advertising Name 0x05 Request Updates
                 sendByte(new byte[] {}, 2); // activate Notifications (BluetoothGattCallback/onCharacteristicChanged UND BroadcastUpdate)
-
+                sendByte(new byte[] {0x08, 0x00, (byte)0x45, 0x3c, 0x50, 0x0D}, 1);     // Test Voltage
             }
         });
 
@@ -251,8 +251,8 @@ public class MainActivity extends AppCompatActivity {
             // btArrayAdapter speichert die Ergebnisse als String für mDevicesListView
             btArrayAdapter.add(result.getDevice().getAddress() + "  " + result.getDevice().getName() +  "  (rssi:" + result.getRssi() + ")");
             bluetoothDeviceList.add(result.getDevice());
-
-            // auto scroll for text view
+            Log.i(TAG, result.getScanRecord().toString());
+                    // auto scroll for text view
             final int scrollAmount = mDevicesListView.getCount() - mDevicesListView.getHeight();
             // if there is no need to scroll, scrollAmount will be <=0
             if (scrollAmount > 0) {

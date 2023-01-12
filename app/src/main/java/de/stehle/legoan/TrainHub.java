@@ -31,8 +31,16 @@ public class TrainHub extends BluetoothGattCallback {
         return bluetoothDevice.getAddress();
     }
 
+    public String getName() {
+        return bluetoothDevice.getName();
+    }
+
     public boolean isConnected() {
         return isConnected;
+    }
+
+    public int getBattery() {
+        return 100;
     }
 
     public TrainHub(BluetoothDevice bluetoothDevice, Context context) {
@@ -89,6 +97,11 @@ public class TrainHub extends BluetoothGattCallback {
 
     public static boolean canConnect(ScanResult scanResult) {
         UUID requiredService = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
+
+        String name = scanResult.getDevice().getName();
+        if (scanResult.getScanRecord().getServiceUuids() == null) {
+            return false;
+        }
 
         for (ParcelUuid uuid: scanResult.getScanRecord().getServiceUuids()) {
             if (uuid.getUuid().equals(requiredService)) {

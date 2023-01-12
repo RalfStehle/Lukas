@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 60000;
     private final Handler mHandler = new Handler();
     private final List<TrainHub> trains = new ArrayList<>();
-    private ArrayAdapter<TrainHubAdapter> trainsAdapter;
+    private TrainHubListAdapter trainsAdapter;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothScanner;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        trainsAdapter = new ArrayAdapter<>(this, R.layout.train_list_item);
+        trainsAdapter = new TrainHubListAdapter(trains);
         trainsListView = (ListView) findViewById(R.id.devicesListView);
         trainsListView.setAdapter(trainsAdapter);
     }
@@ -92,10 +92,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             TrainHub trainHub = new TrainHub(bluetoothAdapter.getRemoteDevice(address), MainActivity.this);
-            TrainHubAdapter trainHubAdapter = new TrainHubAdapter(trainHub);
 
             trains.add(trainHub);
-            trainsAdapter.add(trainHubAdapter);
             trainsAdapter.notifyDataSetChanged();
         }
     };
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Functionality limited");
-        builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+        builder.setMessage("Since location or bluetooth access has not been granted, this app will not be able to discover beacons when in the background.");
         builder.setPositiveButton(android.R.string.ok, null);
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override

@@ -3,11 +3,13 @@
     android:id="@+id/simpleTableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:shrinkColumns="*"> <!-- stretch the second column of the layout-->
+    android:background="#E1E1E1"
+    android:shrinkColumns="*">
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="10pt">
 
         <TextView
             android:id="@+id/textviewMessage"
@@ -18,31 +20,34 @@
     </TableRow>
 
     <TableRow
-        android:id="@+id/Row1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10pt"
+        android:paddingRight="10pt"
         android:weightSum="1">
 
         <Button
             android:id="@+id/StartScanButton"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="Connect"
             android:visibility="visible" />
-
-        <Button
-            android:id="@+id/StopScanButton"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="Stop" />
     </TableRow>
 
     <TableRow
-        android:id="@+id/Row4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10pt"
+        android:paddingRight="10pt"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/StopScanButton"
+            android:layout_weight="1"
+            android:text="Stop"
+            android:visibility="gone" />
+    </TableRow>
+
+    <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
@@ -50,8 +55,10 @@
             android:id="@+id/devicesListView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="4pt"
             android:layout_marginBottom="0dp"
             android:choiceMode="singleChoice"
+            android:dividerHeight="4pt"
             android:scrollbars="vertical" />
     </TableRow>
 </TableLayout>

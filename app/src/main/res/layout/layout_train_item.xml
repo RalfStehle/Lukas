@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardElevation="4px"
+    app:contentPadding="10pt">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/nameLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Name"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/nameContent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Name"
+                android:textSize="20sp" />
+
+        </TableRow>
+
+        <TableRow android:weightSum="3">
+
+            <TextView
+                android:id="@+id/batteryLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Connected" />
+
+            <TextView
+                android:id="@+id/batteryContent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Connected" />
+
+        </TableRow>
+
+        <TableRow android:weightSum="3">
+
+            <TextView
+                android:id="@+id/connectedLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Battery" />
+
+            <TextView
+                android:id="@+id/connectedContent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Battery" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="4pt"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/slowerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Slower" />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4pt"
+                android:layout_marginRight="4pt"
+                android:layout_weight="1"
+                android:text="Stop" />
+
+            <Button
+                android:id="@+id/fasterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Faster" />
+        </TableRow>
+    </TableLayout>
+</androidx.cardview.widget.CardView>

@@ -1,17 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/deviceAdress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Address" />
+
     <TextView
         android:id="@+id/deviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name" />
+
     <TextView
         android:id="@+id/devicePssi"
         android:layout_width="wrap_content"

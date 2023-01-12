@@ -5,28 +5,33 @@
     android:layout_height="match_parent"
     android:shrinkColumns="*"> <!-- stretch the second column of the layout-->
 
-    <TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textviewMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Version 04.01.23 1.0.0.3" />
+        <TextView
+            android:id="@+id/textviewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version 04.01.23 1.0.0.3" />
 
     </TableRow>
+
     <TableRow
         android:id="@+id/Row1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3">
+        android:weightSum="1">
 
         <Button
             android:id="@+id/StartScanButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Connect" />
+            android:layout_weight="1"
+            android:text="Connect"
+            android:visibility="visible" />
+
         <Button
             android:id="@+id/StopScanButton"
             android:layout_width="0dp"
@@ -34,69 +39,6 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:text="Stop" />
-        <Button
-            android:id="@+id/DisconnectButton"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="Disconn" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/Row2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/writeBytes1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="1" />
-        <Button
-            android:id="@+id/writeBytes2"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="2" />
-        <Button
-            android:id="@+id/writeBytes3"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="3" />
-
-    </TableRow>
-    <TableRow
-        android:id="@+id/Row3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/writeBytes4"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="4" />
-        <Button
-            android:id="@+id/writeBytes5"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="5" />
-        <Button
-            android:id="@+id/writeBytes6"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:text="6" />
     </TableRow>
 
     <TableRow
@@ -111,6 +53,5 @@
             android:layout_marginBottom="0dp"
             android:choiceMode="singleChoice"
             android:scrollbars="vertical" />
-
     </TableRow>
 </TableLayout>

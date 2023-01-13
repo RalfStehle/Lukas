@@ -30,14 +30,14 @@ import java.util.List;
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000;
-    private final List<TrainHub> trains = new ArrayList<>();
-    private TrainHubListAdapter trainsAdapter;
+    private final List<Device> devices = new ArrayList<>();
+    private DeviceListAdapter devicesAdapter;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothScanner;
     private Button scanningStartButton;
     private Button scanningStopButton;
     private boolean isScanning = false;
-    private TrainHub menuHub;
+    private TrainHub deviceInContextMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        ListView trainsListView = findViewById(R.id.devicesListView);
-        trainsAdapter = new TrainHubListAdapter(trains, this);
-        trainsListView.setAdapter(trainsAdapter);
+        ListView devicesListView = findViewById(R.id.DevicesListView);
+        devicesAdapter = new DeviceListAdapter(devices, this);
+        devicesListView.setAdapter(devicesAdapter);
     }
 
     // Device scan callback.
@@ -75,16 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
             String address = result.getDevice().getAddress();
 
-            for (TrainHub adapter : trains) {
-                if (adapter.getAddress().equals(address)) {
-                    return;
+            for (Device device : devices) {
+                if (device instanceof TrainHub) {
+                    if (((TrainHub)device).getAddress().equals(address)) {
+                        return;
+                    }
                 }
             }
 
             TrainHub trainHub = new TrainHub(bluetoothAdapter.getRemoteDevice(address), MainActivity.this);
 
-            trains.add(trainHub);
-            trainsAdapter.notifyDataSetChanged();
+            devices.add(trainHub);
+            devicesAdapter.notifyDataSetChanged();
         }
     };
 
@@ -96,16 +98,20 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, R.string.menu_disconnect);
 
         // Set the current hub from the view.
-        menuHub = (TrainHub) v.getTag();
+        deviceInContextMenu = (TrainHub) v.getTag();
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        // We only have one option yet, so we can just call disconnect directly.
-        menuHub.disconnect();
+        if (deviceInContextMenu == null) {
+            return true;
+        }
 
-        trains.remove(menuHub);
-        trainsAdapter.notifyDataSetChanged();
+        // We only have one option yet, so we can just call disconnect directly.
+        devices.remove(deviceInContextMenu);
+        devicesAdapter.notifyDataSetChanged();
+        deviceInContextMenu.disconnect();
+        deviceInContextMenu = null;
         return true;
     }
 

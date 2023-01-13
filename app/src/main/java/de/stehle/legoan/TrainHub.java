@@ -13,19 +13,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @SuppressLint("MissingPermission")
-public class TrainHub extends BluetoothGattCallback {
+public class TrainHub extends Device {
+    private final static UUID ServiceUUID = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
+    private final static UUID CharactersticsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
     private final static byte[] speeds = {0x7E, 0x6C, 0x5A, 0x48, 0x36, 0x24, 0x12, 0x7F, (byte) 0xEC, (byte) 0xDA, (byte) 0xC8, (byte) 0xB6, (byte) 0xA4, (byte) 0x92, (byte) 0x80};
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
     private BluetoothGattService service;
     private BluetoothGattCharacteristic devicesCharacteristic;
     private final static int stopSpeed = speeds.length / 2;
-    private final List<ChangeListener> listeners = new ArrayList<>();
     private int currentSpeed = stopSpeed;
     private int currentColor;
     private int battery;
@@ -61,23 +60,52 @@ public class TrainHub extends BluetoothGattCallback {
         }
     }
 
-    public TrainHub(BluetoothDevice bluetoothDevice, Context context) {
-        this.bluetoothDevice = bluetoothDevice;
-        bluetoothGatt = bluetoothDevice.connectGatt(context, true, this);
+    public TrainHub(BluetoothDevice device, Context context) {
+        BluetoothGattCallback callback = new BluetoothGattCallback() {
+            @Override
+            public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
+                switch (newState) {
+                    case BluetoothGatt.STATE_DISCONNECTED:
+                        setIsConnected(false);
+                        break;
+                    case BluetoothGatt.STATE_CONNECTED:
+                        setIsConnected(true);
+
+                        // It seems to be more stable to wait a little bit for the discovery.
+                        // Discover services and characteristics for this device
+                        new Handler(Looper.getMainLooper()).postDelayed(bluetoothGatt::discoverServices, 500);
+                        initializeService();
+                        break;
+                }
+            }
+
+            @Override
+            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                initializeService();
+            }
+
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                byte[] value = envelopeToData(characteristic.getValue());
+
+                if (value[0] == 0x01) {
+                    parseDeviceInfo(value);
+                }
+            }
+
+            private void parseDeviceInfo(byte[] value) {
+                if (value[1] == 0x06) {
+                    setBattery(value[3]);
+                }
+            }
+        };
+
+        bluetoothDevice = device;
+        bluetoothGatt = bluetoothDevice.connectGatt(context, true, callback);
     }
 
     public void disconnect() {
         bluetoothGatt.disconnect();
-    }
-
-    public void subscribe(ChangeListener listener) {
-        listeners.add(listener);
-    }
-
-    private void notifyChanged() {
-        for (ChangeListener listener : listeners) {
-            listener.notifyChanged();
-        }
     }
 
     public void nextLedColor() {
@@ -117,14 +145,12 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     public static boolean canConnect(ScanResult scanResult) {
-        UUID requiredService = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
-
         if (scanResult.getScanRecord().getServiceUuids() == null) {
             return false;
         }
 
         for (ParcelUuid uuid: scanResult.getScanRecord().getServiceUuids()) {
-            if (uuid.getUuid().equals(requiredService)) {
+            if (uuid.getUuid().equals(ServiceUUID)) {
                 return true;
             }
         }
@@ -145,35 +171,13 @@ public class TrainHub extends BluetoothGattCallback {
         bluetoothGatt.writeCharacteristic(devicesCharacteristic);
     }
 
-    @Override
-    public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
-        switch (newState) {
-            case BluetoothGatt.STATE_DISCONNECTED:
-                setIsConnected(false);
-                break;
-            case BluetoothGatt.STATE_CONNECTED:
-                setIsConnected(true);
-
-                // It seems to be more stable to wait a little bit for the discovery.
-                // Discover services and characteristics for this device
-                new Handler(Looper.getMainLooper()).postDelayed(bluetoothGatt::discoverServices, 500);
-                initializeService();
-                break;
-        }
-    }
-
-    @Override
-    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-        initializeService();
-    }
-
     private void initializeService() {
         if (devicesCharacteristic != null) {
             return;
         }
 
         if (service == null) {
-            service = bluetoothGatt.getService(UUID.fromString("00001623-1212-efde-1623-785feabcd123"));
+            service = bluetoothGatt.getService(ServiceUUID);
         }
 
         if (service == null) {
@@ -181,7 +185,7 @@ public class TrainHub extends BluetoothGattCallback {
         }
 
         if (devicesCharacteristic == null) {
-            devicesCharacteristic = service.getCharacteristic(UUID.fromString("00001624-1212-efde-1623-785feabcd123"));
+            devicesCharacteristic = service.getCharacteristic(CharactersticsUUID);
         }
 
         if (devicesCharacteristic == null) {
@@ -201,21 +205,6 @@ public class TrainHub extends BluetoothGattCallback {
             // Activate battery reports
             send(new byte[] { 0x01, 0x06, 0x02 });
         }, 2000);
-    }
-
-    @Override
-    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        byte[] value = envelopeToData(characteristic.getValue());
-
-        if (value[0] == 0x01) {
-            parseDeviceInfo(value);
-        }
-    }
-
-    private void parseDeviceInfo(byte[] value) {
-        if (value[1] == 0x06) {
-            setBattery(value[3]);
-        }
     }
 
     private byte[] dataToEnvelope(byte[] data) {

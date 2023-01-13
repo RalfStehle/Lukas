@@ -11,24 +11,24 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
-public class TrainHubListAdapter extends BaseAdapter {
-    private final List<TrainHub> trains;
+public class DeviceListAdapter extends BaseAdapter {
+    private final List<Device> devices;
     private final Activity activity;
     private LayoutInflater layoutInflater;
 
-    public TrainHubListAdapter(List<TrainHub> trains, Activity activity) {
-        this.trains = trains;
+    public DeviceListAdapter(List<Device> devices, Activity activity) {
+        this.devices = devices;
         this.activity = activity;
     }
 
     @Override
     public int getCount() {
-        return trains.size();
+        return devices.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return trains.get(i);
+        return devices.get(i);
     }
 
     @Override
@@ -45,18 +45,22 @@ public class TrainHubListAdapter extends BaseAdapter {
 
             view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
 
-            new Connector(trains.get(i), view, activity).connect();
+            Device device = devices.get(i);
+
+            if (device instanceof TrainHub) {
+                new TrainHubConnector((TrainHub)device, view, activity).connect();
+            }
         }
 
         return view;
     }
 
-    static class Connector implements ChangeListener {
+    static class TrainHubConnector implements ChangeListener {
         private final TrainHub hub;
         private final View view;
         private final Activity activity;
 
-        Connector(TrainHub hub, View view, Activity activity) {
+        TrainHubConnector(TrainHub hub, View view, Activity activity) {
             // Attach the hub to the view, so that we can later access it when we create the context menu.
             this.hub = hub;
             this.view = view;

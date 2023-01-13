@@ -94,8 +94,6 @@ public class TrainHub extends BluetoothGattCallback {
         currentSpeed = stopSpeed;
 
         setSpeed(currentSpeed);
-
-        send(new byte[] { 0x01, 0x06, 0x02 }); // Activate button reports
     }
 
     public void decrementSpeed() {

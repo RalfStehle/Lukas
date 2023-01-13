@@ -9,7 +9,6 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,7 +17,6 @@ import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -26,21 +24,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.material.behavior.SwipeDismissBehavior;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000;
-    private final Handler mHandler = new Handler();
     private final List<TrainHub> trains = new ArrayList<>();
     private TrainHubListAdapter trainsAdapter;
-    private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothScanner;
-    private ListView trainsListView;
     private Button scanningStartButton;
     private Button scanningStopButton;
     private boolean isScanning = false;
@@ -52,26 +45,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         scanningStartButton = findViewById(R.id.StartScanButton);
-        scanningStartButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startScanning();
-            }
-        });
+        scanningStartButton.setOnClickListener(v -> startScanning());
 
         scanningStopButton = findViewById(R.id.StopScanButton);
         scanningStopButton.setVisibility(View.GONE);
-        scanningStopButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                stopScanning();
-            }
-        });
+        scanningStopButton.setOnClickListener(v -> stopScanning());
 
-        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
+        ListView trainsListView = findViewById(R.id.devicesListView);
         trainsAdapter = new TrainHubListAdapter(trains, this);
-        trainsListView = findViewById(R.id.devicesListView);
         trainsListView.setAdapter(trainsAdapter);
     }
 
@@ -137,14 +122,20 @@ public class MainActivity extends AppCompatActivity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Functionality limited");
-        builder.setMessage("Since location or bluetooth access has not been granted, this app will not be able to discover beacons when in the background.");
+        builder.setMessage("Please give the bluetooth permission to connect to the hub.");
         builder.setPositiveButton(android.R.string.ok, null);
         builder.show();
     }
 
     public void startScanning() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN) || !hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN}, 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.BLUETOOTH_SCAN
+                        }, 1);
+            }
             return;
         }
 
@@ -159,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(() -> bluetoothScanner.startScan(scanCallback));
 
         // Stop the scanning automatically after some time.
-        mHandler.postDelayed(this::stopScanning, SCAN_PERIOD);
+        new Handler().postDelayed(this::stopScanning, SCAN_PERIOD);
     }
 
     public void stopScanning() {

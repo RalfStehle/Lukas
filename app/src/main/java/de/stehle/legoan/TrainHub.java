@@ -199,7 +199,7 @@ public class TrainHub extends BluetoothGattCallback {
         bluetoothGatt.setCharacteristicNotification(devicesCharacteristic, true);
         bluetoothGatt.writeDescriptor(bluetoothDescriptor);
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        new Handler().postDelayed(() -> {
             // Activate battery reports
             send(new byte[] { 0x01, 0x06, 0x02 });
         }, 2000);

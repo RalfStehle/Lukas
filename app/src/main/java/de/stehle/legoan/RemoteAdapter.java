@@ -13,7 +13,7 @@ import java.util.Locale;
 
 class RemoteAdapter extends Adapter {
     private final Remote device;
-    private View view;
+    private final View view;
     private final DeviceListAdapter devices;
     private final DataSetObserver observer = new DataSetObserver() {
         @Override

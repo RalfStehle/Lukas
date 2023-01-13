@@ -27,8 +27,6 @@ public class Remote extends Device {
     private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
-    private BluetoothGattService service;
-    private BluetoothGattCharacteristic devicesCharacteristic;
     private LogoWriterQueue writerQueue;
     private TrainHub connectedTrain;
 
@@ -190,36 +188,24 @@ public class Remote extends Device {
     }
 
     private void initializeService() {
-        if (devicesCharacteristic != null) {
+        if (writerQueue != null) {
             return;
         }
 
-        if (service == null) {
-            service = bluetoothGatt.getService(ServiceUUID);
-        }
+        BluetoothGattService service = bluetoothGatt.getService(ServiceUUID);
 
         if (service == null) {
             return;
         }
 
-        if (devicesCharacteristic == null) {
-            devicesCharacteristic = service.getCharacteristic(CharacteristicsUUID);
-        }
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(CharacteristicsUUID);
 
-        if (devicesCharacteristic == null) {
+        if (characteristic == null) {
             return;
         }
 
-        writerQueue = new LogoWriterQueue(bluetoothGatt, devicesCharacteristic);
-
-        UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
-        // Use a special descriptor to enable notifications.
-        BluetoothGattDescriptor bluetoothDescriptor = devicesCharacteristic.getDescriptor(uuid);
-        bluetoothDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-
-        bluetoothGatt.setCharacteristicNotification(devicesCharacteristic, true);
-        bluetoothGatt.writeDescriptor(bluetoothDescriptor);
+        writerQueue = new LogoWriterQueue(bluetoothGatt, characteristic);
+        writerQueue.enableNotifications();
 
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

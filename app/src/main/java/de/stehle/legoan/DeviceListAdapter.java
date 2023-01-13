@@ -49,10 +49,10 @@ public class DeviceListAdapter extends BaseAdapter {
                 view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
 
                 new TrainHubAdapter((TrainHub)device, view, activity).connect();
-            } else if (device instanceof SwitchHub) {
+            } else if (device instanceof Switch) {
                 view = layoutInflater.inflate(R.layout.layout_switch_item, viewGroup, false);
 
-                new SwitchHubAdapter((SwitchHub)device, view, activity).connect();
+                new SwitchHubAdapter((Switch)device, view, activity).connect();
             }
         }
 
@@ -60,40 +60,40 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     static class TrainHubAdapter implements ChangeListener {
-        private final TrainHub hub;
+        private final TrainHub device;
         private final View view;
         private final Activity activity;
 
-        TrainHubAdapter(TrainHub hub, View view, Activity activity) {
+        TrainHubAdapter(TrainHub device, View view, Activity activity) {
             // Attach the hub to the view, so that we can later access it when we create the context menu.
-            this.hub = hub;
+            this.device = device;
             this.view = view;
-            this.view.setTag(hub);
+            this.view.setTag(device);
             this.activity = activity;
         }
 
         public void connect() {
-            hub.subscribe(this);
+            device.subscribe(this);
 
             activity.registerForContextMenu(view);
 
-            view.findViewById(R.id.StopButton).setOnClickListener(view1 -> hub.stop());
-            view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> hub.decrementSpeed());
-            view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> hub.incrementSpeed());
-            view.findViewById(R.id.LightButton).setOnClickListener(view1 -> hub.nextLedColor());
+            view.findViewById(R.id.StopButton).setOnClickListener(view1 -> device.stop());
+            view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> device.decrementSpeed());
+            view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> device.incrementSpeed());
+            view.findViewById(R.id.LightButton).setOnClickListener(view1 -> device.nextLedColor());
 
             updateValues();
         }
 
         private void updateValues() {
             ((TextView)view.findViewById(R.id.NameContent))
-                    .setText(hub.getName());
+                    .setText(device.getName());
 
             ((TextView)view.findViewById(R.id.ConnectedContent))
-                    .setText(hub.isConnected() ? "Yes" : "No");
+                    .setText(device.isConnected() ? "Yes" : "No");
 
             ((TextView)view.findViewById(R.id.BatteryContent))
-                    .setText(String.format(Locale.getDefault(), "%d %%", hub.getBattery()));
+                    .setText(String.format(Locale.getDefault(), "%d %%", device.getBattery()));
         }
 
         @Override
@@ -103,37 +103,37 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     static class SwitchHubAdapter implements ChangeListener {
-        private final SwitchHub hub;
+        private final Switch device;
         private final View view;
         private final Activity activity;
 
-        SwitchHubAdapter(SwitchHub hub, View view, Activity activity) {
+        SwitchHubAdapter(Switch device, View view, Activity activity) {
             // Attach the hub to the view, so that we can later access it when we create the context menu.
-            this.hub = hub;
+            this.device = device;
             this.view = view;
-            this.view.setTag(hub);
+            this.view.setTag(device);
             this.activity = activity;
         }
 
         public void connect() {
-            hub.subscribe(this);
+            device.subscribe(this);
 
             activity.registerForContextMenu(view);
 
-            view.findViewById(R.id.ToggleButton).setOnClickListener(view1 -> hub.toggle());
+            view.findViewById(R.id.ToggleButton).setOnClickListener(view1 -> device.toggle());
 
             updateValues();
         }
 
         private void updateValues() {
             ((TextView)view.findViewById(R.id.NameContent))
-                    .setText(hub.getName());
+                    .setText(device.getName());
 
             ((TextView)view.findViewById(R.id.ConnectedContent))
-                    .setText(hub.isConnected() ? "Yes" : "No");
+                    .setText(device.isConnected() ? "Yes" : "No");
 
             ((TextView)view.findViewById(R.id.BatteryContent))
-                    .setText(String.format(Locale.getDefault(), "%d %%", hub.getBattery()));
+                    .setText(String.format(Locale.getDefault(), "%d %%", device.getBattery()));
         }
 
         @Override

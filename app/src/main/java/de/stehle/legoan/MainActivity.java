@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!hasDevice("test")) {
-            addDevice(new SwitchHub());
+            addDevice(new Switch());
         }
 
         isScanning = true;

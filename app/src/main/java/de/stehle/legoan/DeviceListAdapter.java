@@ -22,18 +22,34 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        Object item = getItem(position);
+
+        if (item instanceof TrainHub) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
     public int getCount() {
         return devices.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return devices.get(i);
+    public long getItemId(int i) {
+        return i;
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
+    public Object getItem(int i) {
+        return devices.get(i);
     }
 
     @Override
@@ -45,11 +61,11 @@ public class DeviceListAdapter extends BaseAdapter {
                 layoutInflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
 
-            if (device instanceof TrainHub) {
+            if (getItemViewType(i) == 0) {
                 view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
 
                 new TrainHubAdapter((TrainHub)device, view, activity).connect();
-            } else if (device instanceof Switch) {
+            } else {
                 view = layoutInflater.inflate(R.layout.layout_switch_item, viewGroup, false);
 
                 new SwitchHubAdapter((Switch)device, view, activity).connect();

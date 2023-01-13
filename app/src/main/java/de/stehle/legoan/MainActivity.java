@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         devicesListView.setAdapter(devicesAdapter);
     }
 
-    // Device scan callback.
     private final ScanCallback scanCallback = new ScanCallback() {
         @SuppressLint("MissingPermission")
         @Override
@@ -76,10 +75,8 @@ public class MainActivity extends AppCompatActivity {
             String address = result.getDevice().getAddress();
 
             for (Device device : devices) {
-                if (device instanceof TrainHub) {
-                    if (((TrainHub)device).getAddress().equals(address)) {
-                        return;
-                    }
+                if (device.getAddress().equals(address)) {
+                    return;
                 }
             }
 

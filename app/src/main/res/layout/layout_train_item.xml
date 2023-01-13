@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardElevation="4px"
+    app:cardElevation="1dp"
     app:contentPadding="10pt">
 
     <TableLayout
@@ -16,54 +16,56 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="1pt"
+            android:layout_marginStart="1pt"
             android:layout_marginBottom="2pt"
             android:weightSum="3">
 
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Name"
+                android:text="@string/label_name"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/NameContent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Name"
+                android:text="@string/label_name"
                 android:textSize="20sp" />
 
         </TableRow>
 
-        <TableRow android:weightSum="3"
-            android:layout_marginLeft="1pt">
+        <TableRow
+            android:layout_marginStart="1pt"
+            android:weightSum="3">
 
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Battery" />
+                android:text="@string/label_battery" />
 
             <TextView
                 android:id="@+id/BatteryContent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Connected" />
+                android:text="@string/label_battery" />
 
         </TableRow>
 
-        <TableRow android:weightSum="3"
-            android:layout_marginLeft="1pt">
+        <TableRow
+            android:layout_marginStart="1pt"
+            android:weightSum="3">
 
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Connected" />
+                android:text="@string/label_connected" />
 
             <TextView
                 android:id="@+id/ConnectedContent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Battery" />
+                android:text="@string/label_connected" />
 
         </TableRow>
 
@@ -77,6 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:backgroundTint="#03A9F4"
+                android:contentDescription="@string/button_slower"
                 android:src="@drawable/ic_baseline_arrow_back_24" />
 
             <LinearLayout
@@ -92,6 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#F44336"
+                    android:contentDescription="@string/button_stop"
                     android:src="@drawable/ic_outline_stop_24" />
 
                 <ImageButton
@@ -100,6 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2pt"
                     android:backgroundTint="#FFC107"
+                    android:contentDescription="@string/button_light"
                     android:src="@drawable/ic_outline_lightbulb_24" />
             </LinearLayout>
 
@@ -109,6 +114,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:backgroundTint="#03A9F4"
+                android:contentDescription="@string/button_faster"
                 android:src="@drawable/ic_baseline_arrow_forward_24" />
         </TableRow>
     </TableLayout>

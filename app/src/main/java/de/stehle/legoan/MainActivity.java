@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.setHeaderTitle("Options");
-        menu.add(0, v.getId(), 0, "Disconnect");
+        menu.setHeaderTitle(R.string.menu_header);
+        menu.add(0, v.getId(), 0, R.string.menu_disconnect);
 
         // Set the current hub from the view.
         menuHub = (TrainHub) v.getTag();
@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Functionality limited");
-        builder.setMessage("Please give the bluetooth permission to connect to the hub.");
+        builder.setTitle(R.string.permission_warning_title);
+        builder.setMessage(R.string.permission_warning_text);
         builder.setPositiveButton(android.R.string.ok, null);
         builder.show();
     }

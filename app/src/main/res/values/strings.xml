@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Legoan</string>
+    <string name="button_slower">Slower</string>
+    <string name="button_faster">Faster</string>
+    <string name="button_stop">Faster</string>
+    <string name="button_light">Toggle Light</string>
+    <string name="label_name">Name</string>
+    <string name="label_battery">Battery</string>
+    <string name="label_connected">Connected</string>
+    <string name="label_scan">Scan &amp; Connect</string>
+    <string name="label_scan_stop">Stop</string>
+    <string name="menu_header">Options</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="permission_warning_title">Functionality limited</string>
+    <string name="permission_warning_text">Please give the bluetooth permission to connect to the hub.</string>
 </resources>

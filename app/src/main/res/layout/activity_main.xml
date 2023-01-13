@@ -18,7 +18,7 @@
             android:layout_marginTop="4pt"
             android:layout_marginBottom="4pt"
             android:layout_weight="1"
-            android:text="Connect"
+            android:text="@string/label_scan"
             android:visibility="visible" />
     </TableRow>
 
@@ -34,8 +34,7 @@
             android:layout_marginTop="4pt"
             android:layout_marginBottom="4pt"
             android:layout_weight="1"
-            android:text="Stop"
-            android:visibility="gone" />
+            android:text="@string/label_scan_stop" />
     </TableRow>
 
     <TableRow

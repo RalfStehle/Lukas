@@ -15,6 +15,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,12 +26,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.behavior.SwipeDismissBehavior;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
-    private static final long SCAN_PERIOD = 60000;
+    private static final long SCAN_PERIOD = 10000;
     private final Handler mHandler = new Handler();
     private final List<TrainHub> trains = new ArrayList<>();
     private TrainHubListAdapter trainsAdapter;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Button scanningStartButton;
     private Button scanningStopButton;
     private boolean isScanning = false;
+    private TrainHub menuHub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,27 @@ public class MainActivity extends AppCompatActivity {
             trainsAdapter.notifyDataSetChanged();
         }
     };
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.setHeaderTitle("Options");
+        menu.add(0, v.getId(), 0, "Disconnect");
+
+        // Set the current hub from the view.
+        menuHub = (TrainHub) v.getTag();
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        // We only have one option yet, so we can just call disconnect directly.
+        menuHub.disconnect();
+
+        trains.remove(menuHub);
+        trainsAdapter.notifyDataSetChanged();
+        return true;
+    }
 
     @SuppressLint("MissingSuperCall")
     @Override

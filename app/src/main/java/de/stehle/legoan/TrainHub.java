@@ -66,6 +66,10 @@ public class TrainHub extends BluetoothGattCallback {
         bluetoothGatt = bluetoothDevice.connectGatt(context, true, this);
     }
 
+    public void disconnect() {
+        bluetoothGatt.disconnect();
+    }
+
     public void subscribe(ChangeListener listener) {
         listeners.add(listener);
     }

@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class TrainHubListAdapter extends BaseAdapter {
     private final List<TrainHub> trains;
@@ -56,17 +57,22 @@ public class TrainHubListAdapter extends BaseAdapter {
         private final Activity activity;
 
         Connector(TrainHub hub, View view, Activity activity) {
+            // Attach the hub to the view, so that we can later access it when we create the context menu.
             this.hub = hub;
             this.view = view;
+            this.view.setTag(hub);
             this.activity = activity;
         }
 
         public void connect() {
             hub.subscribe(this);
 
+            activity.registerForContextMenu(view);
+
             view.findViewById(R.id.StopButton).setOnClickListener(view1 -> hub.stop());
             view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> hub.decrementSpeed());
             view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> hub.incrementSpeed());
+            view.findViewById(R.id.LightButton).setOnClickListener(view1 -> hub.nextLedColor());
 
             updateValues();
         }
@@ -79,7 +85,7 @@ public class TrainHubListAdapter extends BaseAdapter {
                     .setText(hub.isConnected() ? "Yes" : "No");
 
             ((TextView)view.findViewById(R.id.BatteryContent))
-                    .setText(Integer.toString(hub.getBattery()).concat(" %"));
+                    .setText(String.format(Locale.getDefault(), "%d %%", hub.getBattery()));
         }
 
         @Override

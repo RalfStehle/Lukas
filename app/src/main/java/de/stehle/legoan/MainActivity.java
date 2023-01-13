@@ -117,10 +117,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startScanning() {
-        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN) || hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN}, 1);
-            }
+        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN) || !hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN}, 1);
             return;
         }
 

@@ -1,13 +1,17 @@
 package de.stehle.legoan;
 
 import android.annotation.SuppressLint;
+import android.app.admin.DnsEvent;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelUuid;
 
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class TrainHub extends BluetoothGattCallback {
     private final List<ChangeListener> listeners = new ArrayList<>();
     private int currentSpeed = stopSpeed;
     private int currentColor;
+    private int battery;
     private boolean isConnected;
 
     public String getAddress() {
@@ -39,8 +44,22 @@ public class TrainHub extends BluetoothGattCallback {
         return isConnected;
     }
 
+    private void setIsConnected(boolean value) {
+        if (this.isConnected != value) {
+            this.isConnected = value;
+            this.notifyChanged();
+        }
+    }
+
     public int getBattery() {
-        return 100;
+        return battery;
+    }
+
+    private void setBattery(int value) {
+        if (this.battery != value) {
+            this.battery = value;
+            this.notifyChanged();
+        }
     }
 
     public TrainHub(BluetoothDevice bluetoothDevice, Context context) {
@@ -66,13 +85,15 @@ public class TrainHub extends BluetoothGattCallback {
         }
 
         // send(new byte[]{0x0a, 0x00, (byte) 0x41, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00});  // Set Colour Mode
-        send(new byte[]{0x00, (byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
+        send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
     }
 
     public void stop() {
         currentSpeed = stopSpeed;
 
         setSpeed(currentSpeed);
+
+        send(new byte[] { 0x01, 0x06, 0x02 }); // Activate button reports
     }
 
     public void decrementSpeed() {
@@ -92,7 +113,7 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     private void setSpeed(int speed) {
-        send(new byte[]{0x00, (byte) 0x81, 0x00, 0x11, 0x51, 0x00, (byte) speeds[speed]}); // Port A
+        send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, (byte) speeds[speed]}); // Port A
     }
 
     public static boolean canConnect(ScanResult scanResult) {
@@ -112,28 +133,15 @@ public class TrainHub extends BluetoothGattCallback {
         return false;
     }
 
-    public boolean send(byte[] data) {
-        if (service == null) {
-            service = bluetoothGatt.getService(UUID.fromString("00001623-1212-efde-1623-785feabcd123"));
-        }
-
-        if (service == null) {
-            return false;
-        }
-
-        if (devicesCharacteristic == null) {
-            devicesCharacteristic = service.getCharacteristic(UUID.fromString("00001624-1212-efde-1623-785feabcd123"));
-        }
+    private boolean send(byte[] data) {
+        initializeService();
 
         if (devicesCharacteristic == null) {
             return false;
         }
 
-        byte[] finalData = new byte[data.length + 1];
-        finalData[0] = (byte)data.length;
-        System.arraycopy(data, 0, finalData, 1, data.length);
-
-        devicesCharacteristic.setValue(finalData);
+        devicesCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+        devicesCharacteristic.setValue(dataToEnvelope(data));
 
         return bluetoothGatt.writeCharacteristic(devicesCharacteristic);
     }
@@ -141,16 +149,94 @@ public class TrainHub extends BluetoothGattCallback {
     @Override
     public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
         switch (newState) {
-            case 0:
-                this.isConnected = false;
-                this.notifyChanged();
+            case BluetoothGatt.STATE_DISCONNECTED:
+                setIsConnected(false);
                 break;
-            case 2:
-                this.isConnected = true;
-                this.notifyChanged();
-                // discover services and characteristics for this device
-                this.bluetoothGatt.discoverServices();
+            case BluetoothGatt.STATE_CONNECTED:
+                setIsConnected(true);
+
+                // It seems to be more stable to wait a little bit for the discovery.
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    // Discover services and characteristics for this device
+                    bluetoothGatt.discoverServices();
+                }, 500);
+                initializeService();
                 break;
         }
+    }
+
+    @Override
+    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+        initializeService();
+    }
+
+    private void initializeService() {
+        if (devicesCharacteristic != null) {
+            return;
+        }
+
+        if (service == null) {
+            service = bluetoothGatt.getService(UUID.fromString("00001623-1212-efde-1623-785feabcd123"));
+        }
+
+        if (service == null) {
+            return;
+        }
+
+        if (devicesCharacteristic == null) {
+            devicesCharacteristic = service.getCharacteristic(UUID.fromString("00001624-1212-efde-1623-785feabcd123"));
+        }
+
+        if (devicesCharacteristic == null) {
+            return;
+        }
+
+        UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+        // Use a special descriptor to enable notifications.
+        BluetoothGattDescriptor bluetoothDescriptor = devicesCharacteristic.getDescriptor(uuid);
+        bluetoothDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+
+        bluetoothGatt.setCharacteristicNotification(devicesCharacteristic, true);
+        bluetoothGatt.writeDescriptor(bluetoothDescriptor);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Activate battery reports
+            send(new byte[] { 0x01, 0x06, 0x02 });
+        }, 2000);
+    }
+
+    @Override
+    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        byte[] value = envelopeToData(characteristic.getValue());
+
+        if (value[0] == 0x01) {
+            parseDeviceInfo(value);
+        }
+    }
+
+    private void parseDeviceInfo(byte[] value) {
+        if (value[1] == 0x06) {
+            setBattery(value[3]);
+        }
+    }
+
+    private byte[] dataToEnvelope(byte[] data) {
+        byte[] envelope = new byte[data.length + 2];
+
+        // The first value must be the length.
+        envelope[0] = (byte)(data.length + 2);
+        envelope[1] = 0;
+
+        // Copy the rest of the value.
+        System.arraycopy(data, 0, envelope, 2, data.length);
+        return envelope;
+    }
+
+    private  byte[] envelopeToData(byte[] envelope) {
+        byte[] data = new byte[envelope.length - 2];
+
+        System.arraycopy(envelope, 2, data, 0, envelope.length - 2);
+        return data;
     }
 }

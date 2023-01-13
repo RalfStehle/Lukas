@@ -96,10 +96,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="#03A9F4"
+                android:backgroundTint="#4CAF50"
                 android:text="@string/label_switch"
-                app:iconGravity="textStart"
-                app:icon="@drawable/ic_baseline_switch_right_24" />
+                app:icon="@drawable/ic_baseline_switch_right_24"
+                app:iconGravity="textStart" />
         </TableRow>
     </TableLayout>
 

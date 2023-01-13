@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Button scanningStartButton;
     private Button scanningStopButton;
     private boolean isScanning = false;
-    private TrainHub deviceInContextMenu;
+    private Device deviceInContextMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,22 +69,11 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!TrainHub.canConnect(result)) {
+            if (!TrainHub.canConnect(result) || hasDevice(result.getDevice().getAddress())) {
                 return;
             }
 
-            String address = result.getDevice().getAddress();
-
-            for (Device device : devices) {
-                if (device.getAddress().equals(address)) {
-                    return;
-                }
-            }
-
-            TrainHub trainHub = new TrainHub(bluetoothAdapter.getRemoteDevice(address), MainActivity.this);
-
-            devices.add(trainHub);
-            devicesAdapter.notifyDataSetChanged();
+            addDevice(new TrainHub(bluetoothAdapter.getRemoteDevice(result.getDevice().getAddress()), MainActivity.this));
         }
     };
 
@@ -95,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, R.string.menu_disconnect);
 
         // Set the current hub from the view.
-        deviceInContextMenu = (TrainHub) v.getTag();
+        deviceInContextMenu = (Device) v.getTag();
     }
 
     @Override
@@ -146,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if (!hasDevice("test")) {
+            addDevice(new SwitchHub());
+        }
+
         isScanning = true;
         scanningStartButton.setVisibility(View.GONE);
         scanningStopButton.setVisibility(View.VISIBLE);
@@ -166,6 +160,21 @@ public class MainActivity extends AppCompatActivity {
         scanningStopButton.setVisibility(View.GONE);
 
         AsyncTask.execute(() -> bluetoothScanner.stopScan(scanCallback));
+    }
+
+    private boolean hasDevice(String address) {
+        for (Device device : devices) {
+            if (device.getAddress().equals(address)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void addDevice(Device device)  {
+        devices.add(device);
+        devicesAdapter.notifyDataSetChanged();
     }
 
     private boolean hasPermission(String id) {

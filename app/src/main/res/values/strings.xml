@@ -3,6 +3,7 @@
     <string name="button_slower">Slower</string>
     <string name="button_faster">Faster</string>
     <string name="button_stop">Faster</string>
+    <string name="button_toggle">Toggle</string>
     <string name="button_light">Toggle Light</string>
     <string name="label_name">Name</string>
     <string name="label_battery">Battery</string>
@@ -10,6 +11,7 @@
     <string name="label_scan">Scan &amp; Connect</string>
     <string name="label_scan_stop">Stop</string>
     <string name="label_train">Train</string>
+    <string name="label_switch">Switch</string>
     <string name="menu_header">Options</string>
     <string name="menu_disconnect">Disconnect</string>
     <string name="permission_warning_title">Functionality limited</string>

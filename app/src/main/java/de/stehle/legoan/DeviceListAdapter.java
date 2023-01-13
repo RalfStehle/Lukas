@@ -38,29 +38,33 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
+        Device device = devices.get(i);
+
+        if (view == null || view.getTag() != device) {
             if (layoutInflater == null) {
                 layoutInflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
 
-            view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
-
-            Device device = devices.get(i);
-
             if (device instanceof TrainHub) {
-                new TrainHubConnector((TrainHub)device, view, activity).connect();
+                view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
+
+                new TrainHubAdapter((TrainHub)device, view, activity).connect();
+            } else if (device instanceof SwitchHub) {
+                view = layoutInflater.inflate(R.layout.layout_switch_item, viewGroup, false);
+
+                new SwitchHubAdapter((SwitchHub)device, view, activity).connect();
             }
         }
 
         return view;
     }
 
-    static class TrainHubConnector implements ChangeListener {
+    static class TrainHubAdapter implements ChangeListener {
         private final TrainHub hub;
         private final View view;
         private final Activity activity;
 
-        TrainHubConnector(TrainHub hub, View view, Activity activity) {
+        TrainHubAdapter(TrainHub hub, View view, Activity activity) {
             // Attach the hub to the view, so that we can later access it when we create the context menu.
             this.hub = hub;
             this.view = view;
@@ -77,6 +81,46 @@ public class DeviceListAdapter extends BaseAdapter {
             view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> hub.decrementSpeed());
             view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> hub.incrementSpeed());
             view.findViewById(R.id.LightButton).setOnClickListener(view1 -> hub.nextLedColor());
+
+            updateValues();
+        }
+
+        private void updateValues() {
+            ((TextView)view.findViewById(R.id.NameContent))
+                    .setText(hub.getName());
+
+            ((TextView)view.findViewById(R.id.ConnectedContent))
+                    .setText(hub.isConnected() ? "Yes" : "No");
+
+            ((TextView)view.findViewById(R.id.BatteryContent))
+                    .setText(String.format(Locale.getDefault(), "%d %%", hub.getBattery()));
+        }
+
+        @Override
+        public void notifyChanged() {
+            activity.runOnUiThread(this::updateValues);
+        }
+    }
+
+    static class SwitchHubAdapter implements ChangeListener {
+        private final SwitchHub hub;
+        private final View view;
+        private final Activity activity;
+
+        SwitchHubAdapter(SwitchHub hub, View view, Activity activity) {
+            // Attach the hub to the view, so that we can later access it when we create the context menu.
+            this.hub = hub;
+            this.view = view;
+            this.view.setTag(hub);
+            this.activity = activity;
+        }
+
+        public void connect() {
+            hub.subscribe(this);
+
+            activity.registerForContextMenu(view);
+
+            view.findViewById(R.id.ToggleButton).setOnClickListener(view1 -> hub.toggle());
 
             updateValues();
         }

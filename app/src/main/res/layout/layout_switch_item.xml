@@ -2,6 +2,7 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardElevation="1dp"
@@ -16,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="clip_horizontal"
+            android:layout_marginStart="1pt"
             android:layout_marginBottom="2pt"
             android:weightSum="3">
 
@@ -31,13 +33,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:layout_marginEnd="1pt"
-                    android:tint="#878787"
-                    app:srcCompat="@drawable/ic_baseline_train_24" />
+                    app:srcCompat="@drawable/ic_baseline_switch_right_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_train"
+                    android:text="@string/label_switch"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -51,6 +52,7 @@
         </TableRow>
 
         <TableRow
+            android:layout_marginStart="1pt"
             android:weightSum="3">
 
             <TextView
@@ -67,6 +69,7 @@
         </TableRow>
 
         <TableRow
+            android:layout_marginStart="1pt"
             android:weightSum="3">
 
             <TextView
@@ -83,56 +86,20 @@
         </TableRow>
 
         <TableRow
-            android:layout_marginTop="4pt"
-            android:weightSum="12">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1pt"
+            android:layout_marginEnd="1pt">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/SlowerButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:backgroundTint="#03A9F4"
-                android:contentDescription="@string/button_slower"
-                app:iconGravity="textStart"
-                app:icon="@drawable/ic_baseline_arrow_back_24" />
-
-            <LinearLayout
+                android:id="@+id/ToggleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8pt"
-                android:layout_marginRight="8pt"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/StopButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#F44336"
-                    android:contentDescription="@string/button_stop"
-                    app:iconGravity="textStart"
-                    app:icon="@drawable/ic_outline_stop_24" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/LightButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2pt"
-                    android:backgroundTint="#FFC107"
-                    android:contentDescription="@string/button_light"
-                    app:iconGravity="textStart"
-                    app:icon="@drawable/ic_outline_lightbulb_24" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/FasterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
+                android:layout_weight="1"
                 android:backgroundTint="#03A9F4"
-                android:contentDescription="@string/button_faster"
+                android:text="@string/label_switch"
                 app:iconGravity="textStart"
-                app:icon="@drawable/ic_baseline_arrow_forward_24" />
+                app:icon="@drawable/ic_baseline_switch_right_24" />
         </TableRow>
     </TableLayout>
 

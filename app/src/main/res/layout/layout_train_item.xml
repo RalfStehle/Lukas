@@ -94,7 +94,8 @@
                 android:backgroundTint="#03A9F4"
                 android:contentDescription="@string/button_slower"
                 app:iconGravity="textStart"
-                app:icon="@drawable/ic_baseline_arrow_back_24" />
+                app:icon="@drawable/ic_baseline_arrow_back_24"
+                app:iconPadding="0dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,7 +112,8 @@
                     android:backgroundTint="#F44336"
                     android:contentDescription="@string/button_stop"
                     app:iconGravity="textStart"
-                    app:icon="@drawable/ic_outline_stop_24" />
+                    app:icon="@drawable/ic_outline_stop_24"
+                    app:iconPadding="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/LightButton"
@@ -120,8 +122,9 @@
                     android:layout_marginTop="2pt"
                     android:backgroundTint="#FFC107"
                     android:contentDescription="@string/button_light"
+                    app:icon="@drawable/ic_outline_lightbulb_24"
                     app:iconGravity="textStart"
-                    app:icon="@drawable/ic_outline_lightbulb_24" />
+                    app:iconPadding="0dp" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -132,7 +135,8 @@
                 android:backgroundTint="#03A9F4"
                 android:contentDescription="@string/button_faster"
                 app:iconGravity="textStart"
-                app:icon="@drawable/ic_baseline_arrow_forward_24" />
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconPadding="0dp" />
         </TableRow>
     </TableLayout>
 

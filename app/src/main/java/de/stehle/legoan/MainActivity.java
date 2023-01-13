@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (isScanning) {
+        if (isScanning || bluetoothScanner == null) {
             return;
         }
 

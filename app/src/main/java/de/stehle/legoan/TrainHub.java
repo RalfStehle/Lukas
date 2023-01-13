@@ -18,7 +18,7 @@ import java.util.UUID;
 @SuppressLint("MissingPermission")
 public class TrainHub extends Device {
     private final static UUID ServiceUUID = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
-    private final static UUID CharactersticsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
+    private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
     private final static byte[] speeds = {0x7E, 0x6C, 0x5A, 0x48, 0x36, 0x24, 0x12, 0x7F, (byte) 0xEC, (byte) 0xDA, (byte) 0xC8, (byte) 0xB6, (byte) 0xA4, (byte) 0x92, (byte) 0x80};
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
@@ -27,37 +27,15 @@ public class TrainHub extends Device {
     private final static int stopSpeed = speeds.length / 2;
     private int currentSpeed = stopSpeed;
     private int currentColor;
-    private int battery;
-    private boolean isConnected;
 
+    @Override
     public String getAddress() {
         return bluetoothDevice.getAddress();
     }
 
+    @Override
     public String getName() {
         return bluetoothDevice.getName();
-    }
-
-    public boolean isConnected() {
-        return isConnected;
-    }
-
-    private void setIsConnected(boolean value) {
-        if (isConnected != value) {
-            isConnected = value;
-            notifyChanged();
-        }
-    }
-
-    public int getBattery() {
-        return battery;
-    }
-
-    private void setBattery(int value) {
-        if (battery != value) {
-            battery = value;
-            notifyChanged();
-        }
     }
 
     public TrainHub(BluetoothDevice device, Context context) {
@@ -104,6 +82,7 @@ public class TrainHub extends Device {
         bluetoothGatt = bluetoothDevice.connectGatt(context, true, callback);
     }
 
+    @Override
     public void disconnect() {
         bluetoothGatt.disconnect();
     }
@@ -185,7 +164,7 @@ public class TrainHub extends Device {
         }
 
         if (devicesCharacteristic == null) {
-            devicesCharacteristic = service.getCharacteristic(CharactersticsUUID);
+            devicesCharacteristic = service.getCharacteristic(CharacteristicsUUID);
         }
 
         if (devicesCharacteristic == null) {
@@ -201,6 +180,7 @@ public class TrainHub extends Device {
         bluetoothGatt.setCharacteristicNotification(devicesCharacteristic, true);
         bluetoothGatt.writeDescriptor(bluetoothDescriptor);
 
+        // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Activate battery reports
             send(new byte[] { 0x01, 0x06, 0x02 });

@@ -68,11 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!TrainHub.canConnect(result) || hasDevice(result.getDevice().getAddress())) {
-                return;
+            if (TrainHub.canConnect(result)) {
+                if (!hasDevice(result.getDevice().getAddress())) {
+                    addDevice(new TrainHub(result.getDevice(), MainActivity.this));
+                }
+            } else if (Remote.canConnect(result)) {
+                if (!hasDevice(result.getDevice().getAddress())) {
+                    addDevice(new Remote(result.getDevice(), MainActivity.this));
+                }
             }
-
-            addDevice(new TrainHub(bluetoothAdapter.getRemoteDevice(result.getDevice().getAddress()), MainActivity.this));
         }
     };
 
@@ -133,10 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (isScanning) {
             return;
-        }
-
-        if (!hasDevice("test")) {
-            addDevice(new Switch());
         }
 
         isScanning = true;

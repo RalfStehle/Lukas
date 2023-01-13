@@ -25,14 +25,16 @@ public class DeviceListAdapter extends BaseAdapter {
 
         if (item instanceof TrainHub) {
             return 0;
-        } else {
+        } else if (item instanceof Remote) {
             return 1;
+        } else {
+            return 2;
         }
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -66,6 +68,8 @@ public class DeviceListAdapter extends BaseAdapter {
 
             if (viewType == 0) {
                 view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
+            } else if (viewType == 1) {
+                view = layoutInflater.inflate(R.layout.layout_remote_item, viewGroup, false);
             } else {
                 view = layoutInflater.inflate(R.layout.layout_switch_item, viewGroup, false);
             }
@@ -77,8 +81,10 @@ public class DeviceListAdapter extends BaseAdapter {
         if (isDisconnected) {
             if (viewType == 0) {
                 new TrainHubAdapter((TrainHub)device, view, activity).connect();
+            } else if (viewType == 1) {
+                new RemoteAdapter((Remote)device, view, activity, this).connect();
             } else {
-                new SwitchHubAdapter((Switch)device, view, activity).connect();
+                new SwitchAdapter((Switch)device, view, activity).connect();
             }
         }
 

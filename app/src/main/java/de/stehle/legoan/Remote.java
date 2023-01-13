@@ -13,23 +13,24 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.util.Log;
 import android.util.SparseArray;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 
 @SuppressLint("MissingPermission")
-public class TrainHub extends Device {
+public class Remote extends Device {
     private final static UUID ServiceUUID = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
     private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
-    private final static byte[] speeds = {0x7E, 0x6C, 0x5A, 0x48, 0x36, 0x24, 0x12, 0x7F, (byte) 0xEC, (byte) 0xDA, (byte) 0xC8, (byte) 0xB6, (byte) 0xA4, (byte) 0x92, (byte) 0x80};
-    private final static int stopSpeed = speeds.length / 2;
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
     private BluetoothGattService service;
     private BluetoothGattCharacteristic devicesCharacteristic;
     private LogoWriterQueue writerQueue;
-    private int currentSpeed = stopSpeed;
-    private int currentColor;
+    private TrainHub connectedTrain;
 
     @Override
     public String getAddress() {
@@ -41,7 +42,15 @@ public class TrainHub extends Device {
         return bluetoothDevice.getName();
     }
 
-    public TrainHub(BluetoothDevice device, Context context) {
+    public TrainHub getConnectedTrain() {
+        return connectedTrain;
+    }
+
+    public void setConnectedTrain(TrainHub connectedTrain) {
+        this.connectedTrain = connectedTrain;
+    }
+
+    public Remote(BluetoothDevice device, Context context) {
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
@@ -76,6 +85,8 @@ public class TrainHub extends Device {
 
                 if (value[0] == 0x01) {
                     parseDeviceInfo(value);
+                } else if (value[0] == 0x45) {
+                    parseButtons(value);
                 }
             }
 
@@ -84,51 +95,68 @@ public class TrainHub extends Device {
                     setBattery(value[3]);
                 }
             }
+
+            private void parseButtons(byte[] value) {
+                byte buttonSide = value[1];
+                byte buttonMode = value[2];
+
+                if (buttonSide == 0) {
+                    if (buttonMode == 1) {
+                        leftUp();
+                    } else if (buttonMode == -1) {
+                        leftDown();
+                    } else if (buttonMode == 127) {
+                        leftMiddle();
+                    }
+                } else {
+                    if (buttonMode == 1) {
+                        rightUp();
+                    } else if (buttonMode == -1) {
+                        rightDown();
+                    } else if (buttonMode == 127) {
+                        rightMiddle();
+                    }
+                }
+            }
         };
 
         bluetoothDevice = device;
         bluetoothGatt = bluetoothDevice.connectGatt(context, true, callback);
     }
 
+    private void leftUp() {
+    }
+
+    private void leftMiddle() {
+        if (connectedTrain != null) {
+            connectedTrain.nextLedColor();
+        }
+    }
+
+    private void leftDown() {
+    }
+
+    private void rightUp() {
+        if (connectedTrain != null) {
+            connectedTrain.incrementSpeed();
+        }
+    }
+
+    private void rightMiddle() {
+        if (connectedTrain != null) {
+            connectedTrain.stop();
+        }
+    }
+
+    private void rightDown() {
+        if (connectedTrain != null) {
+            connectedTrain.decrementSpeed();
+        }
+    }
+
     @Override
     public void disconnect() {
         bluetoothGatt.disconnect();
-    }
-
-    public void nextLedColor() {
-        currentColor++;
-
-        if (currentColor == 11) {
-            currentColor = 0;
-        }
-
-        send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
-    }
-
-    public void stop() {
-        currentSpeed = stopSpeed;
-
-        setSpeed(currentSpeed);
-    }
-
-    public void decrementSpeed() {
-        if (currentSpeed > 0) {
-            currentSpeed--;
-        }
-
-        setSpeed(currentSpeed);
-    }
-
-    public void incrementSpeed() {
-        if (currentSpeed < speeds.length - 1) {
-            currentSpeed++;
-        }
-
-        setSpeed(currentSpeed);
-    }
-
-    private void setSpeed(int speed) {
-        send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speeds[speed]}); // Port A
     }
 
     public static boolean canConnect(ScanResult scanResult) {
@@ -142,7 +170,7 @@ public class TrainHub extends Device {
             if (uuid.getUuid().equals(ServiceUUID)) {
                 String name = record.getDeviceName().trim();
 
-                if (!name.equals("Handset")) {
+                if (name.equals("Handset")) {
                     return true;
                 }
             }
@@ -195,6 +223,10 @@ public class TrainHub extends Device {
 
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Activate button reports
+            send(new byte[] { 0x41, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1 });
+            send(new byte[] { 0x41, 0x1, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1 });
+
             // Activate battery reports
             send(new byte[] { 0x01, 0x06, 0x02 });
         }, 2000);

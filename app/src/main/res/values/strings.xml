@@ -11,9 +11,11 @@
     <string name="label_scan">Scan &amp; Connect</string>
     <string name="label_scan_stop">Stop</string>
     <string name="label_train">Train</string>
+    <string name="label_remote">Remote</string>
     <string name="label_switch">Switch</string>
     <string name="menu_header">Options</string>
     <string name="menu_disconnect">Disconnect</string>
     <string name="permission_warning_title">Functionality limited</string>
     <string name="permission_warning_text">Please give the bluetooth permission to connect to the hub.</string>
+    <string name="label_none">No Train</string>
 </resources>

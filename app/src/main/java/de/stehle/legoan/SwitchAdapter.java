@@ -6,10 +6,10 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-class SwitchHubAdapter extends Adapter {
+class SwitchAdapter extends Adapter {
     private final Switch device;
 
-    SwitchHubAdapter(Switch device, View view, Activity activity) {
+    SwitchAdapter(Switch device, View view, Activity activity) {
         super(activity, device, view);
         this.device = device;
     }

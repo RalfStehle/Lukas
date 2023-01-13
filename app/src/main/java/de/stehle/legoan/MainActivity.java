@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, R.string.menu_disconnect);
 
         // Set the current hub from the view.
-        deviceInContextMenu = (Device) v.getTag();
+        deviceInContextMenu = Adapter.getDevice(v);
     }
 
     @Override

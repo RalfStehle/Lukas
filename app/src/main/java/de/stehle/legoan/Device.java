@@ -34,6 +34,10 @@ public abstract class Device {
         listeners.add(listener);
     }
 
+    public void unsubscribe(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+
     protected void notifyChanged() {
         for (ChangeListener listener : listeners) {
             listener.notifyChanged();

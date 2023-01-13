@@ -64,17 +64,9 @@ public class TrainHubListAdapter extends BaseAdapter {
         public void connect() {
             hub.subscribe(this);
 
-            view.findViewById(R.id.StopButton).setOnClickListener(view1 -> {
-                hub.stop();
-            });
-
-            view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> {
-                hub.decrementSpeed();
-            });
-
-            view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> {
-                hub.incrementSpeed();
-            });
+            view.findViewById(R.id.StopButton).setOnClickListener(view1 -> hub.stop());
+            view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> hub.decrementSpeed());
+            view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> hub.incrementSpeed());
 
             updateValues();
         }

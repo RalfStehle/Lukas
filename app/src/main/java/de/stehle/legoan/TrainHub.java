@@ -1,7 +1,6 @@
 package de.stehle.legoan;
 
 import android.annotation.SuppressLint;
-import android.app.admin.DnsEvent;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -45,9 +44,9 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     private void setIsConnected(boolean value) {
-        if (this.isConnected != value) {
-            this.isConnected = value;
-            this.notifyChanged();
+        if (isConnected != value) {
+            isConnected = value;
+            notifyChanged();
         }
     }
 
@@ -56,23 +55,23 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     private void setBattery(int value) {
-        if (this.battery != value) {
-            this.battery = value;
-            this.notifyChanged();
+        if (battery != value) {
+            battery = value;
+            notifyChanged();
         }
     }
 
     public TrainHub(BluetoothDevice bluetoothDevice, Context context) {
         this.bluetoothDevice = bluetoothDevice;
-        this.bluetoothGatt = bluetoothDevice.connectGatt(context, true, this);
+        bluetoothGatt = bluetoothDevice.connectGatt(context, true, this);
     }
 
     public void subscribe(ChangeListener listener) {
-        this.listeners.add(listener);
+        listeners.add(listener);
     }
 
     private void notifyChanged() {
-        for (ChangeListener listener : this.listeners) {
+        for (ChangeListener listener : listeners) {
             listener.notifyChanged();
         }
     }
@@ -84,7 +83,6 @@ public class TrainHub extends BluetoothGattCallback {
             currentColor = 0;
         }
 
-        // send(new byte[]{0x0a, 0x00, (byte) 0x41, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00});  // Set Colour Mode
         send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor}); // Set color
     }
 
@@ -113,13 +111,12 @@ public class TrainHub extends BluetoothGattCallback {
     }
 
     private void setSpeed(int speed) {
-        send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, (byte) speeds[speed]}); // Port A
+        send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speeds[speed]}); // Port A
     }
 
     public static boolean canConnect(ScanResult scanResult) {
         UUID requiredService = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
 
-        String name = scanResult.getDevice().getName();
         if (scanResult.getScanRecord().getServiceUuids() == null) {
             return false;
         }
@@ -133,17 +130,17 @@ public class TrainHub extends BluetoothGattCallback {
         return false;
     }
 
-    private boolean send(byte[] data) {
+    private void send(byte[] data) {
         initializeService();
 
         if (devicesCharacteristic == null) {
-            return false;
+            return;
         }
 
         devicesCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         devicesCharacteristic.setValue(dataToEnvelope(data));
 
-        return bluetoothGatt.writeCharacteristic(devicesCharacteristic);
+        bluetoothGatt.writeCharacteristic(devicesCharacteristic);
     }
 
     @Override
@@ -156,10 +153,8 @@ public class TrainHub extends BluetoothGattCallback {
                 setIsConnected(true);
 
                 // It seems to be more stable to wait a little bit for the discovery.
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    // Discover services and characteristics for this device
-                    bluetoothGatt.discoverServices();
-                }, 500);
+                // Discover services and characteristics for this device
+                new Handler(Looper.getMainLooper()).postDelayed(bluetoothGatt::discoverServices, 500);
                 initializeService();
                 break;
         }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TrainHubListAdapter extends BaseAdapter {
     private final List<TrainHub> trains;
-    private Activity activity;
+    private final Activity activity;
     private LayoutInflater layoutInflater;
 
     public TrainHubListAdapter(List<TrainHub> trains, Activity activity) {
@@ -50,7 +50,7 @@ public class TrainHubListAdapter extends BaseAdapter {
         return view;
     }
 
-    class Connector implements ChangeListener {
+    static class Connector implements ChangeListener {
         private final TrainHub hub;
         private final View view;
         private final Activity activity;
@@ -92,9 +92,7 @@ public class TrainHubListAdapter extends BaseAdapter {
 
         @Override
         public void notifyChanged() {
-            activity.runOnUiThread(() -> {
-                this.updateValues();
-            });
+            activity.runOnUiThread(this::updateValues);
         }
     }
 }

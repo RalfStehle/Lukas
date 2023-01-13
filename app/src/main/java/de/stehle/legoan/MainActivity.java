@@ -46,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        scanningStartButton = (Button) findViewById(R.id.StartScanButton);
+        scanningStartButton = findViewById(R.id.StartScanButton);
         scanningStartButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startScanning();
             }
         });
 
-        scanningStopButton = (Button) findViewById(R.id.StopScanButton);
+        scanningStopButton = findViewById(R.id.StopScanButton);
         scanningStopButton.setVisibility(View.GONE);
         scanningStopButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
         trainsAdapter = new TrainHubListAdapter(trains, this);
-        trainsListView = (ListView) findViewById(R.id.devicesListView);
+        trainsListView = findViewById(R.id.devicesListView);
         trainsListView.setAdapter(trainsAdapter);
     }
 
@@ -117,15 +117,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startScanning() {
-        if (isScanning) {
-            return;
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN) || hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN}, 1);
             }
+            return;
+        }
+
+        if (isScanning) {
             return;
         }
 
@@ -133,20 +132,10 @@ public class MainActivity extends AppCompatActivity {
         scanningStartButton.setVisibility(View.GONE);
         scanningStopButton.setVisibility(View.VISIBLE);
 
-        AsyncTask.execute(new Runnable() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void run() {
-                bluetoothScanner.startScan(scanCallback);
-            }
-        });
+        AsyncTask.execute(() -> bluetoothScanner.startScan(scanCallback));
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopScanning();
-            }
-        }, SCAN_PERIOD);
+        // Stop the scanning automatically after some time.
+        mHandler.postDelayed(this::stopScanning, SCAN_PERIOD);
     }
 
     public void stopScanning() {
@@ -158,12 +147,10 @@ public class MainActivity extends AppCompatActivity {
         scanningStartButton.setVisibility(View.VISIBLE);
         scanningStopButton.setVisibility(View.GONE);
 
-        AsyncTask.execute(new Runnable() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void run() {
-                bluetoothScanner.stopScan(scanCallback);
-            }
-        });
+        AsyncTask.execute(() -> bluetoothScanner.stopScan(scanCallback));
+    }
+
+    private boolean hasPermission(String id) {
+        return ActivityCompat.checkSelfPermission(this, id) == PackageManager.PERMISSION_GRANTED;
     }
 }

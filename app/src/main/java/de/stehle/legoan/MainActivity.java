@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000;
     private final List<Device> devices = new ArrayList<>();
     private DeviceListAdapter devicesAdapter;
-    private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothScanner;
     private Button scanningStartButton;
     private Button scanningStopButton;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         scanningStopButton.setOnClickListener(v -> stopScanning());
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
+        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
         ListView devicesListView = findViewById(R.id.DevicesListView);

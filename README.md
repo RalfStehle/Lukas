@@ -1,32 +1,32 @@
-# Hubi
+<H1>Hubi</H1>
 <br>
 <br>
-# Lego Powered Up mit Android steuern
+<H1> Lego Powered Up mit Android steuern</H1>
 <br>
 <br>
-## Links
+<H2> Links</H2>
 [The Ultimate Guide to Android Bluetooth Low Energy] (https://punchthrough.com/android-ble-guide)<br>
 [Legoino von Cornelius Munz] (https://github.com/corneliusmunz/legoino/blob/master/src/Lpf2HubEmulation.cpp)<br>
 [The Brick Automation Project] (https://github.com/Cosmik42/BAP)<br>
 [LEGO Wireless Protocol 3.0.00 documentation] (https://lego.github.io/lego-ble-wireless-protocol-docs/index.html)<br>
 <br>
 <br>
-## In Planung:
+<H2>Vorschläge</H2>
 <br>
-1. Integration der Fernsteuerung 88010.<br>
+<H3>1. Integration der Fernsteuerung 88010.<br></H3>
 Die App könnte zwischen Train-Hub und Remote sozusagen dazwischengeschaltet werden, praktisch als Supervisor.<br>
 Jede Fernsteuerung kann dann sogar auf A und B 2 Züge steuern. Die grüne Taste könnte dann das Licht auf Kanal B des HUB ansteuern.
 Bevor die grüne Taste aber volle Power gibt, müsste überprüft werden, ob am Kanal B wirklich Licht und kein Motor angeschlossen ist,
 sonst gibt der Zug VOLLGAS<br>
 Wahrscheinlich muss man das aber fest programmiert in einem extra Branch programmieren
 <br>
-2.Lichtsensor-Daten auswerten<br>
+<H3>2.Lichtsensor-Daten auswerten<br></H3>
 Mit dem Lichtsensor kann mann den Zug automatisch anhalten, schneller und langsamer werden lassen oder eine Pause einlegen, wenn er an einer farbigen Legoplatte vorbeifährt.
 Ob das tatsächlich benutzt wird, ist aber fraglich. Der Sensor ist relativ groß und leider fast nicht in vorhandene Zugmodelle integrierbar.<br>
 Dafür müsste man also selbst eine Lokomotive entwickeln.<br>
 <br>
 <br>
-## 1. Integration der Fernsteuerung 88010.<br>
+<H3>1. Integration der Fernsteuerung 88010.<br></H3>
 Nach Connect muss man dem Gerät sagen, dass es bei Änderungen von Werten Notifications versenden soll.<br>
 In der Legoino Bibliothek von Cornelius Munz wird das über den Befehl „activatePortDevice" gemacht.<br> 
 Diese Funktion sendet einen Wert auf die Characteristic die dem Hub sagt, dass an einem definierten virtuellen Port Notifications versendet werden, wenn sich Werte ändern.
@@ -42,7 +42,7 @@ enum struct PoweredUpRemoteHubPort<br>
   RSSI = 0x3C
 };<br>
 <br>
-### Beispiele:<br>
+<H3>Beispiele:<br></H3>
 Steuertasten links aktivieren:<br>
 0xA, 0x00, 0x41, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01<br>
 <br>
@@ -62,7 +62,7 @@ bluetoothGatt.setCharacteristicNotification(charac1, true);<br>
 bluetoothGatt.readCharacteristic(charac1);<br>
 <br>
 <br>
-### Train Remote - Auswerten der Notifications
+<H3>Train Remote - Auswerten der Notifications</H3>
 <br>
 enum struct ButtonState<br>
 {<br>
@@ -89,7 +89,7 @@ enum struct ButtonState<br>
 05 00 45 01 00	Release<br>
 <br>
 <br>
-### Appendix:<br>
+<H3>Appendix:<br></H3>
 VOLTAGE:<br>
 so wird wahrscheinlich die Spannung berechnet (siehe Legoino):<br>
 https://github.com/corneliusmunz/legoino/blob/master/src/Lpf2Hub.cpp<br>

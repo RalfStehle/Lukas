@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @SuppressLint("MissingPermission")
@@ -181,6 +182,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void addDevice(Device device)  {
         devices.add(device);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            devices.sort(Comparator.comparing((Device t) -> t.getClass().getName()).thenComparing(Device::getName));
+        }
+
         devicesAdapter.notifyDataSetChanged();
     }
 

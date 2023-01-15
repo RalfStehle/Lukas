@@ -18,6 +18,7 @@
             android:layout_marginTop="4pt"
             android:layout_marginBottom="4pt"
             android:layout_weight="1"
+            android:textColor="@color/LightBlue"
             android:text="@string/label_scan"
             android:visibility="visible" />
     </TableRow>
@@ -33,6 +34,7 @@
             android:id="@+id/StopScanButton"
             android:layout_marginTop="4pt"
             android:layout_marginBottom="4pt"
+            android:textColor="@color/LightBlue"
             android:layout_weight="1"
             android:text="@string/label_scan_stop" />
     </TableRow>

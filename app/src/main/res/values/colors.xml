@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#78909c</color>
-    <color name="primaryLightColor">#546e7a</color>
+    <color name="primaryColor">@color/RoyalBlue</color>
+    <color name="primaryLightColor">@color/SteelBlue</color>
     <color name="primaryDarkColor">@color/LightSlateGray</color>
     <color name="secondaryColor">#ff7043</color>
     <color name="secondaryLightColor">#ffa270</color>

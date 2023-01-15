@@ -3,7 +3,7 @@
     android:id="@+id/simpleTableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E1E1E1"
+    android:background="#eceff1"
     android:shrinkColumns="0,1">
 
     <TableRow
@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="4pt"
             android:layout_marginBottom="0dp"
-            android:background="#E1E1E1"
+            android:background="#eceff1"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="4pt"

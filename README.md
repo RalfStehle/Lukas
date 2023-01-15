@@ -89,6 +89,28 @@ enum struct ButtonState<br>
 05 00 45 01 00	Release<br>
 <br>
 <br>
+
+<H3>Train Hub - Aktivieren und Auswerten der Hub Property Reference</H3>
+<br>
+Senden:<br>
+{0x3, 0x00, 0x04}  aktiviert Message-Type für Hub Attached I/O.<br>
+<br>
+Danach meldet der Hub in den Notifications was angeschlossen ist und auch Änderungen:<br>
+<br>
+Header (2Byte), MessageType I/O (3.Byte), Port (4.Byte), Attached (5. Byte), Type (6. Byte)<br>
+Type: 02 = Train Motor, 08 = LED<br>
+<br>
+Beispiele:<br>
+0F 00 04 00 01 02 00 00 00 00 00 00 00 00 00  eingesteckt, A, Motor<br>
+0F 00 04 01 01 02 00 00 00 00 00 00 00 00 00  eingesteckt, B, Motor<br>
+<br>
+0F 00 04 00 01 08 00 00 00 00 00 00 00 00 00  eingesteckt, A, LED<br>
+0F 00 04 01 01 08 00 00 00 00 00 00 00 00 00  eingesteckt, B, LED<br>
+<br>
+05 00 04 00 00                                ausgesteckt, A<br>
+05 00 04 01 00                                ausgesteckt, B<br>
+<br>
+<br>
 <H3>Appendix:<br></H3>
 VOLTAGE:<br>
 so wird wahrscheinlich die Spannung berechnet (siehe Legoino):<br>

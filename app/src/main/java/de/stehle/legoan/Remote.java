@@ -121,7 +121,7 @@ public class Remote extends Device {
 
     private void leftMiddle() {
         if (connectedTrain != null) {
-            connectedTrain.nextLedColor();
+            connectedTrain.ledRandom();
         }
     }
 
@@ -130,19 +130,19 @@ public class Remote extends Device {
 
     private void rightUp() {
         if (connectedTrain != null) {
-            connectedTrain.incrementSpeed();
+            connectedTrain.motorFaster();
         }
     }
 
     private void rightMiddle() {
         if (connectedTrain != null) {
-            connectedTrain.stop();
+            connectedTrain.motorStop();
         }
     }
 
     private void rightDown() {
         if (connectedTrain != null) {
-            connectedTrain.decrementSpeed();
+            connectedTrain.motorSlower();
         }
     }
 

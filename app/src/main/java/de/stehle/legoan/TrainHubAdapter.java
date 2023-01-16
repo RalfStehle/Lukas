@@ -16,10 +16,12 @@ class TrainHubAdapter extends Adapter {
 
     @Override
     protected void connectListeners(View view) {
-        view.findViewById(R.id.StopButton).setOnClickListener(view1 -> device.stop());
-        view.findViewById(R.id.SlowerButton).setOnClickListener(view1 -> device.decrementSpeed());
-        view.findViewById(R.id.FasterButton).setOnClickListener(view1 -> device.incrementSpeed());
-        view.findViewById(R.id.LightButton).setOnClickListener(view1 -> device.nextLedColor());
+        view.findViewById(R.id.MotorStopButton).setOnClickListener(view1 -> device.motorStop());
+        view.findViewById(R.id.MotorSlowerButton).setOnClickListener(view1 -> device.motorSlower());
+        view.findViewById(R.id.MotorFasterButton).setOnClickListener(view1 -> device.motorFaster());
+        view.findViewById(R.id.LedRandomButton).setOnClickListener(view1 -> device.ledRandom());
+        view.findViewById(R.id.LightBrighterButton).setOnClickListener(view1 -> device.lightBrighter());
+        view.findViewById(R.id.LightDarkerButton).setOnClickListener(view1 -> device.lightDarker());
     }
 
     @Override

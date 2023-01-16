@@ -32,6 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:layout_marginEnd="1pt"
+                    app:tint="#878787"
                     app:srcCompat="@drawable/ic_baseline_switch_right_24" />
 
                 <TextView

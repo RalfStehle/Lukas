@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
                     android:layout_marginEnd="1pt"
-                    android:tint="#878787"
+                    app:tint="#878787"
                     app:srcCompat="@drawable/ic_baseline_train_24" />
 
                 <TextView
@@ -87,48 +87,30 @@
             android:weightSum="12">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/SlowerButton"
+                android:id="@+id/MotorSlowerButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:backgroundTint="#03A9F4"
                 android:contentDescription="@string/button_slower"
-                app:iconGravity="textStart"
                 app:icon="@drawable/ic_baseline_arrow_back_24"
+                app:iconGravity="textStart"
                 app:iconPadding="0dp" />
 
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/MotorStopButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8pt"
-                android:layout_marginRight="8pt"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/StopButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#F44336"
-                    android:contentDescription="@string/button_stop"
-                    app:iconGravity="textStart"
-                    app:icon="@drawable/ic_outline_stop_24"
-                    app:iconPadding="0dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/LightButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2pt"
-                    android:backgroundTint="#FFC107"
-                    android:contentDescription="@string/button_light"
-                    app:icon="@drawable/ic_outline_lightbulb_24"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp" />
-            </LinearLayout>
+                android:layout_marginStart="4pt"
+                android:layout_marginEnd="4pt"
+                android:backgroundTint="#0288D1"
+                android:contentDescription="@string/button_stop"
+                app:icon="@drawable/ic_outline_stop_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/FasterButton"
+                android:id="@+id/MotorFasterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
@@ -136,6 +118,48 @@
                 android:contentDescription="@string/button_faster"
                 app:iconGravity="textStart"
                 app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconPadding="0dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4pt"
+            android:weightSum="12">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/LightDarkerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:backgroundTint="#FFA726"
+                android:contentDescription="@string/button_brighter"
+                app:icon="@drawable/ic_baseline_remove_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/LedRandomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4pt"
+                android:layout_marginEnd="4pt"
+                android:backgroundTint="#EF6C00"
+                android:contentDescription="@string/button_light"
+                app:icon="@drawable/ic_outline_lightbulb_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/LightBrighterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:backgroundTint="#FFA726"
+                android:contentDescription="@string/button_darker"
+                app:icon="@drawable/ic_baseline_add_24"
+                app:iconGravity="textStart"
                 app:iconPadding="0dp" />
         </TableRow>
     </TableLayout>

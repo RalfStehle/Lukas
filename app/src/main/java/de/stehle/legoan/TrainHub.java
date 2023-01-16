@@ -26,6 +26,14 @@ public class TrainHub extends Device {
     private LogoWriterQueue writerQueue;
     private int currentSpeed = stopSpeed;
     private int currentColor;
+    private PortType portA = PortType.None;
+    private PortType portB = PortType.None;
+
+    enum PortType {
+        None,
+        Motor,
+        Light
+    }
 
     @Override
     public String getAddress() {
@@ -72,10 +80,38 @@ public class TrainHub extends Device {
 
                 if (value[0] == 0x01) {
                     parseDeviceInfo(value);
+                } else if (value[0] == 0x04) {
+                    parsePortInfo(value);
+                }
+            }
+
+            private void parsePortInfo(byte[] value) {
+                // 0: 0x01
+                // 1: Port Index
+                // 2: Port Mode (PlugIn: 0, PlugOut: 1)
+                // 3: Device Type: (Motor: 2, Light: 8)
+                PortType port = PortType.None;
+
+                if (value[2] == 0 || value.length <= 3) {
+                    port = PortType.None;
+                } else if (value[3] == 0x02) {
+                    port = PortType.Motor;
+                } else if (value[3] == 0x08) {
+                    port = PortType.Light;
+                }
+
+                if (value[1] == 0) {
+                    portA = port;
+                } else if (value[1] == 0x01) {
+                    portB = port;
                 }
             }
 
             private void parseDeviceInfo(byte[] value) {
+                // 0: 0x01
+                // 1: Property Type
+                // 2: -
+                // 3: Value
                 if (value[1] == 0x06) {
                     setBattery(value[3]);
                 }
@@ -91,7 +127,7 @@ public class TrainHub extends Device {
         bluetoothGatt.disconnect();
     }
 
-    public void nextLedColor() {
+    public void ledRandom() {
         currentColor++;
 
         if (currentColor == 11) {
@@ -101,13 +137,21 @@ public class TrainHub extends Device {
         send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor});
     }
 
-    public void stop() {
+    public void lightBrighter() {
+
+    }
+
+    public void lightDarker() {
+
+    }
+
+    public void motorStop() {
         currentSpeed = stopSpeed;
 
         setSpeed(currentSpeed);
     }
 
-    public void decrementSpeed() {
+    public void motorSlower() {
         if (currentSpeed > 0) {
             currentSpeed--;
         }
@@ -115,7 +159,7 @@ public class TrainHub extends Device {
         setSpeed(currentSpeed);
     }
 
-    public void incrementSpeed() {
+    public void motorFaster() {
         if (currentSpeed < speeds.length - 1) {
             currentSpeed++;
         }
@@ -124,7 +168,13 @@ public class TrainHub extends Device {
     }
 
     private void setSpeed(int speed) {
-        send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speeds[speed]});
+        if (portA == PortType.Motor) {
+            send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speeds[speed]});
+        }
+
+        if (portB == PortType.Motor) {
+            send(new byte[]{(byte) 0x81, 0x01, 0x11, 0x51, 0x00, speeds[speed]});
+        }
     }
 
     public static boolean canConnect(ScanResult scanResult) {
@@ -179,8 +229,11 @@ public class TrainHub extends Device {
 
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Activate battery reports
+            // Activate battery reports.
             send(new byte[] { 0x01, 0x06, 0x02 });
+
+            // Activate port reports.
+            send(new byte[] { 0x03, 0x00, 0x04 });
         }, 2000);
     }
 }

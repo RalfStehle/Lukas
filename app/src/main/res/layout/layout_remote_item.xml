@@ -91,19 +91,42 @@
             android:layout_marginStart="1pt"
             android:layout_marginEnd="1pt">
 
-            <RadioGroup
-                android:id="@+id/RadioGroup"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <RadioButton
-                    android:id="@+id/NoTrain"
+                <RadioGroup
+                    android:id="@+id/TrainARadio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_none" />
-            </RadioGroup>
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/TrainANoTrain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_none" />
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/TrainBRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/TrainBNoTrain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_none" />
+                </RadioGroup>
+            </LinearLayout>
+
         </TableRow>
     </TableLayout>
 

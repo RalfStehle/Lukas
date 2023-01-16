@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
@@ -22,7 +21,8 @@ public class Remote extends Device {
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
     private LogoWriterQueue writerQueue;
-    private TrainHub connectedTrain;
+    private TrainHub trainA;
+    private TrainHub trainB;
 
     @Override
     public String getAddress() {
@@ -34,12 +34,20 @@ public class Remote extends Device {
         return bluetoothDevice.getName();
     }
 
-    public TrainHub getConnectedTrain() {
-        return connectedTrain;
+    public TrainHub getTrainA() {
+        return trainA;
     }
 
-    public void setConnectedTrain(TrainHub connectedTrain) {
-        this.connectedTrain = connectedTrain;
+    public TrainHub getTrainB() {
+        return trainA;
+    }
+
+    public void setTrainA(TrainHub trainA) {
+        this.trainA = trainA;
+    }
+
+    public void setTrainB(TrainHub trainB) {
+        this.trainB = trainB;
     }
 
     public Remote(BluetoothDevice device) {
@@ -117,32 +125,56 @@ public class Remote extends Device {
     }
 
     private void leftUp() {
+        if (trainA != null && trainB != null) {
+            trainA.motorFaster();
+        } else if (trainA != null) {
+            trainA.lightBrighter();
+        } else if (trainB != null) {
+            trainB.lightBrighter();
+        }
     }
 
     private void leftMiddle() {
-        if (connectedTrain != null) {
-            connectedTrain.ledRandom();
+        if (trainA != null && trainB != null) {
+            trainA.motorStop();
+        } else if (trainA != null) {
+            trainA.ledRandom();
+        } else if (trainB != null) {
+            trainB.ledRandom();
         }
     }
 
     private void leftDown() {
+        if (trainA != null && trainB != null) {
+            trainA.motorSlower();
+        } else if (trainA != null) {
+            trainA.lightDarker();
+        } else if (trainB != null) {
+            trainB.lightDarker();
+        }
     }
 
     private void rightUp() {
-        if (connectedTrain != null) {
-            connectedTrain.motorFaster();
+        if (trainA != null) {
+            trainA.motorFaster();
+        } else if (trainB != null) {
+            trainB.motorFaster();
         }
     }
 
     private void rightMiddle() {
-        if (connectedTrain != null) {
-            connectedTrain.motorStop();
+        if (trainA != null) {
+            trainA.motorStop();
+        } else if (trainB != null) {
+            trainB.motorStop();
         }
     }
 
     private void rightDown() {
-        if (connectedTrain != null) {
-            connectedTrain.motorSlower();
+        if (trainA != null) {
+            trainA.motorSlower();
+        } else if (trainB != null) {
+            trainB.motorSlower();
         }
     }
 

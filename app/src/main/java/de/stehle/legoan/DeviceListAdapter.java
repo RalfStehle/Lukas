@@ -78,7 +78,6 @@ public class DeviceListAdapter extends BaseAdapter {
             } else if (device instanceof Remote) {
                 RemoteFragment remoteFragment = new RemoteFragment();
                 remoteFragment.setDevice(device);
-                remoteFragment.setDevices(this);
 
                 transaction.replace(view.getId(), remoteFragment);
             } else {
@@ -91,10 +90,10 @@ public class DeviceListAdapter extends BaseAdapter {
             transaction.commit();
         }
 
-        DeviceFragment adapter = (DeviceFragment) getFragment(view);
+        fragment = getFragment(view);
 
-        if (adapter != null) {
-            adapter.setDevice(device);
+        if (fragment instanceof DeviceFragment) {
+            ((DeviceFragment) fragment).setDevice(device);
         }
     }
 

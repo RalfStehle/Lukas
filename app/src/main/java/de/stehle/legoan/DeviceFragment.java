@@ -44,7 +44,6 @@ abstract class DeviceFragment extends Fragment implements ChangeListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         setDevice(null);
     }
 

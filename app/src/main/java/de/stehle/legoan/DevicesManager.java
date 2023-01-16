@@ -24,7 +24,7 @@ public final class DevicesManager extends ViewModel {
     private static final DevicesManager instance = new DevicesManager();
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Device>> remotes = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<Boolean> isScanning = new MutableLiveData<Boolean>();
+    private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
     private BluetoothLeScanner bluetoothScanner;
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -81,8 +81,8 @@ public final class DevicesManager extends ViewModel {
 
         AsyncTask.execute(() -> bluetoothScanner.startScan(scanCallback));
 
-        // Stop the scanning automatically after 60 sec.
-        new Handler().postDelayed(this::stopScanning, 60000);
+        // Stop the scanning automatically after 20 sec.
+        new Handler().postDelayed(this::stopScanning, 20000);
     }
 
     public void stopScanning() {
@@ -90,7 +90,7 @@ public final class DevicesManager extends ViewModel {
             return;
         }
 
-        isScanning.postValue(true);
+        isScanning.postValue(false);
 
         AsyncTask.execute(() -> bluetoothScanner.stopScan(scanCallback));
     }
@@ -114,6 +114,23 @@ public final class DevicesManager extends ViewModel {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName()).thenComparing(Device::getName));
+        }
+
+        devices.postValue(deviceList);
+    }
+
+    public void removeDevice(Device device) {
+        device.disconnect();
+
+        removeDevice(devices, device);
+        removeDevice(remotes, device);
+    }
+
+    private void removeDevice(MutableLiveData<List<Device>> devices, Device device)  {
+        List<Device> deviceList = Objects.requireNonNull(devices.getValue());
+
+        if (!deviceList.remove(device)) {
+            return;
         }
 
         devices.postValue(deviceList);

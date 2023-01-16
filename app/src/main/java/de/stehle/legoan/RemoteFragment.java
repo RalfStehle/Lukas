@@ -1,6 +1,5 @@
 package de.stehle.legoan;
 
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,34 +16,7 @@ import java.util.Locale;
 import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
 
 public class RemoteFragment extends DeviceFragment {
-    private DeviceListAdapter devices;
-    private final DataSetObserver observer = new DataSetObserver() {
-        @Override
-        public void onChanged() {
-            updateTrains();
-        }
-    };
-
     private LayoutRemoteItemBinding binding;
-
-    public void setDevices(DeviceListAdapter newDevices) {
-        if (devices == newDevices) {
-            return;
-        }
-
-        if (devices != null) {
-            devices.unregisterDataSetObserver(observer);
-        }
-
-        devices = newDevices;
-
-        if (devices != null) {
-            devices.registerDataSetObserver(observer);
-        }
-
-        updateTrains();
-    }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,7 +25,7 @@ public class RemoteFragment extends DeviceFragment {
         binding.RadioGroup.check(binding.RadioGroup.getChildAt(0).getId());
         binding.RadioGroup
                 .setOnCheckedChangeListener((target, id) -> {
-                    RadioButton radioButton = (RadioButton) target.getChildAt(id);
+                    RadioButton radioButton = (RadioButton) target.findViewById(id);
 
                     if (radioButton == null) {
                         getRemote().setConnectedTrain(null);
@@ -61,6 +33,8 @@ public class RemoteFragment extends DeviceFragment {
                         getRemote().setConnectedTrain((TrainHub) radioButton.getTag());
                     }
                 });
+
+        DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), this::updateTrains);
 
         return binding.getRoot();
     }
@@ -77,12 +51,14 @@ public class RemoteFragment extends DeviceFragment {
                 .setText(String.format(Locale.getDefault(), "%d %%", device.getBattery()));
     }
 
-    private void updateTrains() {
+    private void updateTrains(List<Device> devices) {
+        if (binding == null) {
+            return;
+        }
+
         List<TrainHub> trains = new ArrayList<>();
 
-        for (int i = 0; i < devices.getCount(); i++) {
-            Device device = (Device) devices.getItem(i);
-
+        for (Device device: devices) {
             if (device instanceof TrainHub) {
                 trains.add((TrainHub) device);
             }
@@ -101,16 +77,18 @@ public class RemoteFragment extends DeviceFragment {
         }
 
         while (binding.RadioGroup.getChildCount() < targetSize) {
-            binding.RadioGroup.addView(new RadioButton(binding.RadioGroup.getContext()));
+            RadioButton radioButton = new RadioButton(binding.RadioGroup.getContext());
+            radioButton.setId(View.generateViewId());
+
+            binding.RadioGroup.addView(radioButton);
         }
 
-        for (int i = 0; i < trains.size(); i++) {
-            TrainHub train = trains.get(i);
-
-            RadioButton radioButton = (RadioButton) binding.RadioGroup.getChildAt(i + 1);
-            radioButton.setId(i + 1);
+        int index = 1;
+        for (TrainHub train: trains) {
+            RadioButton radioButton = (RadioButton) binding.RadioGroup.getChildAt(index);
             radioButton.setTag(train);
             radioButton.setText(train.getName());
+            index++;
         }
 
         if (connectedTrain != null) {

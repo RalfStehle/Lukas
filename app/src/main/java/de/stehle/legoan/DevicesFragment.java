@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.stehle.legoan.databinding.FragmentRemotesBinding;
 
-public class RemotesFragment extends Fragment {
+public class DevicesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
     private FragmentRemotesBinding binding;
     private DeviceListAdapter devicesAdapter;
@@ -22,7 +22,7 @@ public class RemotesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRemotesBinding.inflate(inflater, container, false);
 
-        devicesManager.getRemotes().observe(getViewLifecycleOwner(), this::updateDevices);
+        devicesManager.getDevices().observe(getViewLifecycleOwner(), this::updateDevices);
 
         return binding.getRoot();
     }

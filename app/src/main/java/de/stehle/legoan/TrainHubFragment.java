@@ -32,7 +32,6 @@ public class TrainHubFragment extends DeviceFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 

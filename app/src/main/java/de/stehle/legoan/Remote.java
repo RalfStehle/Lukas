@@ -20,7 +20,7 @@ public class Remote extends Device {
     private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
-    private LogoWriterQueue writerQueue;
+    private LegoWriterQueue writerQueue;
     private TrainHub trainA;
     private TrainHub trainB;
 
@@ -87,13 +87,10 @@ public class Remote extends Device {
                 }
             }
 
-            private void parseDeviceInfo(byte[] value) {
-                if (value[1] == 0x06) {
-                    setBattery(value[3]);
-                }
-            }
-
             private void parseButtons(byte[] value) {
+                // 0: 0x45
+                // 1: Button Side (0: Left, 1: Right)
+                // 2: Button Mode (-1: Down, 1: Up, 127: Red
                 byte buttonSide = value[1];
                 byte buttonMode = value[2];
 
@@ -113,6 +110,16 @@ public class Remote extends Device {
                     } else if (buttonMode == 127) {
                         rightMiddle();
                     }
+                }
+            }
+
+            private void parseDeviceInfo(byte[] value) {
+                // 0: 0x01
+                // 1: Property Type
+                // 2: -
+                // 3: Value
+                if (value[1] == 0x06) {
+                    setBattery(value[3]);
                 }
             }
         };
@@ -227,7 +234,7 @@ public class Remote extends Device {
             return;
         }
 
-        writerQueue = new LogoWriterQueue(bluetoothGatt, characteristic);
+        writerQueue = new LegoWriterQueue(bluetoothGatt, characteristic);
         writerQueue.enableNotifications();
 
         // It seems more stable to wait a little bit, because the first writes usually fail.

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public abstract class Device {
     private final MutableLiveData<String> name = new MutableLiveData<>("");
-    private final MutableLiveData<Boolean> connected = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Boolean> connected = new MutableLiveData<>(false);
     private final MutableLiveData<Integer> battery = new MutableLiveData<>(0);
 
     public String getName() {

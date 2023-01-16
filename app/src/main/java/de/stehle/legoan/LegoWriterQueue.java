@@ -10,13 +10,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-public class LogoWriterQueue {
+public class LegoWriterQueue {
     private final BluetoothGatt bluetoothGatt;
     private final BluetoothGattCharacteristic bluetoothCharacteristic;
     private final Queue<byte[]> writerQueue = new LinkedList<>();
     private boolean writeUnconfirmed;
 
-    public LogoWriterQueue(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothCharacteristic) {
+    public LegoWriterQueue(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothCharacteristic) {
         this.bluetoothGatt = bluetoothGatt;
         this.bluetoothCharacteristic = bluetoothCharacteristic;
     }

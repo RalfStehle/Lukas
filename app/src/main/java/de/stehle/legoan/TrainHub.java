@@ -22,7 +22,7 @@ public class TrainHub extends Device {
     private final static int stopSpeed = speeds.length / 2;
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
-    private LogoWriterQueue writerQueue;
+    private LegoWriterQueue writerQueue;
     private int currentSpeed = stopSpeed;
     private int currentColor;
     private PortType portA = PortType.None;
@@ -88,12 +88,12 @@ public class TrainHub extends Device {
                 // 3: Device Type: (Motor: 2, Light: 8)
                 PortType port = PortType.None;
 
-                if (value[2] == 0 || value.length <= 3) {
-                    port = PortType.None;
-                } else if (value[3] == 0x02) {
-                    port = PortType.Motor;
-                } else if (value[3] == 0x08) {
-                    port = PortType.Light;
+                if (value[2] != 0 && value.length > 3) {
+                    if (value[3] == 0x02) {
+                        port = PortType.Motor;
+                    } else if (value[3] == 0x08) {
+                        port = PortType.Light;
+                    }
                 }
 
                 if (value[1] == 0) {
@@ -220,7 +220,7 @@ public class TrainHub extends Device {
             return;
         }
 
-        writerQueue = new LogoWriterQueue(bluetoothGatt, characteristic);
+        writerQueue = new LegoWriterQueue(bluetoothGatt, characteristic);
         writerQueue.enableNotifications();
 
         // It seems more stable to wait a little bit, because the first writes usually fail.

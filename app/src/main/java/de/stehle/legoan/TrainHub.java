@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
@@ -40,21 +39,18 @@ public class TrainHub extends Device {
         return bluetoothDevice.getAddress();
     }
 
-    @Override
-    public String getName() {
-        return bluetoothDevice.getName();
-    }
-
     public TrainHub(BluetoothDevice device) {
+        setName(device.getName());
+
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
                 switch (newState) {
                     case BluetoothGatt.STATE_DISCONNECTED:
-                        setIsConnected(false);
+                        setConnected(false);
                         break;
                     case BluetoothGatt.STATE_CONNECTED:
-                        setIsConnected(true);
+                        setConnected(true);
 
                         // It seems to be more stable to wait a little bit for the discovery.
                         // Discover services and characteristics for this device

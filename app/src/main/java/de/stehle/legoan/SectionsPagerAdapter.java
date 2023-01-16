@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 @SuppressWarnings("deprecation")
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
-    private Context context;
+    private final Context context;
 
     public SectionsPagerAdapter(Context context, @NonNull FragmentManager fm) {
         super(fm);

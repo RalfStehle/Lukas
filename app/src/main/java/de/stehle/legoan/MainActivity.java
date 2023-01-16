@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -16,7 +15,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import de.stehle.legoan.databinding.ActivityMainBinding;
 
@@ -25,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
     private Device deviceInContextMenu;
     private ActivityMainBinding binding;
+    private int wasScanning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +38,32 @@ public class MainActivity extends AppCompatActivity {
         binding.ScanStartButton.setOnClickListener(this::startScanning);
         binding.ScanStopButton.setOnClickListener(v -> devicesManager.stopScanning());
 
+        binding.ScanStartButtonTop.setOnClickListener(this::startScanning);
+        binding.ScanStopButtonTop.setOnClickListener(v -> devicesManager.stopScanning());
+
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
         devicesManager.setBluetoothManager(bluetoothManager);
         devicesManager.isScanning().observe(this, isScanning -> {
-            if (isScanning) {
+            wasScanning++;
+
+            if (wasScanning >= 3) {
+                binding.ScanStartButton.setVisibility(View.GONE);
+                binding.ScanStopButton.setVisibility(View.GONE);
+            } else if (isScanning) {
                 binding.ScanStartButton.setVisibility(View.GONE);
                 binding.ScanStopButton.setVisibility(View.VISIBLE);
             } else {
                 binding.ScanStartButton.setVisibility(View.VISIBLE);
                 binding.ScanStopButton.setVisibility(View.GONE);
+            }
+
+            if (isScanning) {
+                binding.ScanStartButtonTop.setVisibility(View.GONE);
+                binding.ScanStopButtonTop.setVisibility(View.VISIBLE);
+            } else {
+                binding.ScanStartButtonTop.setVisibility(View.VISIBLE);
+                binding.ScanStopButtonTop.setVisibility(View.GONE);
             }
         });
     }

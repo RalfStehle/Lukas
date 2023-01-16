@@ -29,11 +29,6 @@ public class Remote extends Device {
         return bluetoothDevice.getAddress();
     }
 
-    @Override
-    public String getName() {
-        return bluetoothDevice.getName();
-    }
-
     public TrainHub getTrainA() {
         return trainA;
     }
@@ -51,15 +46,17 @@ public class Remote extends Device {
     }
 
     public Remote(BluetoothDevice device) {
+        setName(device.getName());
+
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
                 switch (newState) {
                     case BluetoothGatt.STATE_DISCONNECTED:
-                        setIsConnected(false);
+                        setConnected(false);
                         break;
                     case BluetoothGatt.STATE_CONNECTED:
-                        setIsConnected(true);
+                        setConnected(true);
 
                         // It seems to be more stable to wait a little bit for the discovery.
                         // Discover services and characteristics for this device

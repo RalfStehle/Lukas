@@ -19,6 +19,15 @@ public class SwitchFragment extends DeviceFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutSwitchItemBinding.inflate(inflater, container, false);
 
+        getName().observe(getViewLifecycleOwner(),
+                value -> binding.NameContent.setText(value));
+
+        getConnected().observe(getViewLifecycleOwner(),
+                value -> binding.NameContent.setText(value ? "Yes" : "No"));
+
+        getBattery().observe(getViewLifecycleOwner(),
+                value -> binding.BatteryContent.setText(String.format(Locale.getDefault(), "%d %%", value)));
+
         return binding.getRoot();
     }
 
@@ -26,17 +35,5 @@ public class SwitchFragment extends DeviceFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    protected void onDeviceChanged(Device device) {
-        binding.NameContent
-                .setText(device.getName());
-
-        binding.ConnectedContent
-                .setText(device.isConnected() ? "Yes" : "No");
-
-        binding.BatteryContent
-                .setText(String.format(Locale.getDefault(), "%d %%", device.getBattery()));
     }
 }

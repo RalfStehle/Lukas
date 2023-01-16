@@ -13,6 +13,9 @@
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="4pt"
+        android:paddingTop="4pt"
+        android:paddingBottom="4pt"
+        android:clipToPadding="false"
         android:scrollbars="vertical" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

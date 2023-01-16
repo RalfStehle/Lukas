@@ -1,73 +1,53 @@
 package de.stehle.legoan;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
-abstract class DeviceFragment extends Fragment implements ChangeListener {
-    private static final String ARG_DEVICE = "device";
-    private Device device;
+abstract class DeviceFragment extends Fragment {
+    private final MutableLiveData<Device> device = new MutableLiveData<>();
+    private final LiveData<String> name =
+            Transformations.map(device, device -> device != null ? device.getName() : null);
+    private final LiveData<Boolean> connected =
+            Transformations.switchMap(device, device -> device != null ? device.getConnected() : null);
+    private final LiveData<Integer> battery =
+            Transformations.switchMap(device, device -> device != null ? device.getBattery() : null);
 
     protected Device getDevice() {
-        return device;
+        return device.getValue();
+    }
+
+    protected LiveData<String> getName() {
+        return name;
+    }
+
+    protected LiveData<Boolean> getConnected() {
+        return connected;
+    }
+
+    protected LiveData<Integer> getBattery() {
+        return battery;
     }
 
     public void setDevice(Device newDevice) {
-        if (newDevice == device) {
-            return;
-        }
-
-        if (device != null) {
-            device.unsubscribe(this);
-        }
-
-        device = newDevice;
-
-        if (device != null) {
-            device.subscribe(this);
-        }
-
-        notifyDeviceChanged();
+        device.setValue(newDevice);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        notifyDeviceChanged();
+        device.observe(getViewLifecycleOwner(), device -> {
+            requireActivity().registerForContextMenu(view);
+            requireView().setTag(device);
+        });
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        setDevice(null);
-    }
-
-    @Override
-    public void notifyChanged() {
-        Activity activity = getActivity();
-
-        if (activity != null) {
-            activity.runOnUiThread(this::notifyDeviceChanged);
-        }
-    }
-
-    private void notifyDeviceChanged() {
-        if (getView() == null || getDevice() == null) {
-            return;
-        }
-
-        requireActivity().registerForContextMenu(requireView());
-        requireView().setTag(device);
-
-        onDeviceChanged(getDevice());
-    }
-
-    protected abstract void onDeviceChanged(Device device);
 
     public static Device getDevice(View view) {
         return (Device) view.getTag();

@@ -1,50 +1,36 @@
 package de.stehle.legoan;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public abstract class Device {
-    private final List<ChangeListener> listeners = new ArrayList<>();
-    private int battery;
-    private boolean isConnected;
+    private final MutableLiveData<String> name = new MutableLiveData<>("");
+    private final MutableLiveData<Boolean> connected = new MutableLiveData<Boolean>(false);
+    private final MutableLiveData<Integer> battery = new MutableLiveData<>(0);
 
-    public boolean isConnected() {
-        return isConnected;
+    public String getName() {
+        return name.getValue();
     }
 
-    protected void setIsConnected(boolean value) {
-        if (isConnected != value) {
-            isConnected = value;
-            notifyChanged();
-        }
+    public LiveData<Boolean> getConnected() {
+        return connected;
     }
 
-    public int getBattery() {
+    public LiveData<Integer> getBattery() {
         return battery;
     }
 
+    protected void setName(String value) {
+        name.postValue(value);
+    }
+
     protected void setBattery(int value) {
-        if (battery != value) {
-            battery = value;
-            notifyChanged();
-        }
+        battery.postValue(value);
     }
 
-    public void subscribe(ChangeListener listener) {
-        listeners.add(listener);
+    protected void setConnected(boolean value) {
+        connected.postValue(value);
     }
-
-    public void unsubscribe(ChangeListener listener) {
-        listeners.remove(listener);
-    }
-
-    protected void notifyChanged() {
-        for (ChangeListener listener : listeners) {
-            listener.notifyChanged();
-        }
-    }
-
-    public abstract String getName();
 
     public abstract String getAddress();
 

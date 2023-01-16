@@ -2,11 +2,6 @@ package de.stehle.legoan;
 
 public class Switch extends Device {
     @Override
-    public String getName() {
-        return "test";
-    }
-
-    @Override
     public String getAddress() {
         return "test";
     }
@@ -16,6 +11,10 @@ public class Switch extends Device {
     }
 
     public void toggle() {
+    }
+
+    public Switch(String name) {
+        setName(name);
     }
 }
 

@@ -42,7 +42,7 @@ public class Remote extends Device {
         this.connectedTrain = connectedTrain;
     }
 
-    public Remote(BluetoothDevice device, Context context) {
+    public Remote(BluetoothDevice device) {
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
@@ -113,7 +113,7 @@ public class Remote extends Device {
         };
 
         bluetoothDevice = device;
-        bluetoothGatt = bluetoothDevice.connectGatt(context, true, callback);
+        bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
     }
 
     private void leftUp() {

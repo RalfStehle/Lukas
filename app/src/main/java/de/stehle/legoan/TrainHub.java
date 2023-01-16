@@ -45,7 +45,7 @@ public class TrainHub extends Device {
         return bluetoothDevice.getName();
     }
 
-    public TrainHub(BluetoothDevice device, Context context) {
+    public TrainHub(BluetoothDevice device) {
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             @Override
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
@@ -119,7 +119,7 @@ public class TrainHub extends Device {
         };
 
         bluetoothDevice = device;
-        bluetoothGatt = bluetoothDevice.connectGatt(context, true, callback);
+        bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
     }
 
     @Override

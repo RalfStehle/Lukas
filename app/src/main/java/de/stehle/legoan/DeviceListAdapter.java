@@ -1,40 +1,23 @@
 package de.stehle.legoan;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
 
 public class DeviceListAdapter extends BaseAdapter {
     private final List<Device> devices;
-    private final Activity activity;
-    private LayoutInflater layoutInflater;
+    private final FragmentManager fragmentManager;
 
-    public DeviceListAdapter(List<Device> devices, Activity activity) {
+    public DeviceListAdapter(List<Device> devices, FragmentManager fragmentManager) {
         this.devices = devices;
-        this.activity = activity;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        Object item = getItem(position);
-
-        if (item instanceof TrainHub) {
-            return 0;
-        } else if (item instanceof Remote) {
-            return 1;
-        } else {
-            return 2;
-        }
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 3;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -54,41 +37,82 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        Device device = devices.get(i);
-
-        // Disconnect the adapter if is associated to another device.
-        boolean isDisconnected = Adapter.disconnect(view, device);
-
-        int viewType = getItemViewType(i);
-
         if (view == null) {
-            if (layoutInflater == null) {
-                layoutInflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            }
+            view = new FragmentContainerView(viewGroup.getContext());
+            view.setId(View.generateViewId());
+            view.setTag(i);
 
-            if (viewType == 0) {
-                view = layoutInflater.inflate(R.layout.layout_train_item, viewGroup, false);
-            } else if (viewType == 1) {
-                view = layoutInflater.inflate(R.layout.layout_remote_item, viewGroup, false);
-            } else {
-                view = layoutInflater.inflate(R.layout.layout_switch_item, viewGroup, false);
-            }
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View view) {
+                    handleAttachedItem(view);
+                }
 
-            activity.registerForContextMenu(view);
+                @Override
+                public void onViewDetachedFromWindow(View view) {
+
+                }
+            });
         }
 
-        // Only create the adapter when necessary.
-        if (isDisconnected) {
-            if (viewType == 0) {
-                new TrainHubAdapter((TrainHub)device, view, activity).connect();
-            } else if (viewType == 1) {
-                new RemoteAdapter((Remote)device, view, activity, this).connect();
-            } else {
-                new SwitchAdapter((Switch)device, view, activity).connect();
-            }
+        if (view.isAttachedToWindow()) {
+            handleAttachedItem(view);
         }
 
         return view;
     }
 
+    private void handleAttachedItem(View view) {
+        Device device = devices.get((int) view.getTag());
+
+        Fragment fragment = getFragment(view);
+
+        if (fragment == null || !IsCorrectFragment(device, fragment)) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            if (device instanceof TrainHub) {
+                TrainHubFragment trainHubFragment = new TrainHubFragment();
+                trainHubFragment.setDevice(device);
+
+                transaction.replace(view.getId(), trainHubFragment);
+            } else if (device instanceof Remote) {
+                RemoteFragment remoteFragment = new RemoteFragment();
+                remoteFragment.setDevice(device);
+                remoteFragment.setDevices(this);
+
+                transaction.replace(view.getId(), remoteFragment);
+            } else {
+                SwitchFragment switchFragment = new SwitchFragment();
+                switchFragment.setDevice(device);
+
+                transaction.replace(view.getId(), switchFragment);
+            }
+
+            transaction.commit();
+        }
+
+        DeviceFragment adapter = (DeviceFragment) getFragment(view);
+
+        if (adapter != null) {
+            adapter.setDevice(device);
+        }
+    }
+
+    private Fragment getFragment(View view) {
+        try {
+            return FragmentManager.findFragment(view);
+        } catch (IllegalStateException ex) {
+            return null;
+        }
+    }
+
+    private boolean IsCorrectFragment(Device device, Fragment fragment) {
+        if (device instanceof TrainHub) {
+            return fragment.getClass() == TrainHubFragment.class;
+        } else if (device instanceof Remote) {
+            return fragment.getClass() == RemoteFragment.class;
+        } else {
+            return fragment.getClass() == SwitchFragment.class;
+        }
+    }
 }

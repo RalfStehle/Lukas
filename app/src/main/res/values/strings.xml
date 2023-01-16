@@ -20,4 +20,9 @@
     <string name="permission_warning_title">Functionality limited</string>
     <string name="permission_warning_text">Please give the bluetooth permission to connect to the hub.</string>
     <string name="label_none">No Train</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

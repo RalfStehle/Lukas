@@ -17,8 +17,6 @@ import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,36 +26,37 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import de.stehle.legoan.databinding.ActivityMainBinding;
+
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000;
     private final List<Device> devices = new ArrayList<>();
     private DeviceListAdapter devicesAdapter;
     private BluetoothLeScanner bluetoothScanner;
-    private Button scanningStartButton;
-    private Button scanningStopButton;
     private boolean isScanning = false;
     private Device deviceInContextMenu;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        scanningStartButton = findViewById(R.id.StartScanButton);
-        scanningStartButton.setOnClickListener(v -> startScanning());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        scanningStopButton = findViewById(R.id.StopScanButton);
-        scanningStopButton.setVisibility(View.GONE);
-        scanningStopButton.setOnClickListener(v -> stopScanning());
+        binding.StartScanButton.setOnClickListener(v -> startScanning());
+        binding.StopScanButton.setVisibility(View.GONE);
+        binding.StopScanButton.setOnClickListener(v -> stopScanning());
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        ListView devicesListView = findViewById(R.id.DevicesListView);
-        devicesAdapter = new DeviceListAdapter(devices, this);
-        devicesListView.setAdapter(devicesAdapter);
+        devicesAdapter = new DeviceListAdapter(devices, getSupportFragmentManager());
+
+        binding.DevicesListView.setAdapter(devicesAdapter);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, R.string.menu_disconnect);
 
         // Set the current hub from the view.
-        deviceInContextMenu = Adapter.getDevice(v);
+        deviceInContextMenu = DeviceFragment.getDevice(v);
     }
 
     @Override
@@ -148,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         isScanning = true;
-        scanningStartButton.setVisibility(View.GONE);
-        scanningStopButton.setVisibility(View.VISIBLE);
+        binding.StartScanButton.setVisibility(View.GONE);
+        binding.StopScanButton.setVisibility(View.VISIBLE);
 
         AsyncTask.execute(() -> bluetoothScanner.startScan(scanCallback));
 
@@ -163,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         isScanning = false;
-        scanningStartButton.setVisibility(View.VISIBLE);
-        scanningStopButton.setVisibility(View.GONE);
+        binding.StartScanButton.setVisibility(View.VISIBLE);
+        binding.StopScanButton.setVisibility(View.GONE);
 
         AsyncTask.execute(() -> bluetoothScanner.stopScan(scanCallback));
     }

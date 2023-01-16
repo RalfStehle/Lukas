@@ -130,7 +130,7 @@ public class TrainHub extends Device {
             currentColor = 0;
         }
 
-        send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte)currentColor});
+        send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte) currentColor});
     }
 
     public void lightBrighter() {
@@ -180,7 +180,7 @@ public class TrainHub extends Device {
             return false;
         }
 
-        for (ParcelUuid uuid: record.getServiceUuids()) {
+        for (ParcelUuid uuid : record.getServiceUuids()) {
             if (uuid.getUuid().equals(ServiceUUID)) {
                 String name = record.getDeviceName().trim();
 
@@ -226,10 +226,10 @@ public class TrainHub extends Device {
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Activate battery reports.
-            send(new byte[] { 0x01, 0x06, 0x02 });
+            send(new byte[]{0x01, 0x06, 0x02});
 
             // Activate port reports.
-            send(new byte[] { 0x03, 0x00, 0x04 });
+            send(new byte[]{0x03, 0x00, 0x04});
         }, 2000);
     }
 }

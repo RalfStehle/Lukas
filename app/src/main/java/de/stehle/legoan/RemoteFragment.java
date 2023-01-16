@@ -69,7 +69,7 @@ public class RemoteFragment extends DeviceFragment {
 
         List<TrainHub> trains = new ArrayList<>();
 
-        for (Device device: devices) {
+        for (Device device : devices) {
             if (device instanceof TrainHub) {
                 trains.add((TrainHub) device);
             }
@@ -107,7 +107,7 @@ public class RemoteFragment extends DeviceFragment {
         }
 
         int index = 1;
-        for (TrainHub train: trains) {
+        for (TrainHub train : trains) {
             RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
             radioButton.setTag(train);
             radioButton.setText(train.getName());

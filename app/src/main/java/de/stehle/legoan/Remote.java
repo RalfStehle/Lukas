@@ -194,7 +194,7 @@ public class Remote extends Device {
             return false;
         }
 
-        for (ParcelUuid uuid: record.getServiceUuids()) {
+        for (ParcelUuid uuid : record.getServiceUuids()) {
             if (uuid.getUuid().equals(ServiceUUID)) {
                 String name = record.getDeviceName().trim();
 
@@ -240,11 +240,11 @@ public class Remote extends Device {
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             // Activate button reports
-            send(new byte[] { 0x41, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1 });
-            send(new byte[] { 0x41, 0x1, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1 });
+            send(new byte[]{0x41, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1});
+            send(new byte[]{0x41, 0x1, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1});
 
             // Activate battery reports
-            send(new byte[] { 0x01, 0x06, 0x02 });
+            send(new byte[]{0x01, 0x06, 0x02});
         }, 2000);
     }
 }

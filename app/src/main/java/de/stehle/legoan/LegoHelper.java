@@ -5,7 +5,7 @@ public class LegoHelper {
         byte[] envelope = new byte[data.length + 2];
 
         // The first value must be the length.
-        envelope[0] = (byte)(data.length + 2);
+        envelope[0] = (byte) (data.length + 2);
         envelope[1] = 0;
 
         // Copy the rest of the value.

@@ -107,7 +107,7 @@ public final class DevicesManager extends ViewModel {
         return false;
     }
 
-    private void addDevice(MutableLiveData<List<Device>> devices, Device device)  {
+    private void addDevice(MutableLiveData<List<Device>> devices, Device device) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
         deviceList.add(device);
@@ -126,7 +126,7 @@ public final class DevicesManager extends ViewModel {
         removeDevice(remotes, device);
     }
 
-    private void removeDevice(MutableLiveData<List<Device>> devices, Device device)  {
+    private void removeDevice(MutableLiveData<List<Device>> devices, Device device) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
         if (!deviceList.remove(device)) {

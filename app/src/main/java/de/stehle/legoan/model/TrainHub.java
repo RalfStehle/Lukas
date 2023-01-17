@@ -50,10 +50,10 @@ public class TrainHub extends Device {
             public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
                 switch (newState) {
                     case BluetoothGatt.STATE_DISCONNECTED:
-                        setConnected(false);
+                        setIsConnected(false);
                         break;
                     case BluetoothGatt.STATE_CONNECTED:
-                        setConnected(true);
+                        setIsConnected(true);
 
                         // It seems to be more stable to wait a little bit for the discovery.
                         // Discover services and characteristics for this device

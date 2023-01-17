@@ -1,5 +1,6 @@
 package de.stehle.legoan.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +9,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Locale;
-
 import de.stehle.legoan.databinding.LayoutTrainItemBinding;
 import de.stehle.legoan.model.TrainHub;
 
 public class TrainHubFragment extends DeviceFragment {
     private LayoutTrainItemBinding binding;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutTrainItemBinding.inflate(inflater, container, false);
@@ -30,11 +30,9 @@ public class TrainHubFragment extends DeviceFragment {
         getName().observe(getViewLifecycleOwner(),
                 value -> binding.NameContent.setText(value));
 
-        getConnected().observe(getViewLifecycleOwner(),
-                value -> binding.ConnectedContent.setText(value ? "Yes" : "No"));
-
         getBattery().observe(getViewLifecycleOwner(),
-                value -> binding.BatteryContent.setText(String.format(Locale.getDefault(), "%d %%", value)));
+                value -> binding.BatteryContent.setText(Integer.toString(value)));
+
 
         return binding.getRoot();
     }

@@ -55,15 +55,27 @@
                 android:layout_weight="1"
                 android:text="@string/label_battery" />
 
-            <TextView
-                android:id="@+id/BatteryContent"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="2"
-                android:text="@string/label_battery" />
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <TextView
+                    android:id="@+id/BatteryContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_battery" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" %" />
+
+            </LinearLayout>
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"

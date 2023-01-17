@@ -12,10 +12,12 @@ import android.os.Handler;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,10 +27,10 @@ public final class DevicesManager extends ViewModel {
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Device>> remotes = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
+    private final HashMap<Device, Observer<Boolean>> observers = new HashMap<>();
     private BluetoothLeScanner bluetoothScanner;
 
     private final ScanCallback scanCallback = new ScanCallback() {
-        @SuppressLint("MissingPermission")
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             if (result.getDevice().getName() == null) {
@@ -64,6 +66,17 @@ public final class DevicesManager extends ViewModel {
     }
 
     private DevicesManager() {
+        boolean testing = false;
+
+        if (testing) {
+            addDevice(devices, new Switch("1"));
+            addDevice(devices, new Switch("1"));
+            addDevice(devices, new Switch("1"));
+
+            addDevice(remotes, new Switch("1"));
+            addDevice(remotes, new Switch("1"));
+            addDevice(remotes, new Switch("1"));
+        }
     }
 
     public void setBluetoothManager(BluetoothManager bluetoothManager) {
@@ -71,7 +84,6 @@ public final class DevicesManager extends ViewModel {
         bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
-    @SuppressLint("MissingPermission")
     public void startScanning() {
         if (Boolean.TRUE.equals(isScanning.getValue())) {
             return;
@@ -110,7 +122,16 @@ public final class DevicesManager extends ViewModel {
     private void addDevice(MutableLiveData<List<Device>> devices, Device device) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
+        Observer<Boolean> connectedObserver = connected -> {
+            if (!connected) {
+                removeDevice(devices, device);
+            }
+        };
+
         deviceList.add(device);
+        device.getIsConnected().observeForever(connectedObserver);
+
+        observers.put(device, connectedObserver);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName()).thenComparing(Device::getName));
@@ -120,7 +141,10 @@ public final class DevicesManager extends ViewModel {
     }
 
     public void removeDevice(Device device) {
+        Observer<Boolean> connectedObserver = observers.remove(device);
+
         device.disconnect();
+        device.getIsConnected().removeObserver(Objects.requireNonNull(connectedObserver));
 
         removeDevice(devices, device);
         removeDevice(remotes, device);

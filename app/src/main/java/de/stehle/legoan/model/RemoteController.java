@@ -1,7 +1,10 @@
 package de.stehle.legoan.model;
 
+import java.util.Locale;
+import java.util.Objects;
+
 public abstract class RemoteController {
-    private TrainHub train;
+    private final TrainHub train;
 
     RemoteController(TrainHub train) {
         this.train = train;
@@ -16,6 +19,27 @@ public abstract class RemoteController {
     public abstract void down();
 
     public abstract void middle();
+
+    public abstract String getName();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RemoteController that = (RemoteController) o;
+
+        return Objects.equals(train, that.train);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(train);
+    }
 
     public static RemoteController noop() {
         return new NullController();
@@ -48,6 +72,11 @@ public abstract class RemoteController {
         public void middle() {
             getTrain().motorStop();
         }
+
+        @Override
+        public String getName() {
+            return String.format(Locale.getDefault(), "%s Motor", getTrain().getName());
+        }
     }
 
     private static class LightController extends RemoteController {
@@ -69,6 +98,11 @@ public abstract class RemoteController {
         public void middle() {
             getTrain().ledRandom();
         }
+
+        @Override
+        public String getName() {
+            return String.format(Locale.getDefault(), "%s Motor", getTrain().getName());
+        }
     }
 
     private static class NullController extends RemoteController {
@@ -86,6 +120,11 @@ public abstract class RemoteController {
 
         @Override
         public void middle() {
+        }
+
+        @Override
+        public String getName() {
+            return "None";
         }
     }
 }

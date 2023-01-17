@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 
 public abstract class Device {
     private final MutableLiveData<String> name = new MutableLiveData<>("");
-    private final MutableLiveData<Boolean> connected = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isConnected = new MutableLiveData<>(true);
     private final MutableLiveData<Integer> battery = new MutableLiveData<>(0);
 
     public String getName() {
         return name.getValue();
     }
 
-    public LiveData<Boolean> getConnected() {
-        return connected;
+    public LiveData<Boolean> getIsConnected() {
+        return isConnected;
     }
 
     public LiveData<Integer> getBattery() {
@@ -28,8 +28,8 @@ public abstract class Device {
         battery.postValue(value);
     }
 
-    protected void setConnected(boolean value) {
-        connected.postValue(value);
+    protected void setIsConnected(boolean value) {
+        isConnected.postValue(value);
     }
 
     public abstract String getAddress();

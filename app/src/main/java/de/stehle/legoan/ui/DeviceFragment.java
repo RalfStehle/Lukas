@@ -17,7 +17,7 @@ public abstract class DeviceFragment extends Fragment {
     private final LiveData<String> name =
             Transformations.map(device, device -> device != null ? device.getName() : null);
     private final LiveData<Boolean> connected =
-            Transformations.switchMap(device, device -> device != null ? device.getConnected() : null);
+            Transformations.switchMap(device, device -> device != null ? device.getIsConnected() : null);
     private final LiveData<Integer> battery =
             Transformations.switchMap(device, device -> device != null ? device.getBattery() : null);
 

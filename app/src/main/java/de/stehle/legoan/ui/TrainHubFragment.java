@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import java.util.Locale;
 
 import de.stehle.legoan.databinding.LayoutTrainItemBinding;
+import de.stehle.legoan.model.TrainHub;
 
 public class TrainHubFragment extends DeviceFragment {
     private LayoutTrainItemBinding binding;
@@ -30,7 +31,7 @@ public class TrainHubFragment extends DeviceFragment {
                 value -> binding.NameContent.setText(value));
 
         getConnected().observe(getViewLifecycleOwner(),
-                value -> binding.NameContent.setText(value ? "Yes" : "No"));
+                value -> binding.ConnectedContent.setText(value ? "Yes" : "No"));
 
         getBattery().observe(getViewLifecycleOwner(),
                 value -> binding.BatteryContent.setText(String.format(Locale.getDefault(), "%d %%", value)));

@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +10,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
+
+import de.stehle.legoan.model.Device;
+import de.stehle.legoan.model.Remote;
+import de.stehle.legoan.model.TrainHub;
 
 public class DeviceListAdapter extends BaseAdapter {
     private final List<Device> devices;

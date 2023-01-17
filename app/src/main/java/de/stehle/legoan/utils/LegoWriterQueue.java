@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.utils;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;

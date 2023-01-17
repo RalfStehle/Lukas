@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.model;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -14,6 +14,9 @@ import android.os.ParcelUuid;
 
 import java.util.UUID;
 
+import de.stehle.legoan.utils.LegoHelper;
+import de.stehle.legoan.utils.LegoWriterQueue;
+
 @SuppressLint("MissingPermission")
 public class Remote extends Device {
     private final static UUID ServiceUUID = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
@@ -21,28 +24,28 @@ public class Remote extends Device {
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
     private LegoWriterQueue writerQueue;
-    private TrainHub trainA;
-    private TrainHub trainB;
+    private RemoteController controllerA = RemoteController.noop();
+    private RemoteController controllerB = RemoteController.noop();
 
     @Override
     public String getAddress() {
         return bluetoothDevice.getAddress();
     }
 
-    public TrainHub getTrainA() {
-        return trainA;
+    public RemoteController getControllerA() {
+        return controllerA;
     }
 
-    public TrainHub getTrainB() {
-        return trainA;
+    public RemoteController getControllerB() {
+        return controllerA;
     }
 
-    public void setTrainA(TrainHub trainA) {
-        this.trainA = trainA;
+    public void setControllerA(RemoteController controllerA) {
+        this.controllerA = controllerA != null ? controllerA : RemoteController.noop();
     }
 
-    public void setTrainB(TrainHub trainB) {
-        this.trainB = trainB;
+    public void setControllerB(RemoteController controllerB) {
+        this.controllerB = controllerB != null ? controllerB : RemoteController.noop();
     }
 
     public Remote(BluetoothDevice device) {
@@ -89,26 +92,26 @@ public class Remote extends Device {
 
             private void parseButtons(byte[] value) {
                 // 0: 0x45
-                // 1: Button Side (0: Left, 1: Right)
+                // 1: Button Side (0: A, 1: B)
                 // 2: Button Mode (-1: Down, 1: Up, 127: Red
                 byte buttonSide = value[1];
                 byte buttonMode = value[2];
 
                 if (buttonSide == 0) {
                     if (buttonMode == 1) {
-                        leftUp();
+                        controllerA.up();
                     } else if (buttonMode == -1) {
-                        leftDown();
+                        controllerA.down();
                     } else if (buttonMode == 127) {
-                        leftMiddle();
+                        controllerA.middle();
                     }
                 } else {
                     if (buttonMode == 1) {
-                        rightUp();
+                        controllerB.up();
                     } else if (buttonMode == -1) {
-                        rightDown();
+                        controllerB.down();
                     } else if (buttonMode == 127) {
-                        rightMiddle();
+                        controllerB.middle();
                     }
                 }
             }
@@ -126,60 +129,6 @@ public class Remote extends Device {
 
         bluetoothDevice = device;
         bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
-    }
-
-    private void leftUp() {
-        if (trainA != null && trainB != null) {
-            trainA.motorFaster();
-        } else if (trainA != null) {
-            trainA.lightBrighter();
-        } else if (trainB != null) {
-            trainB.lightBrighter();
-        }
-    }
-
-    private void leftMiddle() {
-        if (trainA != null && trainB != null) {
-            trainA.motorStop();
-        } else if (trainA != null) {
-            trainA.ledRandom();
-        } else if (trainB != null) {
-            trainB.ledRandom();
-        }
-    }
-
-    private void leftDown() {
-        if (trainA != null && trainB != null) {
-            trainA.motorSlower();
-        } else if (trainA != null) {
-            trainA.lightDarker();
-        } else if (trainB != null) {
-            trainB.lightDarker();
-        }
-    }
-
-    private void rightUp() {
-        if (trainA != null) {
-            trainA.motorFaster();
-        } else if (trainB != null) {
-            trainB.motorFaster();
-        }
-    }
-
-    private void rightMiddle() {
-        if (trainA != null) {
-            trainA.motorStop();
-        } else if (trainB != null) {
-            trainB.motorStop();
-        }
-    }
-
-    private void rightDown() {
-        if (trainA != null) {
-            trainA.motorSlower();
-        } else if (trainB != null) {
-            trainB.motorSlower();
-        }
     }
 
     @Override

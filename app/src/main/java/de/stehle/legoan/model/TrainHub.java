@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.model;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -13,6 +13,9 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 
 import java.util.UUID;
+
+import de.stehle.legoan.utils.LegoHelper;
+import de.stehle.legoan.utils.LegoWriterQueue;
 
 @SuppressLint("MissingPermission")
 public class TrainHub extends Device {

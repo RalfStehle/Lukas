@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.utils;
 
 public class LegoHelper {
     public static byte[] dataToEnvelope(byte[] data) {

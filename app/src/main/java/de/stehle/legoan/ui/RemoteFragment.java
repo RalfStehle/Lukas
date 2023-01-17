@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.Locale;
 
 import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
+import de.stehle.legoan.model.Device;
+import de.stehle.legoan.model.DevicesManager;
+import de.stehle.legoan.model.Remote;
+import de.stehle.legoan.model.RemoteController;
+import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
     private LayoutRemoteItemBinding binding;
@@ -27,10 +32,8 @@ public class RemoteFragment extends DeviceFragment {
                 .setOnCheckedChangeListener((target, id) -> {
                     RadioButton radioButton = (RadioButton) target.findViewById(id);
 
-                    if (radioButton == null) {
-                        getRemote().setTrainA(null);
-                    } else {
-                        getRemote().setTrainA((TrainHub) radioButton.getTag());
+                    if (radioButton != null) {
+                        getRemote().setControllerA((RemoteController) radioButton.getTag());
                     }
                 });
 
@@ -38,10 +41,8 @@ public class RemoteFragment extends DeviceFragment {
                 .setOnCheckedChangeListener((target, id) -> {
                     RadioButton radioButton = (RadioButton) target.findViewById(id);
 
-                    if (radioButton == null) {
-                        getRemote().setTrainB(null);
-                    } else {
-                        getRemote().setTrainB((TrainHub) radioButton.getTag());
+                    if (radioButton != null) {
+                        getRemote().setControllerB((RemoteController) radioButton.getTag());
                     }
                 });
 
@@ -54,7 +55,7 @@ public class RemoteFragment extends DeviceFragment {
                 value -> binding.NameContent.setText(value));
 
         getConnected().observe(getViewLifecycleOwner(),
-                value -> binding.NameContent.setText(value ? "Yes" : "No"));
+                value -> binding.ConnectedContent.setText(value ? "Yes" : "No"));
 
         getBattery().observe(getViewLifecycleOwner(),
                 value -> binding.BatteryContent.setText(String.format(Locale.getDefault(), "%d %%", value)));
@@ -77,23 +78,23 @@ public class RemoteFragment extends DeviceFragment {
 
         Remote remote = getRemote();
 
-        TrainHub trainA = remote.getTrainA();
-        TrainHub trainB = remote.getTrainB();
+        TrainHub trainA = remote.getControllerA().getTrain();
+        TrainHub trainB = remote.getControllerB().getTrain();
 
         if (!trains.contains(trainA)) {
-            remote.setTrainA(null);
+            remote.setControllerA(null);
         }
 
         if (!trains.contains(trainB)) {
-            remote.setTrainB(null);
+            remote.setControllerB(null);
         }
 
-        updateRadio(binding.TrainARadio, trains, remote.getTrainA());
-        updateRadio(binding.TrainBRadio, trains, remote.getTrainB());
+        updateRadio(binding.TrainARadio, trains, remote.getControllerA().getTrain());
+        updateRadio(binding.TrainBRadio, trains, remote.getControllerB().getTrain());
     }
 
     private void updateRadio(RadioGroup radioGroup, List<TrainHub> trains, TrainHub connectedTrain) {
-        int targetSize = trains.size() + 1;
+        int targetSize = trains.size() * 2 + 1;
 
         while (radioGroup.getChildCount() > targetSize) {
             radioGroup.removeViewAt(radioGroup.getChildCount() - 1);
@@ -108,22 +109,18 @@ public class RemoteFragment extends DeviceFragment {
 
         int index = 1;
         for (TrainHub train : trains) {
-            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-            radioButton.setTag(train);
-            radioButton.setText(train.getName());
+            String name = train.getName();
+
+            RadioButton motorRadio = (RadioButton) radioGroup.getChildAt(index);
+            motorRadio.setTag(RemoteController.motor(train));
+            motorRadio.setText(String.format(Locale.getDefault(), "%s Motor", name));
+            index++;
+
+            RadioButton lightRadio = (RadioButton) radioGroup.getChildAt(index);
+            lightRadio.setTag(RemoteController.light(train));
+            lightRadio.setText(String.format(Locale.getDefault(), "%s Light", name));
             index++;
         }
-
-        if (connectedTrain != null) {
-            View view = radioGroup.getChildAt(trains.indexOf(connectedTrain) + 1);
-
-            if (view != null) {
-                radioGroup.check(view.getId());
-                return;
-            }
-        }
-
-        checkNone(radioGroup);
     }
 
     private void checkNone(RadioGroup radioGroup) {

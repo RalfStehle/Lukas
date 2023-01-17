@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.content.Context;
 
@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import de.stehle.legoan.R;
 
 @SuppressWarnings("deprecation")
 public class SectionsPagerAdapter extends FragmentPagerAdapter {

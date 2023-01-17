@@ -13,16 +13,11 @@
         android:background="#FFFFFF">
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="clip_horizontal"
-            android:layout_marginStart="1pt"
-            android:layout_marginBottom="2pt"
-            android:weightSum="3">
+            android:layout_marginBottom="2pt">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -44,6 +39,7 @@
 
             <TextView
                 android:id="@+id/NameContent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/label_name"
@@ -52,44 +48,38 @@
         </TableRow>
 
         <TableRow
-            android:layout_marginStart="1pt"
-            android:weightSum="3">
+            android:layout_marginBottom="2pt">
 
             <TextView
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/label_battery" />
 
             <TextView
                 android:id="@+id/BatteryContent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="2"
                 android:text="@string/label_battery" />
 
         </TableRow>
 
-        <TableRow
-            android:layout_marginStart="1pt"
-            android:weightSum="3">
+        <TableRow>
 
             <TextView
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/label_connected" />
 
             <TextView
                 android:id="@+id/ConnectedContent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="2"
                 android:text="@string/label_connected" />
 
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="1pt"
-            android:layout_marginEnd="1pt">
+            android:layout_marginTop="8pt">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ToggleButton"

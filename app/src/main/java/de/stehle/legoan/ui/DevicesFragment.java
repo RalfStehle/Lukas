@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import java.util.List;
 
 import de.stehle.legoan.databinding.FragmentRemotesBinding;
+import de.stehle.legoan.model.Device;
+import de.stehle.legoan.model.DevicesManager;
 
-public class RemotesFragment extends Fragment {
+public class DevicesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
     private FragmentRemotesBinding binding;
     private DeviceListAdapter devicesAdapter;
@@ -22,7 +24,7 @@ public class RemotesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRemotesBinding.inflate(inflater, container, false);
 
-        devicesManager.getRemotes().observe(getViewLifecycleOwner(), this::updateDevices);
+        devicesManager.getDevices().observe(getViewLifecycleOwner(), this::updateDevices);
 
         return binding.getRoot();
     }

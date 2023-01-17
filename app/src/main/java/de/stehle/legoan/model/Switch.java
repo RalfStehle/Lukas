@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.model;
 
 public class Switch extends Device {
     @Override

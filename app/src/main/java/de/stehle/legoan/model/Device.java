@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.model;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

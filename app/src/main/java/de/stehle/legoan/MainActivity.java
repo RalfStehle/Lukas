@@ -17,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import de.stehle.legoan.databinding.ActivityMainBinding;
+import de.stehle.legoan.model.Device;
+import de.stehle.legoan.model.DevicesManager;
+import de.stehle.legoan.ui.DeviceFragment;
+import de.stehle.legoan.ui.SectionsPagerAdapter;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {

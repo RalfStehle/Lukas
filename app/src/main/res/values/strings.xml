@@ -9,7 +9,7 @@
     <string name="button_light">Toggle Light</string>
     <string name="label_name">Name</string>
     <string name="label_battery">Battery</string>
-    <string name="label_connected">Connected</string>
+    <string name="label_connected">Status</string>
     <string name="label_scan">Scan &amp; Connect</string>
     <string name="label_scan_stop">Stop</string>
     <string name="label_train">Train</string>

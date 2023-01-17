@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.stehle.legoan.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +10,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-abstract class DeviceFragment extends Fragment {
+import de.stehle.legoan.model.Device;
+
+public abstract class DeviceFragment extends Fragment {
     private final MutableLiveData<Device> device = new MutableLiveData<>();
     private final LiveData<String> name =
             Transformations.map(device, device -> device != null ? device.getName() : null);

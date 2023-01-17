@@ -2,6 +2,7 @@ package de.stehle.legoan.model;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -25,7 +26,6 @@ import java.util.Objects;
 public final class DevicesManager extends ViewModel {
     private static final DevicesManager instance = new DevicesManager();
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<Device>> remotes = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
     private final HashMap<Device, Observer<Boolean>> observers = new HashMap<>();
     private BluetoothLeScanner bluetoothScanner;
@@ -33,17 +33,17 @@ public final class DevicesManager extends ViewModel {
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            if (result.getDevice().getName() == null) {
+            BluetoothDevice device = result.getDevice();
+
+            if (device.getName() == null) {
                 return;
             }
 
-            if (TrainHub.canConnect(result)) {
-                if (!hasDevice(devices, result.getDevice().getAddress())) {
-                    addDevice(devices, new TrainHub(result.getDevice()));
-                }
-            } else if (Remote.canConnect(result)) {
-                if (!hasDevice(remotes, result.getDevice().getAddress())) {
-                    addDevice(remotes, new Remote(result.getDevice()));
+            if (!hasDevice(device.getAddress())) {
+                if (TrainHub.canConnect(result)) {
+                    addDevice(new TrainHub(device));
+                } else if (Remote.canConnect(result)) {
+                    addDevice(new Remote(device));
                 }
             }
         }
@@ -57,25 +57,20 @@ public final class DevicesManager extends ViewModel {
         return devices;
     }
 
-    public LiveData<List<Device>> getRemotes() {
-        return remotes;
-    }
-
     public LiveData<Boolean> isScanning() {
         return isScanning;
     }
 
+    @SuppressLint("DefaultLocale")
     private DevicesManager() {
-        boolean testing = false;
+        boolean testing = true;
 
         if (testing) {
-            addDevice(devices, new Switch("1"));
-            addDevice(devices, new Switch("1"));
-            addDevice(devices, new Switch("1"));
-
-            addDevice(remotes, new Switch("1"));
-            addDevice(remotes, new Switch("1"));
-            addDevice(remotes, new Switch("1"));
+            for (int i = 0; i < 8; i++) {
+                addDevice(new Switch(String.format("Switch %d", i)));
+                addDevice(new Remote(String.format("Remote %d", i)));
+                addDevice(new TrainHub(String.format("TrainHub %d", i)));
+            }
         }
     }
 
@@ -107,7 +102,7 @@ public final class DevicesManager extends ViewModel {
         AsyncTask.execute(() -> bluetoothScanner.stopScan(scanCallback));
     }
 
-    private boolean hasDevice(MutableLiveData<List<Device>> devices, String address) {
+    private boolean hasDevice(String address) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
         for (Device device : deviceList) {
@@ -119,7 +114,7 @@ public final class DevicesManager extends ViewModel {
         return false;
     }
 
-    private void addDevice(MutableLiveData<List<Device>> devices, Device device) {
+    private void addDevice(Device device) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
         Observer<Boolean> connectedObserver = connected -> {
@@ -134,7 +129,7 @@ public final class DevicesManager extends ViewModel {
         observers.put(device, connectedObserver);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName()).thenComparing(Device::getName));
+            deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName(), Comparator.reverseOrder()).thenComparing(Device::getName));
         }
 
         devices.postValue(deviceList);
@@ -147,7 +142,6 @@ public final class DevicesManager extends ViewModel {
         device.getIsConnected().removeObserver(Objects.requireNonNull(connectedObserver));
 
         removeDevice(devices, device);
-        removeDevice(remotes, device);
     }
 
     private void removeDevice(MutableLiveData<List<Device>> devices, Device device) {

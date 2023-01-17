@@ -1,108 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="2pt"
-    app:contentPadding="10pt">
+    android:paddingStart="4pt"
+    android:paddingBottom="4pt"
+    android:paddingEnd="4pt"
+    android:clipToPadding="false">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardElevation="1pt"
+        app:contentPadding="10pt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_max="450dp">
 
-        <TableRow
-            android:layout_marginBottom="2pt">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <TableRow
+                android:layout_marginBottom="2pt">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="18dp"
-                    android:layout_marginEnd="1pt"
-                    app:tint="#878787"
-                    app:srcCompat="@drawable/ic_baseline_switch_right_24" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="1pt"
+                        app:tint="#878787"
+                        app:srcCompat="@drawable/ic_baseline_switch_right_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_switch"
+                        android:textSize="20sp" />
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/NameContent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_switch"
+                    android:layout_weight="2"
+                    android:text="@string/label_name"
                     android:textSize="20sp" />
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/NameContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="@string/label_name"
-                android:textSize="20sp" />
+            </TableRow>
 
-        </TableRow>
-
-        <TableRow
-            android:layout_marginBottom="2pt">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/label_battery" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
+            <TableRow
+                android:layout_marginBottom="2pt">
 
                 <TextView
-                    android:id="@+id/BatteryContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:text="@string/label_battery" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text=" %" />
+                    android:layout_weight="2">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/BatteryContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_battery" />
 
-        </TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" %" />
 
-        <TableRow android:visibility="gone">
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/label_connected" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/ConnectedContent"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:text="@string/label_connected" />
+            <TableRow android:visibility="gone">
 
-        </TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/label_connected" />
 
-        <TableRow
-            android:layout_marginTop="8pt">
+                <TextView
+                    android:id="@+id/ConnectedContent"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:text="@string/label_connected" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ToggleButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#4CAF50"
-                android:text="@string/label_switch"
-                app:icon="@drawable/ic_baseline_switch_right_24"
-                app:iconGravity="textStart" />
-        </TableRow>
-    </TableLayout>
+            </TableRow>
 
-</androidx.cardview.widget.CardView>
+            <TableRow
+                android:layout_marginTop="8pt">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ToggleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#4CAF50"
+                    android:text="@string/label_switch"
+                    app:icon="@drawable/ic_baseline_switch_right_24"
+                    app:iconGravity="textStart" />
+            </TableRow>
+        </TableLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,6 +42,13 @@ public class TrainHub extends Device {
         return bluetoothDevice.getAddress();
     }
 
+    public TrainHub(String name) {
+        setName(name);
+
+        bluetoothDevice = null;
+        bluetoothGatt = null;
+    }
+
     public TrainHub(BluetoothDevice device) {
         setName(device.getName());
 

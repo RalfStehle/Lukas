@@ -36,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (binding.ViewPager != null && binding.Tabs != null) {
-            binding.ViewPager.setAdapter(new SectionsPagerAdapter(this, getSupportFragmentManager()));
-            binding.Tabs.setupWithViewPager(binding.ViewPager);
-        }
+        binding.ViewPager.setAdapter(new SectionsPagerAdapter(this, getSupportFragmentManager()));
+        binding.Tabs.setupWithViewPager(binding.ViewPager);
 
         binding.ScanStartButton.setOnClickListener(this::startScanning);
         binding.ScanStopButton.setOnClickListener(v -> devicesManager.stopScanning());

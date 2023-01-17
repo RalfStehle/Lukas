@@ -18,15 +18,24 @@ import de.stehle.legoan.model.TrainHub;
 public class DeviceListAdapter extends BaseAdapter {
     private final List<Device> devices;
     private final FragmentManager fragmentManager;
+    private final DeviceFilter filter;
 
-    public DeviceListAdapter(List<Device> devices, FragmentManager fragmentManager) {
+    public DeviceListAdapter(List<Device> devices, FragmentManager fragmentManager, DeviceFilter filter) {
         this.devices = devices;
         this.fragmentManager = fragmentManager;
+        this.filter = filter;
     }
 
     @Override
     public int getCount() {
-        return devices.size();
+        int count = 0;
+        for (Device device: devices) {
+            if (filter == null || filter.shouldUse(device)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     @Override
@@ -36,7 +45,18 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return devices.get(i);
+        int index = -1;
+        for (Device device: devices) {
+            if (filter == null || filter.shouldUse(device)) {
+                index++;
+
+                if (index == i) {
+                    return device;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -67,7 +87,7 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     private void handleAttachedItem(View view) {
-        Device device = devices.get((int) view.getTag());
+        Device device = (Device)getItem((int) view.getTag());
 
         Fragment fragment = getFragment(view);
 

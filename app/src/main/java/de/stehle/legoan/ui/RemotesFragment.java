@@ -14,6 +14,8 @@ import java.util.List;
 import de.stehle.legoan.databinding.FragmentRemotesBinding;
 import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
+import de.stehle.legoan.model.Remote;
+import de.stehle.legoan.model.TrainHub;
 
 public class RemotesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
@@ -24,17 +26,15 @@ public class RemotesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRemotesBinding.inflate(inflater, container, false);
 
-        devicesManager.getRemotes().observe(getViewLifecycleOwner(), this::updateDevices);
+        devicesAdapter = new DeviceListAdapter(devicesManager.getDevices().getValue(), getParentFragmentManager(), d -> d instanceof Remote);
+
+        binding.ListViewLeft.setAdapter(devicesAdapter);
 
         return binding.getRoot();
     }
 
     private void updateDevices(List<Device> devices) {
-        if (devicesAdapter == null) {
-            devicesAdapter = new DeviceListAdapter(devices, getParentFragmentManager());
-
-            binding.RemotesListView.setAdapter(devicesAdapter);
-        } else {
+        if (devicesAdapter != null) {
             devicesAdapter.notifyDataSetChanged();
         }
     }

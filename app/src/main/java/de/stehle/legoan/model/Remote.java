@@ -48,6 +48,13 @@ public class Remote extends Device {
         this.controllerB = controllerB != null ? controllerB : RemoteController.noop();
     }
 
+    public Remote(String name) {
+        setName(name);
+
+        bluetoothDevice = null;
+        bluetoothGatt = null;
+    }
+
     public Remote(BluetoothDevice device) {
         setName(device.getName());
 

@@ -1,135 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="2pt"
-    app:contentPadding="10pt">
+    android:paddingStart="4pt"
+    android:paddingBottom="4pt"
+    android:paddingEnd="4pt"
+    android:clipToPadding="false">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardElevation="1pt"
+        app:contentPadding="10pt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_max="450dp">
 
-        <TableRow
-            android:layout_marginBottom="2pt">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <TableRow android:layout_marginBottom="2pt">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="18dp"
-                    android:layout_marginEnd="1pt"
-                    app:tint="#878787"
-                    app:srcCompat="@drawable/ic_outline_settings_remote_24" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="1pt"
+                        app:srcCompat="@drawable/ic_outline_settings_remote_24"
+                        app:tint="#878787" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_remote"
+                        android:textSize="20sp" />
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/NameContent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_remote"
+                    android:layout_weight="2"
+                    android:text="@string/label_name"
                     android:textSize="20sp" />
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/NameContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="@string/label_name"
-                android:textSize="20sp" />
+            </TableRow>
 
-        </TableRow>
-
-        <TableRow
-            android:layout_marginBottom="2pt">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/label_battery" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2">
+            <TableRow android:layout_marginBottom="2pt">
 
                 <TextView
-                    android:id="@+id/BatteryContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:text="@string/label_battery" />
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2">
+
+                    <TextView
+                        android:id="@+id/BatteryContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_battery" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" %" />
+
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow android:visibility="gone">
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" %" />
-
-            </LinearLayout>
-
-        </TableRow>
-
-        <TableRow android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/label_connected" />
-
-            <TextView
-                android:id="@+id/ConnectedContent"
-                android:layout_width="2dp"
-                android:layout_weight="2"
-                android:text="@string/label_connected" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_marginTop="8pt">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <RadioGroup
-                    android:id="@+id/TrainARadio"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:text="@string/label_connected" />
 
-                    <RadioButton
-                        android:id="@+id/TrainANoTrain"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_none" />
-                </RadioGroup>
+                <TextView
+                    android:id="@+id/ConnectedContent"
+                    android:layout_width="2dp"
+                    android:layout_weight="2"
+                    android:text="@string/label_connected" />
 
-                <RadioGroup
-                    android:id="@+id/TrainBRadio"
+            </TableRow>
+
+            <TableRow android:layout_marginTop="8pt">
+
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                    <RadioButton
-                        android:id="@+id/TrainBNoTrain"
-                        android:layout_width="match_parent"
+                    <RadioGroup
+                        android:id="@+id/TrainARadio"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_none" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                </RadioGroup>
-            </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/TrainANoTrain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_none" />
+                    </RadioGroup>
 
-        </TableRow>
-    </TableLayout>
+                    <RadioGroup
+                        android:id="@+id/TrainBRadio"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-</androidx.cardview.widget.CardView>
+                        <RadioButton
+                            android:id="@+id/TrainBNoTrain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_none" />
+
+                    </RadioGroup>
+                </LinearLayout>
+
+            </TableRow>
+        </TableLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

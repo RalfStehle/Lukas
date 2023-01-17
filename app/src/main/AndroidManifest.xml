@@ -28,15 +28,6 @@
         android:theme="@style/Theme.Legoan"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.Legoan.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Legoan.NoActionBar">

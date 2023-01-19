@@ -67,9 +67,9 @@ public final class DevicesManager extends ViewModel {
 
         if (testing) {
             for (int i = 0; i < 8; i++) {
-                addDevice(new Switch(String.format("Switch %d", i)));
-                addDevice(new Remote(String.format("Remote %d", i)));
-                addDevice(new TrainHub(String.format("TrainHub %d", i)));
+                addDevice(new Switch(String.format("Switch #%d", i)));
+                addDevice(new Remote(String.format("Remote #%d", i)));
+                addDevice(new TrainHub(String.format("Train Hub #%d", i)));
             }
         }
     }

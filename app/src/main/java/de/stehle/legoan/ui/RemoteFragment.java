@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,35 +25,62 @@ import de.stehle.legoan.model.RemoteController;
 import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
+    private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
+    private ArrayAdapter<RemoteController> spinnerAdapter;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutRemoteItemBinding.inflate(inflater, container, false);
 
-        binding.TrainARadio
-                .setOnCheckedChangeListener((target, id) -> {
-                    RadioButton radioButton = (RadioButton) target.findViewById(id);
+        spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
 
-                    if (radioButton != null) {
-                        getRemote().setControllerA((RemoteController) radioButton.getTag());
-                    }
-                });
+        DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), value -> {
+            controllers.clear();
+            controllers.add(RemoteController.noop());
 
-        binding.TrainBRadio
-                .setOnCheckedChangeListener((target, id) -> {
-                    RadioButton radioButton = (RadioButton) target.findViewById(id);
+            for (Device device : value) {
+                if (device instanceof TrainHub) {
+                    controllers.add(RemoteController.motor((TrainHub) device));
+                    controllers.add(RemoteController.light((TrainHub) device));
+                }
+            }
 
-                    if (radioButton != null) {
-                        getRemote().setControllerB((RemoteController) radioButton.getTag());
-                    }
-                });
+            spinnerAdapter.notifyDataSetChanged();
+        });
 
-        checkNone(binding.TrainARadio);
-        checkNone(binding.TrainBRadio);
+        getLiveDevice().observe(getViewLifecycleOwner(), device -> {
+            Remote remote = (Remote) device;
 
-        DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), this::updateTrains);
+            binding.TrainASpinner.setSelection(controllers.indexOf(remote.getControllerA()));
+            binding.TrainBSpinner.setSelection(controllers.indexOf(remote.getControllerB()));
+        });
+
+        binding.TrainASpinner.setAdapter(spinnerAdapter);
+        binding.TrainASpinner.setSelection(controllers.indexOf(getRemote().getControllerA()));
+        binding.TrainASpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                RemoteController controller = (RemoteController) parent.getItemAtPosition(pos);
+
+                getRemote().setControllerA(controller);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        binding.TrainBSpinner.setAdapter(spinnerAdapter);
+        binding.TrainBSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                RemoteController controller = (RemoteController) parent.getItemAtPosition(pos);
+
+                getRemote().setControllerB(controller);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         getName().observe(getViewLifecycleOwner(),
                 value -> binding.NameContent.setText(value));
@@ -77,77 +104,6 @@ public class RemoteFragment extends DeviceFragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         DevicesManager.getInstance().removeDevice(getDevice());
         return true;
-    }
-
-    private void updateTrains(List<Device> devices) {
-        if (binding == null) {
-            return;
-        }
-
-        List<RemoteController> controllers = new ArrayList<>();
-
-        for (Device device : devices) {
-            if (device instanceof TrainHub) {
-                controllers.add(RemoteController.motor((TrainHub) device));
-                controllers.add(RemoteController.light((TrainHub) device));
-            }
-        }
-
-        Remote remote = getRemote();
-
-        RemoteController controllerA = remote.getControllerA();
-        RemoteController controllerB = remote.getControllerB();
-
-        if (!controllers.contains(controllerA)) {
-            remote.setControllerA(null);
-        }
-
-        if (!controllers.contains(controllerB)) {
-            remote.setControllerB(null);
-        }
-
-        updateRadio(binding.TrainARadio, controllers, remote.getControllerA());
-        updateRadio(binding.TrainBRadio, controllers, remote.getControllerB());
-    }
-
-    private void updateRadio(RadioGroup radioGroup, List<RemoteController> controllers, RemoteController connectedController) {
-        int targetSize = controllers.size() + 1;
-
-        while (radioGroup.getChildCount() > targetSize) {
-            radioGroup.removeViewAt(radioGroup.getChildCount() - 1);
-        }
-
-        while (radioGroup.getChildCount() < targetSize) {
-            RadioButton radioButton = new RadioButton(radioGroup.getContext());
-            radioButton.setId(View.generateViewId());
-
-            radioGroup.addView(radioButton);
-        }
-
-        int index = 1;
-        for (RemoteController controller : controllers) {
-            RadioButton motorRadio = (RadioButton) radioGroup.getChildAt(index);
-            motorRadio.setTag(controller);
-            motorRadio.setText(controller.getName());
-            index++;
-        }
-
-        int indexOfSelection = controllers.indexOf(connectedController);
-
-        if (indexOfSelection >= 0) {
-            View selectedButton = radioGroup.getChildAt(indexOfSelection);
-
-            if (selectedButton != null) {
-                radioGroup.check(selectedButton.getId());
-                return;
-            }
-        }
-
-        checkNone(radioGroup);
-    }
-
-    private void checkNone(RadioGroup radioGroup) {
-        radioGroup.check(radioGroup.getChildAt(0).getId());
     }
 
     private Remote getRemote() {

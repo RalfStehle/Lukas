@@ -1,9 +1,12 @@
 package de.stehle.legoan.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 import java.util.Objects;
 
 public abstract class RemoteController {
+    private static final NoopController Noop = new NoopController();
     private final TrainHub train;
 
     RemoteController(TrainHub train) {
@@ -19,8 +22,6 @@ public abstract class RemoteController {
     public abstract void down();
 
     public abstract void middle();
-
-    public abstract String getName();
 
     @Override
     public boolean equals(Object o) {
@@ -42,7 +43,7 @@ public abstract class RemoteController {
     }
 
     public static RemoteController noop() {
-        return new NullController();
+        return Noop;
     }
 
     public static RemoteController motor(TrainHub train) {
@@ -73,9 +74,10 @@ public abstract class RemoteController {
             getTrain().motorStop();
         }
 
+        @NonNull
         @Override
-        public String getName() {
-            return String.format(Locale.getDefault(), "%s Motor", getTrain().getName());
+        public String toString() {
+            return String.format(Locale.getDefault(), "Motor %s", getTrain().getName());
         }
     }
 
@@ -99,14 +101,15 @@ public abstract class RemoteController {
             getTrain().ledRandom();
         }
 
+        @NonNull
         @Override
-        public String getName() {
-            return String.format(Locale.getDefault(), "%s Light", getTrain().getName());
+        public String toString() {
+            return String.format(Locale.getDefault(), "Light %s", getTrain().getName());
         }
     }
 
-    private static class NullController extends RemoteController {
-        NullController() {
+    private static class NoopController extends RemoteController {
+        NoopController() {
             super(null);
         }
 
@@ -122,8 +125,9 @@ public abstract class RemoteController {
         public void middle() {
         }
 
+        @NonNull
         @Override
-        public String getName() {
+        public String toString() {
             return "None";
         }
     }

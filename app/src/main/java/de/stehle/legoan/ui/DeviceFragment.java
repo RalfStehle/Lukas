@@ -20,6 +20,10 @@ public abstract class DeviceFragment extends Fragment {
         return device.getValue();
     }
 
+    protected LiveData<Device> getLiveDevice() {
+        return device;
+    }
+
     protected LiveData<String> getName() {
         return name;
     }

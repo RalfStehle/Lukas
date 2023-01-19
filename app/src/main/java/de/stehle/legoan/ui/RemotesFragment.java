@@ -15,7 +15,6 @@ import de.stehle.legoan.databinding.FragmentRemotesBinding;
 import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Remote;
-import de.stehle.legoan.model.TrainHub;
 
 public class RemotesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();

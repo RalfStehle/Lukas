@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipToPadding="false"
     android:paddingStart="4pt"
-    android:paddingBottom="4pt"
-    android:paddingEnd="4pt"
-    android:clipToPadding="false">
+    android:paddingEnd="0pt"
+    android:paddingBottom="4pt">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/Card"
@@ -41,6 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:layout_marginEnd="1pt"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/ic_outline_settings_remote_24"
                         app:tint="#878787" />
 
@@ -111,34 +112,21 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <RadioGroup
-                        android:id="@+id/TrainARadio"
+                    <Spinner
+                        android:id="@+id/TrainASpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_marginEnd="2pt"
+                        android:background="#F4F4F4"/>
 
-                        <RadioButton
-                            android:id="@+id/TrainANoTrain"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_none" />
-                    </RadioGroup>
-
-                    <RadioGroup
-                        android:id="@+id/TrainBRadio"
+                    <Spinner
+                        android:id="@+id/TrainBSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <RadioButton
-                            android:id="@+id/TrainBNoTrain"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_none" />
-
-                    </RadioGroup>
+                        android:layout_marginStart="2pt"
+                        android:background="#F4F4F4" />
                 </LinearLayout>
 
             </TableRow>

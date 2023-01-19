@@ -29,7 +29,7 @@ public class DeviceListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         int count = 0;
-        for (Device device: devices) {
+        for (Device device : devices) {
             if (filter == null || filter.shouldUse(device)) {
                 count++;
             }
@@ -46,7 +46,7 @@ public class DeviceListAdapter extends BaseAdapter {
     @Override
     public Object getItem(int i) {
         int index = -1;
-        for (Device device: devices) {
+        for (Device device : devices) {
             if (filter == null || filter.shouldUse(device)) {
                 index++;
 
@@ -87,7 +87,7 @@ public class DeviceListAdapter extends BaseAdapter {
     }
 
     private void handleAttachedItem(View view) {
-        Device device = (Device)getItem((int) view.getTag());
+        Device device = (Device) getItem((int) view.getTag());
 
         Fragment fragment = getFragment(view);
 

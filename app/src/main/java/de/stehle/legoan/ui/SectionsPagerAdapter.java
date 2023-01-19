@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import de.stehle.legoan.R;
-import de.stehle.legoan.model.Remote;
 
 @SuppressWarnings("deprecation")
 public class SectionsPagerAdapter extends FragmentPagerAdapter {

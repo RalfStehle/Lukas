@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import java.util.List;
 
 import de.stehle.legoan.databinding.FragmentDevicesBinding;
-import de.stehle.legoan.databinding.FragmentRemotesBinding;
 import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Remote;

@@ -42,8 +42,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:layout_marginEnd="1pt"
-                        app:tint="#878787"
-                        app:srcCompat="@drawable/ic_baseline_switch_right_24" />
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_baseline_switch_right_24"
+                        app:tint="#878787" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -115,8 +116,10 @@
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
                     android:text="@string/label_switch"
+                    android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
-                    app:iconGravity="textStart" />
+                    app:iconGravity="textStart"
+                    app:iconTint="#FFFFFF" />
             </TableRow>
         </TableLayout>
 

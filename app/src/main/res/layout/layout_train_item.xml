@@ -41,6 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:layout_marginEnd="1pt"
+                        android:visibility="gone"
                         app:tint="#878787"
                         app:srcCompat="@drawable/ic_baseline_train_24" />
 
@@ -125,7 +126,8 @@
                     android:contentDescription="@string/button_stop"
                     app:icon="@drawable/ic_outline_stop_24"
                     app:iconGravity="textStart"
-                    app:iconPadding="0dp" />
+                    app:iconPadding="0dp"
+                    app:iconTint="#ffffff" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/MotorFasterButton"
@@ -161,7 +163,8 @@
                     android:contentDescription="@string/button_light"
                     app:icon="@drawable/ic_outline_lightbulb_24"
                     app:iconGravity="textStart"
-                    app:iconPadding="0dp" />
+                    app:iconPadding="0dp"
+                    app:iconTint="#ffffff" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/LightBrighterButton"

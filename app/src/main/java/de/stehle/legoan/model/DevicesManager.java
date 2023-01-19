@@ -63,7 +63,7 @@ public final class DevicesManager extends ViewModel {
 
     @SuppressLint("DefaultLocale")
     private DevicesManager() {
-        boolean testing = true;
+        boolean testing = false;
 
         if (testing) {
             for (int i = 0; i < 8; i++) {

@@ -2,7 +2,9 @@ package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -14,6 +16,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
 import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
@@ -58,7 +61,22 @@ public class RemoteFragment extends DeviceFragment {
         getBattery().observe(getViewLifecycleOwner(),
                 value -> binding.BatteryContent.setText(Integer.toString(value)));
 
+        registerForContextMenu(binding.Card);
+
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(0, v.getId(), 0, R.string.menu_disconnect);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        DevicesManager.getInstance().removeDevice(getDevice());
+        return true;
     }
 
     private void updateTrains(List<Device> devices) {

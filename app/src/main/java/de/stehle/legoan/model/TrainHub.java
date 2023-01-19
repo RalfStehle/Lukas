@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import de.stehle.legoan.utils.LegoHelper;
@@ -21,13 +22,12 @@ import de.stehle.legoan.utils.LegoWriterQueue;
 public class TrainHub extends Device {
     private final static UUID ServiceUUID = UUID.fromString("00001623-1212-efde-1623-785feabcd123");
     private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
-    private final static byte[] speeds = {0x7E, 0x6C, 0x5A, 0x48, 0x36, 0x24, 0x12, 0x7F, (byte) 0xEC, (byte) 0xDA, (byte) 0xC8, (byte) 0xB6, (byte) 0xA4, (byte) 0x92, (byte) 0x80};
-    private final static int stopSpeed = speeds.length / 2;
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
     private LegoWriterQueue writerQueue;
-    private int currentSpeed = stopSpeed;
+    private int currentSpeed;
     private int currentColor;
+    private int currentBrightness;
     private PortType portA = PortType.None;
     private PortType portB = PortType.None;
 
@@ -64,7 +64,7 @@ public class TrainHub extends Device {
 
                         // It seems to be more stable to wait a little bit for the discovery.
                         // Discover services and characteristics for this device
-                        new Handler(Looper.getMainLooper()).postDelayed(bluetoothGatt::discoverServices, 500);
+                        new Handler(Looper.getMainLooper()).postDelayed(Objects.requireNonNull(bluetoothGatt)::discoverServices, 500);
                         initializeService();
                         break;
                 }
@@ -143,43 +143,65 @@ public class TrainHub extends Device {
         send(new byte[]{(byte) 0x81, 0x32, 0x11, 0x51, 0x00, (byte) currentColor});
     }
 
-    public void lightBrighter() {
+    public void lightDarker() {
+        if (currentBrightness > 0) {
+            currentBrightness -= 25;
+        }
 
+        updateBrightness();
     }
 
-    public void lightDarker() {
+    public void lightBrighter() {
+        if (currentBrightness < 100) {
+            currentBrightness += 25;
+        }
 
+        updateBrightness();
+    }
+
+    private void updateBrightness() {
+        byte brightness = (byte) LegoHelper.mapBrightness(currentBrightness);
+
+        if (portA == PortType.Light) {
+            send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, brightness});
+        }
+
+        if (portB == PortType.Light) {
+            send(new byte[]{(byte) 0x81, 0x01, 0x11, 0x51, 0x00, brightness});
+        }
     }
 
     public void motorStop() {
-        currentSpeed = stopSpeed;
+        currentSpeed = 0;
 
-        setSpeed(currentSpeed);
+        updateSpeed();
     }
 
     public void motorSlower() {
-        if (currentSpeed > 0) {
-            currentSpeed--;
+        if (currentSpeed > -100) {
+            currentSpeed -= 25;
         }
 
-        setSpeed(currentSpeed);
+        updateSpeed();
     }
 
     public void motorFaster() {
-        if (currentSpeed < speeds.length - 1) {
-            currentSpeed++;
+        if (currentSpeed < 100) {
+            currentSpeed += 25;
         }
 
-        setSpeed(currentSpeed);
+        updateSpeed();
     }
 
-    private void setSpeed(int speed) {
+    private void updateSpeed() {
+        byte speed = LegoHelper.mapSpeed(currentSpeed);
+
         if (portA == PortType.Motor) {
-            send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speeds[speed]});
+            send(new byte[]{(byte) 0x81, 0x00, 0x11, 0x51, 0x00, speed});
         }
 
         if (portB == PortType.Motor) {
-            send(new byte[]{(byte) 0x81, 0x01, 0x11, 0x51, 0x00, speeds[speed]});
+            send(new byte[]{(byte) 0x81, 0x01, 0x11, 0x51, 0x00, speed});
         }
     }
 

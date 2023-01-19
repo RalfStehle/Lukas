@@ -27,6 +27,7 @@ public class RemotesFragment extends Fragment {
         binding = FragmentRemotesBinding.inflate(inflater, container, false);
 
         devicesAdapter = new DeviceListAdapter(devicesManager.getDevices().getValue(), getParentFragmentManager(), d -> d instanceof Remote);
+        devicesManager.getDevices().observe(getViewLifecycleOwner(), this::updateDevices);
 
         binding.ListViewLeft.setAdapter(devicesAdapter);
 

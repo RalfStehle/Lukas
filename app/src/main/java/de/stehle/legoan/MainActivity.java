@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,15 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import de.stehle.legoan.databinding.ActivityMainBinding;
-import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
-import de.stehle.legoan.ui.DeviceFragment;
 import de.stehle.legoan.ui.SectionsPagerAdapter;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
-    private Device deviceInContextMenu;
     private ActivityMainBinding binding;
     private int wasScanning;
 
@@ -76,29 +71,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        menu.setHeaderTitle(R.string.menu_header);
-        menu.add(0, v.getId(), 0, R.string.menu_disconnect);
-
-        // Set the current hub from the view.
-        deviceInContextMenu = DeviceFragment.getDevice(v);
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (deviceInContextMenu == null) {
-            return true;
-        }
-
-        // We only have one option yet, so we can just call disconnect directly.
-        devicesManager.removeDevice(deviceInContextMenu);
-        deviceInContextMenu = null;
-        return true;
     }
 
     @SuppressLint("MissingSuperCall")

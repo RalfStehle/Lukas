@@ -19,4 +19,22 @@ public class LegoHelper {
         System.arraycopy(envelope, 2, data, 0, envelope.length - 2);
         return data;
     }
+
+    public static byte mapSpeed(int speed) {
+        if (speed == 0) {
+            return 127; // stop motor
+        } else if (speed > 0) {
+            return (byte) map(speed, 0, 100, 0, 126);
+        } else {
+            return (byte) map(-speed, 0, 100, 255, 128);
+        }
+    }
+
+    public static byte mapBrightness(int brightness) {
+        return (byte) brightness;
+    }
+
+    public static int map(int x, int inMin, int inMax, int outMin, int outMax) {
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
 }

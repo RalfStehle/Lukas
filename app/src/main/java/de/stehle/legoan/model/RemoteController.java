@@ -101,7 +101,7 @@ public abstract class RemoteController {
 
         @Override
         public String getName() {
-            return String.format(Locale.getDefault(), "%s Motor", getTrain().getName());
+            return String.format(Locale.getDefault(), "%s Light", getTrain().getName());
         }
     }
 

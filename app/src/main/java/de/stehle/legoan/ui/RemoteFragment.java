@@ -22,6 +22,7 @@ import de.stehle.legoan.model.Device;
 import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Remote;
 import de.stehle.legoan.model.RemoteController;
+import de.stehle.legoan.model.Switch;
 import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
@@ -42,8 +43,10 @@ public class RemoteFragment extends DeviceFragment {
 
             for (Device device : value) {
                 if (device instanceof TrainHub) {
-                    controllers.add(RemoteController.motor((TrainHub) device));
-                    controllers.add(RemoteController.light((TrainHub) device));
+                    controllers.add(RemoteController.forMotor((TrainHub) device));
+                    controllers.add(RemoteController.forLight((TrainHub) device));
+                } else if (device instanceof Switch) {
+                    controllers.add(RemoteController.forSwitch((Switch) device));
                 }
             }
 

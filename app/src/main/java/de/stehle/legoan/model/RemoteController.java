@@ -6,15 +6,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 public abstract class RemoteController {
-    private static final NoopController Noop = new NoopController();
-    private final TrainHub train;
+    private final Device device;
 
-    RemoteController(TrainHub train) {
-        this.train = train;
+    RemoteController(Device device) {
+        this.device = device;
     }
 
-    public TrainHub getTrain() {
-        return train;
+    public Device getDevice() {
+        return device;
     }
 
     public abstract void up();
@@ -34,82 +33,119 @@ public abstract class RemoteController {
 
         RemoteController that = (RemoteController) o;
 
-        return Objects.equals(train, that.train);
+        return Objects.equals(device, that.device);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(train);
+        return Objects.hash(device);
     }
 
     public static RemoteController noop() {
-        return Noop;
+        return NoopController.getInstance();
     }
 
-    public static RemoteController motor(TrainHub train) {
-        return new MotorController(train);
+    public static RemoteController forSwitch(Switch device) {
+        return new SwitchController(device);
     }
 
-    public static RemoteController light(TrainHub train) {
-        return new LightController(train);
+    public static RemoteController forMotor(TrainHub device) {
+        return new MotorController(device);
+    }
+
+    public static RemoteController forLight(TrainHub device) {
+        return new LightController(device);
     }
 
     private static class MotorController extends RemoteController {
-        MotorController(TrainHub train) {
-            super(train);
+        MotorController(TrainHub device) {
+            super(device);
         }
 
         @Override
         public void up() {
-            getTrain().motorFaster();
+            ((TrainHub) getDevice()).motorFaster();
         }
 
         @Override
         public void down() {
-            getTrain().motorSlower();
+            ((TrainHub) getDevice()).motorSlower();
         }
 
         @Override
         public void middle() {
-            getTrain().motorStop();
+            ((TrainHub) getDevice()).motorStop();
         }
 
         @NonNull
         @Override
         public String toString() {
-            return String.format(Locale.getDefault(), "Motor %s", getTrain().getName());
+            return String.format(Locale.getDefault(), "Motor %s", getDevice().getName());
         }
     }
 
     private static class LightController extends RemoteController {
-        LightController(TrainHub train) {
-            super(train);
+        LightController(TrainHub device) {
+            super(device);
         }
 
         @Override
         public void up() {
-            getTrain().lightBrighter();
+            ((TrainHub) getDevice()).lightBrighter();
         }
 
         @Override
         public void down() {
-            getTrain().lightDarker();
+            ((TrainHub) getDevice()).lightDarker();
         }
 
         @Override
         public void middle() {
-            getTrain().ledRandom();
+            ((TrainHub) getDevice()).ledRandom();
         }
 
         @NonNull
         @Override
         public String toString() {
-            return String.format(Locale.getDefault(), "Light %s", getTrain().getName());
+            return String.format(Locale.getDefault(), "Light %s", ((TrainHub) getDevice()).getName());
+        }
+    }
+
+    private static class SwitchController extends RemoteController {
+        SwitchController(Switch device) {
+            super(device);
+        }
+
+        @Override
+        public void up() {
+            ((Switch) getDevice()).toggle();
+        }
+
+        @Override
+        public void down() {
+            ((Switch) getDevice()).toggle();
+        }
+
+        @Override
+        public void middle() {
+            ((Switch) getDevice()).toggle();
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return String.format(Locale.getDefault(), "Switch %s", ((TrainHub) getDevice()).getName());
         }
     }
 
     private static class NoopController extends RemoteController {
-        NoopController() {
+        private static final NoopController INSTANCE = new NoopController();
+
+        public static NoopController getInstance() {
+            return INSTANCE;
+        }
+
+        private NoopController() {
             super(null);
         }
 

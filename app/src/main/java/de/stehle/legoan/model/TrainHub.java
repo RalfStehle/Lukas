@@ -43,7 +43,7 @@ public class TrainHub extends Device {
     }
 
     public TrainHub(String name) {
-        setName(name);
+        setInitialName(name);
 
         bluetoothDevice = null;
         bluetoothGatt = null;
@@ -130,7 +130,9 @@ public class TrainHub extends Device {
 
     @Override
     public void disconnect() {
-        bluetoothGatt.disconnect();
+        if (bluetoothGatt != null) {
+            bluetoothGatt.disconnect();
+        }
     }
 
     public void ledRandom() {
@@ -232,7 +234,7 @@ public class TrainHub extends Device {
             return;
         }
 
-        writerQueue.write(data);
+        writerQueue.write(LegoHelper.dataToEnvelope(data));
     }
 
     private void initializeService() {
@@ -253,7 +255,7 @@ public class TrainHub extends Device {
         }
 
         writerQueue = new LegoWriterQueue(bluetoothGatt, characteristic);
-        writerQueue.enableNotifications();
+        LegoHelper.enableNotifications(bluetoothGatt, characteristic);
 
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

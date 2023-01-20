@@ -44,6 +44,8 @@ public final class DevicesManager extends ViewModel {
                     addDevice(new TrainHub(device));
                 } else if (Remote.canConnect(result)) {
                     addDevice(new Remote(device));
+                } else if (Switch.canConnect(result)) {
+                    addDevice((new Switch(device)));
                 }
             }
         }
@@ -114,7 +116,7 @@ public final class DevicesManager extends ViewModel {
         return false;
     }
 
-    private void addDevice(Device device) {
+    public void addDevice(Device device) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
         Observer<Boolean> connectedObserver = connected -> {
@@ -129,7 +131,7 @@ public final class DevicesManager extends ViewModel {
         observers.put(device, connectedObserver);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName(), Comparator.reverseOrder()).thenComparing(Device::getName));
+            deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName(), Comparator.reverseOrder()).thenComparing(Device::toString));
         }
 
         devices.postValue(deviceList);

@@ -69,7 +69,7 @@ public class DeviceListAdapter extends BaseAdapter {
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View view) {
-                    handleAttachedItem(view);
+                    // handleAttachedItem(view);
                 }
 
                 @Override
@@ -79,7 +79,9 @@ public class DeviceListAdapter extends BaseAdapter {
             });
         }
 
-        if (view.isAttachedToWindow()) {
+        view.setTag(i);
+
+        if (true || view.isAttachedToWindow()) {
             handleAttachedItem(view);
         }
 
@@ -123,7 +125,7 @@ public class DeviceListAdapter extends BaseAdapter {
 
     private Fragment getFragment(View view) {
         try {
-            return FragmentManager.findFragment(view);
+            return fragmentManager.findFragmentById(view.getId());
         } catch (IllegalStateException ex) {
             return null;
         }

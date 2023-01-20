@@ -1,7 +1,10 @@
 package de.stehle.legoan.model;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import java.util.Objects;
 
 public abstract class Device {
     private final MutableLiveData<String> name = new MutableLiveData<>("");
@@ -20,6 +23,10 @@ public abstract class Device {
         return battery;
     }
 
+    protected void setInitialName(String value) {
+        name.setValue(value);
+    }
+
     protected void setName(String value) {
         name.postValue(value);
     }
@@ -35,4 +42,10 @@ public abstract class Device {
     public abstract String getAddress();
 
     public abstract void disconnect();
+
+    @NonNull
+    @Override
+    public String toString() {
+        return Objects.requireNonNull(name.getValue());
+    }
 }

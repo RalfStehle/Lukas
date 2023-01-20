@@ -46,12 +46,14 @@ public class TrainHubFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(0, v.getId(), 0, R.string.menu_disconnect);
+        menu.add(1000, v.getId(), 0, R.string.menu_disconnect);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        DevicesManager.getInstance().removeDevice(getDevice());
+        if (item.getGroupId() == 1000) {
+            DevicesManager.getInstance().removeDevice(getDevice());
+        }
         return true;
     }
 

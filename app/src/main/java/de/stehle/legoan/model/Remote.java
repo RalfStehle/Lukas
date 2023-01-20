@@ -49,7 +49,7 @@ public class Remote extends Device {
     }
 
     public Remote(String name) {
-        setName(name);
+        setInitialName(name);
 
         bluetoothDevice = null;
         bluetoothGatt = null;
@@ -170,7 +170,7 @@ public class Remote extends Device {
             return;
         }
 
-        writerQueue.write(data);
+        writerQueue.write(LegoHelper.dataToEnvelope(data));
     }
 
     private void initializeService() {
@@ -191,7 +191,7 @@ public class Remote extends Device {
         }
 
         writerQueue = new LegoWriterQueue(bluetoothGatt, characteristic);
-        writerQueue.enableNotifications();
+        LegoHelper.enableNotifications(bluetoothGatt, characteristic);
 
         // It seems more stable to wait a little bit, because the first writes usually fail.
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

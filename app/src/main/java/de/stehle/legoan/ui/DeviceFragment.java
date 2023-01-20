@@ -1,7 +1,5 @@
 package de.stehle.legoan.ui;
 
-import android.view.View;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -33,10 +31,8 @@ public abstract class DeviceFragment extends Fragment {
     }
 
     public void setDevice(Device newDevice) {
-        device.setValue(newDevice);
-    }
-
-    public static Device getDevice(View view) {
-        return (Device) view.getTag();
+        if (newDevice != device.getValue()) {
+            device.setValue(newDevice);
+        }
     }
 }

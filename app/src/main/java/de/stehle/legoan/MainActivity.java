@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,9 @@ import androidx.core.app.ActivityCompat;
 
 import de.stehle.legoan.databinding.ActivityMainBinding;
 import de.stehle.legoan.model.DevicesManager;
+import de.stehle.legoan.model.Remote;
+import de.stehle.legoan.model.Switch;
+import de.stehle.legoan.model.TrainHub;
 import de.stehle.legoan.ui.SectionsPagerAdapter;
 
 @SuppressLint("MissingPermission")
@@ -23,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
     private ActivityMainBinding binding;
     private int wasScanning;
+    private int addedDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +71,43 @@ public class MainActivity extends AppCompatActivity {
                 binding.ScanStopButtonTop.setVisibility(View.GONE);
             }
         });
+
+        registerForContextMenu(binding.Toolbar);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(1, v.getId(), 1, "Add Train");
+        menu.add(2, v.getId(), 2, "Add Remote");
+        menu.add(3, v.getId(), 3, "Add Switch");
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        addedDevices++;
+
+        switch (item.getGroupId()) {
+            case 1:
+                devicesManager.addDevice(new TrainHub(String.format("Train %d", addedDevices)));
+                break;
+            case 2:
+                devicesManager.addDevice(new Remote(String.format("Train %d", addedDevices)));
+                break;
+            case 3:
+                devicesManager.addDevice(new Switch(String.format("Train %d", addedDevices)));
+                break;
+        }
+
+        return false;
     }
 
     @SuppressLint("MissingSuperCall")

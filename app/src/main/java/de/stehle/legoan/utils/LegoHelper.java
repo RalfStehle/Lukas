@@ -1,5 +1,12 @@
 package de.stehle.legoan.utils;
 
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+
+import java.util.UUID;
+
 public class LegoHelper {
     public static byte[] dataToEnvelope(byte[] data) {
         byte[] envelope = new byte[data.length + 2];
@@ -36,5 +43,17 @@ public class LegoHelper {
 
     public static int map(int x, int inMin, int inMax, int outMin, int outMax) {
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void enableNotifications(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothCharacteristic) {
+        UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+        // Use a special descriptor to enable notifications.
+        BluetoothGattDescriptor bluetoothDescriptor = bluetoothCharacteristic.getDescriptor(uuid);
+        bluetoothDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+
+        bluetoothGatt.setCharacteristicNotification(bluetoothCharacteristic, true);
+        bluetoothGatt.writeDescriptor(bluetoothDescriptor);
     }
 }

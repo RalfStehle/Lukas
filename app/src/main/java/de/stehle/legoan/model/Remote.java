@@ -154,7 +154,8 @@ public class Remote extends Device {
             if (uuid.getUuid().equals(ServiceUUID)) {
                 String name = record.getDeviceName().trim();
 
-                if (name.equals("Handset")) {
+                if ((name.contains("Handset")) || (name.contains("88010")) || (name.contains("Fernbedienung")))  // if (name.equals("Handset"))
+                {
                     return true;
                 }
             }

@@ -43,10 +43,10 @@ public class RemoteFragment extends DeviceFragment {
 
             for (Device device : value) {
                 if (device instanceof TrainHub) {
-                    controllers.add(RemoteController.forMotor((TrainHub) device));
-                    controllers.add(RemoteController.forLight((TrainHub) device));
+                    controllers.add(((TrainHub) device).getMotorController());
+                    controllers.add(((TrainHub) device).getLightController());
                 } else if (device instanceof Switch) {
-                    controllers.add(RemoteController.forSwitch((Switch) device));
+                    controllers.add(((Switch) device).getController());
                 }
             }
 

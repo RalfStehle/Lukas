@@ -85,7 +85,7 @@ public final class DevicesManager extends ViewModel {
         if (Boolean.TRUE.equals(isScanning.getValue())) {
             return;
         }
-<
+
         isScanning.postValue(true);
 
         AsyncTask.execute(() -> bluetoothScanner.startScan(scanCallback));

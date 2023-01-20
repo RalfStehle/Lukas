@@ -23,6 +23,7 @@ public class Switch extends Device {
     private final static UUID CharacteristicsUUID = UUID.fromString("196988b4-b878-4b5b-a4cc-2e3eb64c1e00");
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
+    private final RemoteController controller;
     private LegoWriterQueue writerQueue;
 
     @Override
@@ -30,11 +31,16 @@ public class Switch extends Device {
         return bluetoothDevice.getAddress();
     }
 
+    public RemoteController getController() {
+        return controller;
+    }
+
     public Switch(String name) {
         setInitialName(name);
 
         bluetoothDevice = null;
         bluetoothGatt = null;
+        controller = new RemoteController.SwitchController(this);
     }
 
     public Switch(BluetoothDevice device) {
@@ -71,6 +77,7 @@ public class Switch extends Device {
 
         bluetoothDevice = device;
         bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
+        controller = new RemoteController.SwitchController(this);
     }
 
     @Override

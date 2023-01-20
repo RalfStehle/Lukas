@@ -24,6 +24,8 @@ public class TrainHub extends Device {
     private final static UUID CharacteristicsUUID = UUID.fromString("00001624-1212-efde-1623-785feabcd123");
     private final BluetoothDevice bluetoothDevice;
     private final BluetoothGatt bluetoothGatt;
+    private final RemoteController motorController;
+    private final RemoteController lightController;
     private LegoWriterQueue writerQueue;
     private int currentSpeed;
     private int currentColor;
@@ -42,11 +44,21 @@ public class TrainHub extends Device {
         return bluetoothDevice.getAddress();
     }
 
+    public RemoteController getLightController() {
+        return lightController;
+    }
+
+    public RemoteController getMotorController() {
+        return motorController;
+    }
+
     public TrainHub(String name) {
         setInitialName(name);
 
         bluetoothDevice = null;
         bluetoothGatt = null;
+        motorController = new RemoteController.MotorController(this);
+        lightController = new RemoteController.LightController(this);
     }
 
     public TrainHub(BluetoothDevice device) {
@@ -126,6 +138,8 @@ public class TrainHub extends Device {
 
         bluetoothDevice = device;
         bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
+        motorController = new RemoteController.MotorController(this);
+        lightController = new RemoteController.LightController(this);
     }
 
     @Override

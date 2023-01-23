@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Switch;
 
 public class SwitchFragment extends DeviceFragment {
+    private final int contextMenuId = View.generateViewId();
     private LayoutSwitchItemBinding binding;
 
     @SuppressLint("SetTextI18n")
@@ -41,15 +43,17 @@ public class SwitchFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(1000, v.getId(), 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getGroupId() == 1000) {
+        if (item.getItemId() == contextMenuId) {
             DevicesManager.getInstance().removeDevice(getDevice());
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,6 +27,9 @@ import de.stehle.legoan.ui.SectionsPagerAdapter;
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
+    private final int menuAddTrain = View.generateViewId();
+    private final int menuAddRemote = View.generateViewId();
+    private final int menuAddSwitch = View.generateViewId();
     private ActivityMainBinding binding;
     private int wasScanning;
     private int addedDevices;
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (devicesManager.isTesting()) {
             registerForContextMenu(binding.Toolbar);
+
+            addedDevices = devicesManager.getDevices().getValue().size();
         }
     }
 
@@ -88,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         if (devicesManager.isTesting()) {
-            menu.add(1, v.getId(), 1, "Add Train");
-            menu.add(2, v.getId(), 2, "Add Remote");
-            menu.add(3, v.getId(), 3, "Add Switch");
+            menu.add(Menu.NONE, menuAddTrain, 0, R.string.add_train);
+            menu.add(Menu.NONE, menuAddRemote, 0, R.string.add_remote);
+            menu.add(Menu.NONE, menuAddTrain, 0, R.string.add_switch);
         }
     }
 
@@ -99,16 +105,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         addedDevices++;
 
-        switch (item.getGroupId()) {
-            case 1:
-                devicesManager.addDevice(new TrainHub(String.format("Train %d", addedDevices)));
-                break;
-            case 2:
-                devicesManager.addDevice(new Remote(String.format("Train %d", addedDevices)));
-                break;
-            case 3:
-                devicesManager.addDevice(new Switch(String.format("Train %d", addedDevices)));
-                break;
+        int itemId = item.getItemId();
+
+        if (itemId == menuAddTrain) {
+            devicesManager.addDevice(new TrainHub(String.format("Train %d", addedDevices)));
+        } else if (itemId == menuAddRemote) {
+            devicesManager.addDevice(new Remote(String.format("Train %d", addedDevices)));
+        } else if (itemId == menuAddSwitch) {
+            devicesManager.addDevice(new Switch(String.format("Train %d", addedDevices)));
         }
 
         return false;

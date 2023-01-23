@@ -64,7 +64,7 @@ public final class DevicesManager extends ViewModel {
     }
 
     public boolean isTesting() {
-        return true;
+        return false;
     }
 
     @SuppressLint("DefaultLocale")

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import de.stehle.legoan.model.Switch;
 import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
+    private final int contextMenuId = View.generateViewId();
     private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
     private ArrayAdapter<RemoteController> spinnerAdapter;
@@ -61,7 +63,6 @@ public class RemoteFragment extends DeviceFragment {
         });
 
         binding.TrainASpinner.setAdapter(spinnerAdapter);
-        binding.TrainASpinner.setSelection(controllers.indexOf(getRemote().getControllerA()));
         binding.TrainASpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 RemoteController controller = (RemoteController) parent.getItemAtPosition(pos);
@@ -100,15 +101,17 @@ public class RemoteFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(1000, v.getId(), 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getGroupId() == 1000) {
+        if (item.getItemId() == contextMenuId) {
             DevicesManager.getInstance().removeDevice(getDevice());
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     private Remote getRemote() {

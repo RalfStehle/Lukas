@@ -68,7 +68,7 @@ public interface RemoteController {
     }
 
     class SwitchController implements RemoteController {
-        private Switch device;
+        private final Switch device;
 
         SwitchController(Switch device) {
             this.device = device;

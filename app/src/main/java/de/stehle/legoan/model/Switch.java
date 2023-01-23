@@ -87,8 +87,16 @@ public class Switch extends Device {
         }
     }
 
-    public void toggle() {
-        send(new byte[]{(byte) 0x42});
+    public void toggle1() {
+        send(new byte[]{(byte) 0x31});
+    }
+
+    public void toggle2() {
+        send(new byte[]{(byte) 0x32});
+    }
+
+    public void toggle3() {
+        send(new byte[]{(byte) 0x33});
     }
 
     public static boolean canConnect(ScanResult scanResult) {

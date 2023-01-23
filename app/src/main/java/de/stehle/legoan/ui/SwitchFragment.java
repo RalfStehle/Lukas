@@ -26,7 +26,9 @@ public class SwitchFragment extends DeviceFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutSwitchItemBinding.inflate(inflater, container, false);
 
-        binding.ToggleButton.setOnClickListener(view1 -> getSwitch().toggle());
+        binding.ToggleButton1.setOnClickListener(view1 -> getSwitch().toggle1());
+        binding.ToggleButton2.setOnClickListener(view1 -> getSwitch().toggle2());
+        binding.ToggleButton3.setOnClickListener(view1 -> getSwitch().toggle3());
 
         getName().observe(getViewLifecycleOwner(),
                 value -> binding.NameContent.setText(value));

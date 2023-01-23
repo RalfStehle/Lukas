@@ -75,15 +75,15 @@ public interface RemoteController {
         }
 
         public void up() {
-            device.toggle();
+            device.toggle1();
         }
 
         public void down() {
-            device.toggle();
+            device.toggle3();
         }
 
         public void middle() {
-            device.toggle();
+            device.toggle2();
         }
 
         @NonNull

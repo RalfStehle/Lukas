@@ -152,10 +152,9 @@ public class Remote extends Device {
 
         for (ParcelUuid uuid : record.getServiceUuids()) {
             if (uuid.getUuid().equals(ServiceUUID)) {
-                String name = record.getDeviceName().trim();
+                byte[] data = record.getManufacturerSpecificData(0x397);
 
-                if ((name.contains("Handset")) || (name.contains("88010")) || (name.contains("Fernbedienung")))  // if (name.equals("Handset"))
-                {
+                if (data != null && data[1] == 66) { // 010 00010
                     return true;
                 }
             }

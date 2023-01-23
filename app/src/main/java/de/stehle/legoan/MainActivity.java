@@ -72,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        registerForContextMenu(binding.Toolbar);
+        if (devicesManager.isTesting()) {
+            registerForContextMenu(binding.Toolbar);
+        }
     }
 
     @Override
@@ -85,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(1, v.getId(), 1, "Add Train");
-        menu.add(2, v.getId(), 2, "Add Remote");
-        menu.add(3, v.getId(), 3, "Add Switch");
+        if (devicesManager.isTesting()) {
+            menu.add(1, v.getId(), 1, "Add Train");
+            menu.add(2, v.getId(), 2, "Add Remote");
+            menu.add(3, v.getId(), 3, "Add Switch");
+        }
     }
 
     @SuppressLint("DefaultLocale")

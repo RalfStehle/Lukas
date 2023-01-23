@@ -63,11 +63,13 @@ public final class DevicesManager extends ViewModel {
         return isScanning;
     }
 
+    public boolean isTesting() {
+        return true;
+    }
+
     @SuppressLint("DefaultLocale")
     private DevicesManager() {
-        boolean testing = false;
-
-        if (testing) {
+        if (isTesting()) {
             for (int i = 0; i < 8; i++) {
                 addDevice(new Switch(String.format("Switch #%d", i)));
                 addDevice(new Remote(String.format("Remote #%d", i)));

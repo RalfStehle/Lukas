@@ -230,9 +230,9 @@ public class TrainHub extends Device {
 
         for (ParcelUuid uuid : record.getServiceUuids()) {
             if (uuid.getUuid().equals(ServiceUUID)) {
-                String name = record.getDeviceName().trim();
-                if ((!name.contains("Handset")) && (!name.contains("88010")) && (!name.contains("Fernbedienung")))  // if (!name.equals("Handset"))
-                 {
+                byte[] data = record.getManufacturerSpecificData(0x397);
+
+                if (data != null && data[1] == 65) { // 010 00010
                     return true;
                 }
             }

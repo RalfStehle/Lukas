@@ -5,29 +5,32 @@
 <br>
 <br>
 <H2> Links</H2>
-[The Ultimate Guide to Android Bluetooth Low Energy] (https://punchthrough.com/android-ble-guide)<br>
-[Legoino von Cornelius Munz] (https://github.com/corneliusmunz/legoino/blob/master/src/Lpf2HubEmulation.cpp)<br>
-[The Brick Automation Project] (https://github.com/Cosmik42/BAP)<br>
 [LEGO Wireless Protocol 3.0.00 documentation] (https://lego.github.io/lego-ble-wireless-protocol-docs/index.html)<br>
+[Legoino von Cornelius Munz] (https://github.com/corneliusmunz/legoino/blob/master/src/Lpf2HubEmulation.cpp)<br>
+[The Ultimate Guide to Android Bluetooth Low Energy] (https://punchthrough.com/android-ble-guide)<br>
+[Making Android BLE work] (https://medium.com/@martijn.van.welie)<br>
+[The Brick Automation Project] (https://github.com/Cosmik42/BAP)<br>
+[https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started] (Seeed Studio XIAO ESP32C3 - Getting Started and Ble-Example)
+
 <br>
 <br>
-<H2>Vorschläge</H2>
+Die Android-App integriert die Lego-Fernsteuerung 88010, den Train-Hub 88009 und Arduino-ESP32-Microcontroller als Weichensteuerung<br>
+Mehrere Hubs und Fernsteuerungen können kombiniert werden.<br>
+<br>
+Es ist sogar möglich mit einer Fernsteuerung zwei Train-Hubs oder einen Train-Hub und einen Arduino zu steuern.<br>
+Am Train-Hub wird automatisch erkannt, ob ein LED-Licht oder ein Train-Motor angeschlossen wurde.<br>
+<br>
+Am Duplo Train base kann bisher nur der Motor gesteuert werden.<br>
+Sounds und Tone sind unberücksichtigt.
+
+<H3>Mögliche zukünftige Ergänzungen<br></H3>
+<H2>Integration des Farb- & Abstandssensor 88007
+Mit dem Lichtsensor kann man den Zug automatisch anhalten, schneller und langsamer werden lassen oder eine Pause einlegen, wenn er an einer farbigen Legoplatte vorbeifährt.
+Leider lässt sich der relativ große Sensor aber nur schwierig in die Lego-Modelle integrieren. Daher habe ich den Sensor nur mal kurz ausprobiert und nie weiter genutzt..<br>
+<br>
 <br>
 <H3>1. Integration der Fernsteuerung 88010.<br></H3>
-Die App könnte zwischen Train-Hub und Remote sozusagen dazwischengeschaltet werden, praktisch als Supervisor.<br>
-Jede Fernsteuerung kann dann sogar auf A und B 2 Züge steuern. Die grüne Taste könnte dann das Licht auf Kanal B des HUB ansteuern.
-Bevor die grüne Taste aber volle Power gibt, müsste überprüft werden, ob am Kanal B wirklich Licht und kein Motor angeschlossen ist,
-sonst gibt der Zug VOLLGAS<br>
-Wahrscheinlich muss man das aber fest programmiert in einem extra Branch programmieren
-<br>
-<H3>2.Lichtsensor-Daten auswerten<br></H3>
-Mit dem Lichtsensor kann mann den Zug automatisch anhalten, schneller und langsamer werden lassen oder eine Pause einlegen, wenn er an einer farbigen Legoplatte vorbeifährt.
-Ob das tatsächlich benutzt wird, ist aber fraglich. Der Sensor ist relativ groß und leider fast nicht in vorhandene Zugmodelle integrierbar.<br>
-Dafür müsste man also selbst eine Lokomotive entwickeln.<br>
-<br>
-<br>
-<H3>1. Integration der Fernsteuerung 88010.<br></H3>
-Nach Connect muss man dem Gerät sagen, dass es bei Änderungen von Werten Notifications versenden soll.<br>
+Nach Bluetooth-Connect muss man die Notifications am Device aktivieren. Sonst bekommt man keine Nachricht bei Betätigung einer Taste.<br>
 In der Legoino Bibliothek von Cornelius Munz wird das über den Befehl „activatePortDevice" gemacht.<br> 
 Diese Funktion sendet einen Wert auf die Characteristic die dem Hub sagt, dass an einem definierten virtuellen Port Notifications versendet werden, wenn sich Werte ändern.
 <br>
@@ -52,7 +55,7 @@ Steuertasten rechts aktivieren:<br>
 Die grüne Taste ist automatisch aktiviert, eigentlich ja zum An- und Ausschalten.<br>
 <br>
 <br>
-Die Notifications müssen aktiviert sein, evtl. daher noch folgende Befehle ausführen:<br>
+Java-Code-Beispiel:<br>
 BluetoothGattCharacteristic charac1 = null;<br>
 charac1 = Service.getCharacteristic(UUID.fromString("00001624-1212-efde-1623-785feabcd123"));<br>
 BluetoothGattDescriptor descriptor = charac1.getDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"));<br>

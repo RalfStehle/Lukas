@@ -140,7 +140,10 @@ public class Remote extends Device {
 
     @Override
     public void disconnect() {
-        bluetoothGatt.disconnect();
+        // Switch Off Hub  (Hub Actions = 0x02)
+        send(new byte[]{0x02, 0x01});
+        bluetoothGatt.close();
+        //bluetoothGatt.disconnect();
     }
 
     public static boolean canConnect(ScanResult scanResult) {

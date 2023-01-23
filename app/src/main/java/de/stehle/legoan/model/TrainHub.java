@@ -144,9 +144,9 @@ public class TrainHub extends Device {
 
     @Override
     public void disconnect() {
-        if (bluetoothGatt != null) {
-            bluetoothGatt.disconnect();
-        }
+        send(new byte[]{0x02, 0x01});
+        bluetoothGatt.close();
+        // if (bluetoothGatt != null) {  bluetoothGatt.disconnect();    }
     }
 
     public void ledRandom() {

@@ -119,13 +119,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
-                    android:text="1"
+                    android:text="Switch 1"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
                     app:iconGravity="textStart"
                     app:iconTint="#FFFFFF" />
                 <Space
-                    android:layout_width="6dp"
+                    android:layout_width="15dp"
                     android:layout_height="wrap_content" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ToggleButton2"
@@ -133,25 +133,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
-                    android:text="2"
+                    android:text="Switch 2"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
                     app:iconGravity="textStart"
                     app:iconTint="#FFFFFF" />
-                <Space
-                    android:layout_width="6dp"
-                    android:layout_height="0dp"/>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/ToggleButton3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#4CAF50"
-                    android:text = "3"
-                    android:textColor="#FFFFFF"
-                    app:icon="@drawable/ic_baseline_switch_right_24"
-                    app:iconGravity="textStart"
-                    app:iconTint="#FFFFFF" />
+
 
             </TableRow>
         </TableLayout>

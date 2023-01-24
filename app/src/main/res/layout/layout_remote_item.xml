@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="2pt"
-                        android:background="#F4F4F4"/>
+                        android:background="@color/Tomato"/>
 
                     <Spinner
                         android:id="@+id/TrainBSpinner"
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="2pt"
-                        android:background="#F4F4F4" />
+                        android:background="@color/Tomato" />
                 </LinearLayout>
 
             </TableRow>

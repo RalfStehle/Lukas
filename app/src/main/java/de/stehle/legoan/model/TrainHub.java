@@ -232,7 +232,7 @@ public class TrainHub extends Device {
             if (uuid.getUuid().equals(ServiceUUID)) {
                 byte[] data = record.getManufacturerSpecificData(0x397);
 
-                if (data != null && data[1] == 65) { // 010 00010
+                if (data != null && data[1] == 65) { // 010 00001
                     return true;
                 }
             }

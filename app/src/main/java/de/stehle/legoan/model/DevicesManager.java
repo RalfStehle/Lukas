@@ -157,4 +157,13 @@ public final class DevicesManager extends ViewModel {
 
         devices.postValue(deviceList);
     }
+
+    // Test von Ralf
+    public void disconnectAll() {
+        List<Device> deviceList = Objects.requireNonNull(devices.getValue());
+
+        for (Device device : deviceList) {
+            device.disconnect();
+        }
+    }
 }

@@ -140,4 +140,5 @@ public class DeviceListAdapter extends BaseAdapter {
             return fragment.getClass() == SwitchFragment.class;
         }
     }
+
 }

@@ -112,7 +112,7 @@ public class Switch extends Device {
         return false;
     }
 
-    private void send(byte[] data) {
+    public void send(byte[] data) {
         initializeService();
 
         if (writerQueue == null) {

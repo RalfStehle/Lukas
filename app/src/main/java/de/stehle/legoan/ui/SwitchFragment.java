@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.nio.charset.StandardCharsets;
+
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutSwitchItemBinding;
 import de.stehle.legoan.model.DevicesManager;
@@ -92,7 +94,7 @@ public class SwitchFragment extends DeviceFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 servoSetting = value.getText().toString();
-                //Switch.send(new byte[]);
+                getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
             }
         });
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {

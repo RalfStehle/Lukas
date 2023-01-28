@@ -1,18 +1,13 @@
 package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,7 +59,7 @@ public class SwitchFragment extends DeviceFragment {
             return true;
         }
         if (item.getItemId() == setServoMenuId) {
-            inputBox();
+            testServo();
             return true;
         }
 
@@ -82,27 +77,14 @@ public class SwitchFragment extends DeviceFragment {
     }
 
     // Test von Ralf
-    private void inputBox() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Servo einstellen");
-        final EditText value = new EditText(getActivity());   // Set up the input
-        value.setText(servoSetting);  //
-        value.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(value);
-
-        builder.setPositiveButton("Senden", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                servoSetting = value.getText().toString();
-                getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
-            }
-        });
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
+    private void testServo() {
+        new ConfirmBuilder(requireActivity())
+                .setTitle(R.string.setup_servo)
+                .setConfirmText(R.string.send)
+                .setValue(servoSetting)
+                .show(value -> {
+                    servoSetting = value;
+                    getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
+                });
     }
 }

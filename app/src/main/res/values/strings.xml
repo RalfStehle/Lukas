@@ -31,4 +31,9 @@
     <string name="add_train">Add Train</string>
     <string name="add_remote">Add Remote</string>
     <string name="add_switch">Add Switch</string>
+    <string name="send">Senden</string>
+    <string name="cancel">Cancel</string>
+    <string name="make_input">Make Input</string>
+    <string name="ok">OK</string>
+    <string name="setup_servo">Setup Servo</string>
 </resources>

@@ -69,7 +69,7 @@ public class DeviceListAdapter extends BaseAdapter {
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View view) {
-                    // handleAttachedItem(view);
+                    handleAttachedItem(view);
                 }
 
                 @Override
@@ -81,7 +81,7 @@ public class DeviceListAdapter extends BaseAdapter {
 
         view.setTag(i);
 
-        if (true || view.isAttachedToWindow()) {
+        if (view.isAttachedToWindow()) {
             handleAttachedItem(view);
         }
 

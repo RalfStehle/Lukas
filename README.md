@@ -20,6 +20,8 @@ Sounds und Tone sind unberücksichtigt.
 [Making Android BLE work] (https://medium.com/@martijn.van.welie)<br>
 [The Brick Automation Project] (https://github.com/Cosmik42/BAP)<br>
 [Seeed Studio XIAO ESP32C3 - Getting Started and Ble-Example] (https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started)<br>
+<A HREF="https://rebrickable.com/mocs/MOC-81350/DomBug/railway-electric-point-machine-with-a-china-servo" target="_blank">Weichenantrieb (MOC) by DomBug</A>
+<A HREF="https://rebrickable.com/users/Rebrickable/mocs/purchases/download/0/82990/c341ec473cedcb3e6f8cb6a10d253aa2472d6cd28e1239c5a636bb22a6edaaaa/?expire=1675114402" target="_blank">Weichenantrieb.pdf von DomBug (www.lokschuppen-dominik.de)</A>
 <br>
 <br>
 

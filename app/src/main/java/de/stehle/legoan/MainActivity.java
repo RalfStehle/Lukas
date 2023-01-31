@@ -3,8 +3,10 @@ package de.stehle.legoan;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private int wasScanning;
     private int addedDevices;
+    private ActivityResultLauncher<Intent> blueoothIntentLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
 
             addedDevices = devicesManager.getDevices().getValue().size();
         }
+
+        blueoothIntentLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        devicesManager.startScanning();
+                    }
+                });
     }
 
     @Override
@@ -154,6 +167,13 @@ public class MainActivity extends AppCompatActivity {
                         }, 1);
                 return;
             }
+        }
+
+        if (!devicesManager.isBluetoothEnabled()) {
+            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+            blueoothIntentLauncher.launch(enableBluetoothIntent);
+            return;
         }
 
         devicesManager.startScanning();

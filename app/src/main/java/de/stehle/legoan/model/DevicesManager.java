@@ -28,6 +28,8 @@ public final class DevicesManager extends ViewModel {
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
     private final HashMap<Device, Observer<Boolean>> observers = new HashMap<>();
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothManager bluetoothManager;
     private BluetoothLeScanner bluetoothScanner;
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -64,7 +66,11 @@ public final class DevicesManager extends ViewModel {
     }
 
     public boolean isTesting() {
-        return true;
+        return false;
+    }
+
+    public boolean isBluetoothEnabled() {
+        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
 
     @SuppressLint("DefaultLocale")
@@ -79,12 +85,23 @@ public final class DevicesManager extends ViewModel {
     }
 
     public void setBluetoothManager(BluetoothManager bluetoothManager) {
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+        this.bluetoothManager = bluetoothManager;
     }
 
     public void startScanning() {
         if (Boolean.TRUE.equals(isScanning.getValue())) {
+            return;
+        }
+
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            return;
+        }
+
+        bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+
+        if (bluetoothScanner == null) {
             return;
         }
 

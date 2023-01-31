@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="50dp"
+    android:background="@drawable/servo_dialog_background">
+
+    <TextView
+        android:id="@+id/textview1"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:text="Servo Position 1" />
+
+    <EditText
+        android:id="@+id/servopos1"
+        android:layout_below="@+id/textview1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="Servo Position 1"
+        android:ems="16"
+        android:inputType="numberDecimal"
+        android:maxLength="3"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/textview2"
+        android:layout_below="@+id/servopos1"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:text="Servo Position 2"/>
+
+    <EditText
+        android:id="@+id/servopos2"
+        android:layout_below="@+id/textview2"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="numberDecimal"
+        android:maxLength="3"
+        android:autofillHints="Servo Position 2"
+        android:text="120" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/servopos2">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:backgroundTint="@null"
+            android:text="Ok" />
+
+        <Space
+            android:id="@+id/space1"
+            android:layout_toRightOf="@id/button1"
+            android:layout_width="25dp"
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_toRightOf="@id/space1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Cancel" />
+
+    </RelativeLayout>
+</RelativeLayout>

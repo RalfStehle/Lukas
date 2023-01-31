@@ -12,18 +12,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.nio.charset.StandardCharsets;
-
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutSwitchItemBinding;
 import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Switch;
+import de.stehle.legoan.utils.HexUtils;
 
 public class SwitchFragment extends DeviceFragment {
-    private final int contextMenuId = View.generateViewId();
-    private final int setServoMenuId = View.generateViewId();
+    private final int disconnectMenuItemId = View.generateViewId();
+    private final int setServoMenuItemId = View.generateViewId();
     private LayoutSwitchItemBinding binding;
-    private String servoSetting = "0x00 (byte)0x78";
+    private String servoSetting = "00 78";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -48,17 +47,18 @@ public class SwitchFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
-        menu.add(Menu.NONE, setServoMenuId, 0, R.string.menu_servo);
+        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, setServoMenuItemId, 0, R.string.menu_servo);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == contextMenuId) {
+        int itemId = item.getItemId();
+
+        if (itemId == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
             return true;
-        }
-        if (item.getItemId() == setServoMenuId) {
+        } else if (itemId == setServoMenuItemId) {
             testServo();
             return true;
         }
@@ -72,11 +72,6 @@ public class SwitchFragment extends DeviceFragment {
         binding = null;
     }
 
-    private Switch getSwitch() {
-        return (Switch) getDevice();
-    }
-
-    // Test von Ralf
     private void testServo() {
         new ConfirmBuilder(requireActivity())
                 .setTitle(R.string.setup_servo)
@@ -84,7 +79,11 @@ public class SwitchFragment extends DeviceFragment {
                 .setValue(servoSetting)
                 .show(value -> {
                     servoSetting = value;
-                    getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
+                    getSwitch().send(HexUtils.hexStringToByteArray(value));
                 });
+    }
+
+    private Switch getSwitch() {
+        return (Switch) getDevice();
     }
 }

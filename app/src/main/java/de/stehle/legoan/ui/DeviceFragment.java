@@ -9,8 +9,10 @@ import de.stehle.legoan.model.Device;
 
 public abstract class DeviceFragment extends Fragment {
     private final MutableLiveData<Device> device = new MutableLiveData<>();
+
     private final LiveData<String> name =
-            Transformations.map(device, device -> device != null ? device.getName() : null);
+            Transformations.switchMap(device, device -> device != null ? device.getName() : null);
+
     private final LiveData<Integer> battery =
             Transformations.switchMap(device, device -> device != null ? device.getBattery() : null);
 

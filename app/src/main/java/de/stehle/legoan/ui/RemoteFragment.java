@@ -1,6 +1,7 @@
 package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -10,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ import de.stehle.legoan.model.Switch;
 import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
-    private final int contextMenuId = View.generateViewId();
+    private final int disconnectMenuItemId = View.generateViewId();
     private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
     private ArrayAdapter<RemoteController> spinnerAdapter;
@@ -102,12 +104,12 @@ public class RemoteFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == contextMenuId) {
+        if (item.getItemId() == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
             return true;
         }
@@ -117,5 +119,36 @@ public class RemoteFragment extends DeviceFragment {
 
     private Remote getRemote() {
         return (Remote) getDevice();
+    }
+
+    class CustomArrayAdapter extends ArrayAdapter<RemoteController> {
+        public CustomArrayAdapter(@NonNull Context context, int resource) {
+            super(context, resource);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+
+            final RemoteController item = getItem(position);
+
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                final Observer<String> observer;
+
+                @Override
+                public void onViewAttachedToWindow(View view) {
+                    handleAttachedItem(view);
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View view) {
+
+                }
+            });
+            item.getName().observe(view.get);
+
+            return view;
+        }
     }
 }

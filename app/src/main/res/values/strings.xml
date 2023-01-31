@@ -36,4 +36,5 @@
     <string name="make_input">Make Input</string>
     <string name="ok">OK</string>
     <string name="setup_servo">Setup Servo</string>
+    <string name="rename">Rename</string>
 </resources>

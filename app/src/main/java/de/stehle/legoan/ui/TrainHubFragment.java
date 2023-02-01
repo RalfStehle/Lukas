@@ -1,7 +1,6 @@
 package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -9,10 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.nio.charset.StandardCharsets;
 
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutTrainItemBinding;
@@ -20,7 +20,8 @@ import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.TrainHub;
 
 public class TrainHubFragment extends DeviceFragment {
-    private final int contextMenuId = View.generateViewId();
+    private final int disconnectMenuItemId = View.generateViewId();
+    private final int renameMenuItemId = View.generateViewId();
     private LayoutTrainItemBinding binding;
 
     @SuppressLint("SetTextI18n")
@@ -50,13 +51,19 @@ public class TrainHubFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, renameMenuItemId, 0, R.string.rename);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == contextMenuId) {
+        int itemId = item.getItemId();
+
+        if (itemId == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
+            return true;
+        } else if (itemId == renameMenuItemId) {
+            rename();
             return true;
         }
 
@@ -67,6 +74,17 @@ public class TrainHubFragment extends DeviceFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void rename() {
+        new ConfirmBuilder(requireActivity())
+                .setTitle(R.string.rename)
+                .setConfirmText(R.string.rename)
+                .setValue(getName().getValue())
+                .setLMaxLength(14)
+                .show(value -> {
+                    getTrain().rename(value);
+                });
     }
 
     private TrainHub getTrain() {

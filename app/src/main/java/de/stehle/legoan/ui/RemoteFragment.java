@@ -1,6 +1,7 @@
 package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -10,13 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
@@ -28,17 +39,17 @@ import de.stehle.legoan.model.Switch;
 import de.stehle.legoan.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
-    private final int contextMenuId = View.generateViewId();
+    private final int disconnectMenuItemId = View.generateViewId();
     private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
-    private ArrayAdapter<RemoteController> spinnerAdapter;
+    private CustomArrayAdapter spinnerAdapter;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutRemoteItemBinding.inflate(inflater, container, false);
 
-        spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
+        spinnerAdapter = new CustomArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
 
         DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), value -> {
             controllers.clear();
@@ -102,12 +113,12 @@ public class RemoteFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == contextMenuId) {
+        if (item.getItemId() == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
             return true;
         }
@@ -117,5 +128,73 @@ public class RemoteFragment extends DeviceFragment {
 
     private Remote getRemote() {
         return (Remote) getDevice();
+    }
+
+    static class CustomArrayAdapter extends ArrayAdapter<RemoteController> {
+        public CustomArrayAdapter(@NonNull Context context, int resource, List<RemoteController> objects) {
+            super(context, resource, objects);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+
+            NameOwner.getNameOwner(view).setController(getItem(position));
+
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+
+            NameOwner.getNameOwner(view).setController(getItem(position));
+
+            return view;
+        }
+    }
+
+    static class NameOwner implements View.OnAttachStateChangeListener {
+        private final MutableLiveData<RemoteController> controller = new MutableLiveData<>();
+        private final LiveData<String> nameObservable;
+        private final Observer<String> nameObserver;
+        private TextView view;
+
+        public static NameOwner getNameOwner(TextView view) {
+            Object current = view.getTag();
+
+            if (current instanceof NameOwner) {
+                return (NameOwner) current;
+            }
+
+            return new NameOwner(view);
+        }
+
+        private NameOwner(TextView view) {
+            this.view = view;
+            this.view.setTag(this);
+            this.view.addOnAttachStateChangeListener(this);
+
+            nameObservable = Transformations.switchMap(controller, c -> c.getName());
+            nameObserver = view::setText;
+            nameObservable.observeForever(nameObserver);
+        }
+
+        public void setController(RemoteController controller) {
+            this.controller.setValue(controller);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(View view) {
+
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View view) {
+            nameObservable.removeObserver(nameObserver);
+            view.setTag(null);
+            view.removeOnAttachStateChangeListener(this);
+        }
     }
 }

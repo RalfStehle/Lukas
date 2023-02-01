@@ -1,10 +1,7 @@
 package de.stehle.legoan.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,14 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.nio.charset.StandardCharsets;
 
@@ -32,8 +24,8 @@ import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Switch;
 
 public class SwitchFragment extends DeviceFragment {
-    private final int contextMenuId = View.generateViewId();
-    private final int setServoMenuId = View.generateViewId();
+    private final int disconnectMenuItemId = View.generateViewId();
+    private final int setServoMenuItemId = View.generateViewId();
     private LayoutSwitchItemBinding binding;
     private String servopos1 = "0";
     private String servopos2 = "120";
@@ -62,17 +54,18 @@ public class SwitchFragment extends DeviceFragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(Menu.NONE, contextMenuId, 0, R.string.menu_disconnect);
-        menu.add(Menu.NONE, setServoMenuId, 0, R.string.menu_servo);
+        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, setServoMenuItemId, 0, R.string.menu_servo);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == contextMenuId) {
+        int itemId = item.getItemId();
+
+        if (itemId == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
             return true;
-        }
-        if (item.getItemId() == setServoMenuId) {
+        } else if (itemId == setServoMenuItemId) {
             setServoSetting();
             return true;
         }
@@ -86,11 +79,8 @@ public class SwitchFragment extends DeviceFragment {
         binding = null;
     }
 
-    private Switch getSwitch() {
-        return (Switch) getDevice();
-    }
-
     // Ergänzung von Ralf
+    @SuppressLint("ResourceAsColor")
     private void setServoSetting() {
         ServoDialogBinding binding = ServoDialogBinding.inflate(getLayoutInflater());
 
@@ -109,22 +99,17 @@ public class SwitchFragment extends DeviceFragment {
         binding.OkButton.setOnClickListener(view -> {
             servopos1 = binding.Position1.getText().toString();
             servopos2 = binding.Position2.getText().toString();
+
             String servoSetting = servopos1 + "#" + servopos2;
+
             getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
             dialog.cancel();
         });
         binding.CancelButton.setOnClickListener(view -> dialog.cancel());
         dialog.show();
-}
+    }
 
-    private void testServo() {
-        new ConfirmBuilder(requireActivity())
-                .setTitle(R.string.setup_servo)
-                .setConfirmText(R.string.send)
-                .setValue(servopos1)
-                .show(value -> {
-                    servopos1 = value;
-                    getSwitch().send(servopos1.getBytes(StandardCharsets.UTF_8));
-                });
+    private Switch getSwitch() {
+        return (Switch) getDevice();
     }
 }

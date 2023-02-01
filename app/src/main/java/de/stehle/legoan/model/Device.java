@@ -11,11 +11,11 @@ public abstract class Device {
     private final MutableLiveData<Boolean> isConnected = new MutableLiveData<>(true);
     private final MutableLiveData<Integer> battery = new MutableLiveData<>(0);
 
-    public String getName() {
-        return name.getValue();
+    public LiveData<String> getName() {
+        return name;
     }
 
-    public LiveData<Boolean> getIsConnected() {
+    public LiveData<Boolean> getStatus() {
         return isConnected;
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ public class ConfirmBuilder {
     private int cancelText = R.string.cancel;
     private int confirmText = R.string.ok;
     private String value = "";
+    private int maxLength;
 
     public interface ClickListener {
         void ok(String text);
@@ -33,6 +35,11 @@ public class ConfirmBuilder {
 
     public ConfirmBuilder setCancelText(int cancelText) {
         this.cancelText = cancelText;
+        return this;
+    }
+
+    public ConfirmBuilder setLMaxLength(int maxLength) {
+        this.maxLength = maxLength;
         return this;
     }
 
@@ -63,6 +70,11 @@ public class ConfirmBuilder {
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setLayoutParams(params);
         editText.requestFocus();
+
+        if (maxLength > 0) {
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+            editText.setMaxLines(1);
+        }
 
         FrameLayout frameLayout = new FrameLayout(context);
         frameLayout.addView(editText);

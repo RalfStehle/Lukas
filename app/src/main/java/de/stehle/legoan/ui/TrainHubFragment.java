@@ -81,6 +81,7 @@ public class TrainHubFragment extends DeviceFragment {
                 .setTitle(R.string.rename)
                 .setConfirmText(R.string.rename)
                 .setValue(getName().getValue())
+                .setLMaxLength(14)
                 .show(value -> {
                     getTrain().rename(value);
                 });

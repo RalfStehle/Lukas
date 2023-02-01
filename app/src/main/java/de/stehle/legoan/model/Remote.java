@@ -181,6 +181,10 @@ public class Remote extends Device {
             return;
         }
 
+        if (bluetoothGatt == null) {
+            return;
+        }
+
         BluetoothGattService service = bluetoothGatt.getService(ServiceUUID);
 
         if (service == null) {

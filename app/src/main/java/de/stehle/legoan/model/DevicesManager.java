@@ -25,6 +25,8 @@ public final class DevicesManager extends ViewModel {
     private static final DevicesManager instance = new DevicesManager();
     private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothManager bluetoothManager;
     private BluetoothLeScanner bluetoothScanner;
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -61,13 +63,17 @@ public final class DevicesManager extends ViewModel {
     }
 
     public boolean isTesting() {
-        return false;
+        return true;
+    }
+
+    public boolean isBluetoothEnabled() {
+        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
 
     @SuppressLint("DefaultLocale")
     private DevicesManager() {
         if (isTesting()) {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 3; i++) {
                 addDevice(new Switch(String.format("Switch #%d", i)));
                 addDevice(new Remote(String.format("Remote #%d", i)));
                 addDevice(new TrainHub(String.format("Train Hub #%d", i)));
@@ -76,12 +82,23 @@ public final class DevicesManager extends ViewModel {
     }
 
     public void setBluetoothManager(BluetoothManager bluetoothManager) {
-        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-        bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+        this.bluetoothManager = bluetoothManager;
     }
 
     public void startScanning() {
         if (Boolean.TRUE.equals(isScanning.getValue())) {
+            return;
+        }
+
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            return;
+        }
+
+        bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+
+        if (bluetoothScanner == null) {
             return;
         }
 
@@ -115,12 +132,17 @@ public final class DevicesManager extends ViewModel {
         return false;
     }
 
-    public void addDevice(Device device) {
+    public void addDevice(Device deviceToAdd) {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 
-        deviceList.add(device);
-        device.getName().observeForever(v -> sortDevices());
-        device.getStatus().observeForever(v -> removeDevice(device));
+        deviceList.add(deviceToAdd);
+        deviceToAdd.getName().observeForever(v -> sortDevices());
+
+        deviceToAdd.getStatus().observeForever(isConnected -> {
+            if (!isConnected) {
+                removeDevice(deviceToAdd);
+            }
+        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             deviceList.sort(Comparator.comparing((Device t) -> t.getClass().getName(), Comparator.reverseOrder()).thenComparing(Device::toString));
@@ -151,7 +173,7 @@ public final class DevicesManager extends ViewModel {
         devices.postValue(deviceList);
     }
 
-    // Test von Ralf
+    @SuppressWarnings("unused")
     public void disconnectAll() {
         List<Device> deviceList = Objects.requireNonNull(devices.getValue());
 

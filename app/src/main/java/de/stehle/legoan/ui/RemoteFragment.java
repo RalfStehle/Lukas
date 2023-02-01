@@ -15,10 +15,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
@@ -33,14 +42,14 @@ public class RemoteFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();
     private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
-    private ArrayAdapter<RemoteController> spinnerAdapter;
+    private CustomArrayAdapter spinnerAdapter;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = LayoutRemoteItemBinding.inflate(inflater, container, false);
 
-        spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
+        spinnerAdapter = new CustomArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
 
         DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), value -> {
             controllers.clear();
@@ -121,9 +130,9 @@ public class RemoteFragment extends DeviceFragment {
         return (Remote) getDevice();
     }
 
-    class CustomArrayAdapter extends ArrayAdapter<RemoteController> {
-        public CustomArrayAdapter(@NonNull Context context, int resource) {
-            super(context, resource);
+    static class CustomArrayAdapter extends ArrayAdapter<RemoteController> {
+        public CustomArrayAdapter(@NonNull Context context, int resource, List<RemoteController> objects) {
+            super(context, resource, objects);
         }
 
         @NonNull
@@ -131,24 +140,61 @@ public class RemoteFragment extends DeviceFragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             TextView view = (TextView) super.getView(position, convertView, parent);
 
-            final RemoteController item = getItem(position);
-
-            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                final Observer<String> observer;
-
-                @Override
-                public void onViewAttachedToWindow(View view) {
-                    handleAttachedItem(view);
-                }
-
-                @Override
-                public void onViewDetachedFromWindow(View view) {
-
-                }
-            });
-            item.getName().observe(view.get);
+            NameOwner.getNameOwner(view).setController(getItem(position));
 
             return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+
+            NameOwner.getNameOwner(view).setController(getItem(position));
+
+            return view;
+        }
+    }
+
+    static class NameOwner implements View.OnAttachStateChangeListener {
+        private final MutableLiveData<RemoteController> controller = new MutableLiveData<>();
+        private final LiveData<String> nameObservable;
+        private final Observer<String> nameObserver;
+        private TextView view;
+
+        public static NameOwner getNameOwner(TextView view) {
+            Object current = view.getTag();
+
+            if (current instanceof NameOwner) {
+                return (NameOwner) current;
+            }
+
+            return new NameOwner(view);
+        }
+
+        private NameOwner(TextView view) {
+            this.view = view;
+            this.view.setTag(this);
+            this.view.addOnAttachStateChangeListener(this);
+
+            nameObservable = Transformations.switchMap(controller, c -> c.getName());
+            nameObserver = view::setText;
+            nameObservable.observeForever(nameObserver);
+        }
+
+        public void setController(RemoteController controller) {
+            this.controller.setValue(controller);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(View view) {
+
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View view) {
+            nameObservable.removeObserver(nameObserver);
+            view.setTag(null);
+            view.removeOnAttachStateChangeListener(this);
         }
     }
 }

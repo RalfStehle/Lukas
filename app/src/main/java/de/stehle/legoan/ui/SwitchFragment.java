@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 
 import de.stehle.legoan.R;
 import de.stehle.legoan.databinding.LayoutSwitchItemBinding;
+import de.stehle.legoan.databinding.ServoDialogBinding;
 import de.stehle.legoan.model.DevicesManager;
 import de.stehle.legoan.model.Switch;
 
@@ -91,8 +92,10 @@ public class SwitchFragment extends DeviceFragment {
 
     // Ergänzung von Ralf
     private void setServoSetting() {
+        ServoDialogBinding binding = ServoDialogBinding.inflate(getLayoutInflater());
+
         final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.servo_dialog);
+        dialog.setContentView(binding.getRoot());
 
         int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
         int height = (int)(getResources().getDisplayMetrics().heightPixels*0.50);
@@ -100,30 +103,17 @@ public class SwitchFragment extends DeviceFragment {
         dialog.getWindow().setLayout(width, height);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.R.color.background_light));
 
-        EditText _servopos1 = (EditText) dialog.findViewById(R.id.servopos1);
-        EditText _servopos2 = (EditText) dialog.findViewById(R.id.servopos2);
-        Button btn_yes = (Button) dialog.findViewById(R.id.button1);
-        Button btn_cancel = (Button) dialog.findViewById(R.id.button2);
+        binding.Position1.setInputType(InputType.TYPE_CLASS_NUMBER);
+        binding.Position2.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        _servopos1.setInputType(InputType.TYPE_CLASS_NUMBER);
-        _servopos2.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        btn_yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                servopos1 = _servopos1.getText().toString();
-                servopos2 = _servopos2.getText().toString();
-                String servoSetting = servopos1 + "#" + servopos2;
-                getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
-                dialog.cancel();
-            }
+        binding.OkButton.setOnClickListener(view -> {
+            servopos1 = binding.Position1.getText().toString();
+            servopos2 = binding.Position2.getText().toString();
+            String servoSetting = servopos1 + "#" + servopos2;
+            getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
+            dialog.cancel();
         });
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-            }
-        });
+        binding.CancelButton.setOnClickListener(view -> dialog.cancel());
         dialog.show();
 }
 

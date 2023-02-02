@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             if (wasScanning >= 3) {
                 binding.ScanStartButton.setVisibility(View.GONE);
                 binding.ScanStopButton.setVisibility(View.GONE);
+                binding.StopTrainButton.setVisibility(View.VISIBLE);
             } else if (isScanning) {
                 binding.ScanStartButton.setVisibility(View.GONE);
                 binding.ScanStopButton.setVisibility(View.VISIBLE);

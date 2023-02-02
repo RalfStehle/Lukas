@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/textview2"
-        android:layout_below="@+id/servopos1"
+        android:layout_below="@+id/Position1"
         android:layout_width="300dp"
         android:layout_height="25dp"
         android:text="Servo Position 2"/>
@@ -45,7 +45,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/servopos2">
+        android:layout_below="@+id/Position2">
 
         <Button
             android:id="@+id/OkButton"
@@ -57,7 +57,7 @@
 
         <Space
             android:id="@+id/space1"
-            android:layout_toRightOf="@id/button1"
+            android:layout_toRightOf="@id/OkButton"
             android:layout_width="25dp"
             android:gravity="center"
             android:background="@android:color/transparent"

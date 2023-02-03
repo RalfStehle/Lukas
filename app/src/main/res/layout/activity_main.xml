@@ -88,4 +88,20 @@
         app:backgroundTint="#43A047"
         app:icon="@drawable/ic_baseline_bluetooth_24"
         app:iconTint="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/StopTrainButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        android:text=""
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/DarkRed"
+        app:icon="@drawable/ic_baseline_front_hand_24"
+        app:iconTint="@android:color/white" />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

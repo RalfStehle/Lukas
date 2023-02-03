@@ -95,7 +95,6 @@ public class Switch extends Device {
         send(new byte[]{(byte) 0x32});
     }
 
-
     public static boolean canConnect(ScanResult scanResult) {
         ScanRecord record = scanResult.getScanRecord();
 

@@ -33,15 +33,15 @@ public class RemotesFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void updateDevices(List<Device> devices) {
-        if (devicesAdapter != null) {
-            devicesAdapter.notifyDataSetChanged();
-        }
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void updateDevices(List<Device> devices) {
+        if (devicesAdapter != null) {
+            devicesAdapter.notifyDataSetChanged();
+        }
     }
 }

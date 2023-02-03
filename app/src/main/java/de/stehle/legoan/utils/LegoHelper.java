@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class LegoHelper {
@@ -35,6 +36,18 @@ public class LegoHelper {
         } else {
             return (byte) map(-speed, 0, 100, 255, 128);
         }
+    }
+
+    public static byte[] createRenameRequest(String name) {
+        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+        byte[] namePayload = new byte[nameBytes.length + 3];
+
+        System.arraycopy(nameBytes, 0, namePayload, 3, nameBytes.length);
+        namePayload[0] = 0x01;
+        namePayload[1] = 0x01; // Operation: Set
+        namePayload[2] = 0x01; // Property: Name.
+
+        return namePayload;
     }
 
     public static byte mapBrightness(int brightness) {

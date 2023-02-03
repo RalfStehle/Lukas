@@ -166,6 +166,11 @@ public class Remote extends Device {
         return false;
     }
 
+    public void rename(String name) {
+        setName(name);
+        send(LegoHelper.createRenameRequest(name));
+    }
+
     private void send(byte[] data) {
         initializeService();
 

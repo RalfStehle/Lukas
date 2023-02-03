@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -223,17 +222,8 @@ public class TrainHub extends Device {
     }
 
     public void rename(String name) {
-        byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
-        byte[] namePayload = new byte[nameBytes.length + 3];
-
-        System.arraycopy(nameBytes, 0, namePayload, 3, nameBytes.length);
-        namePayload[0] = 0x01;
-        namePayload[1] = 0x01; // Operation: Set
-        namePayload[2] = 0x01; // Property: Name.
-
         setName(name);
-
-        send(namePayload);
+        send(LegoHelper.createRenameRequest(name));
     }
 
     private void send(byte[] data) {

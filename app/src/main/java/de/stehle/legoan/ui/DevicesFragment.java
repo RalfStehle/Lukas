@@ -47,6 +47,12 @@ public class DevicesFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     private void updateDevices(List<Device> devices) {
         if (devicesAdapterLeft != null) {
             devicesAdapterLeft.notifyDataSetChanged();
@@ -55,11 +61,5 @@ public class DevicesFragment extends Fragment {
         if (devicesAdapterRight != null) {
             devicesAdapterRight.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }

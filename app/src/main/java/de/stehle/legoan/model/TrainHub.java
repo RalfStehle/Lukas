@@ -112,9 +112,11 @@ public class TrainHub extends Device {
 
                 if (value[2] != 0 && value.length > 3) {
                     if (value[3] == 0x02) {
-                        port = PortType.Motor;
+                        port = PortType.Motor;   // Train Motor 88002
+                    } else if (value[3] == 0x2E) {
+                        port = PortType.Motor;   // Technic Großer Motor 88013
                     } else if (value[3] == 0x08) {
-                        port = PortType.Light;
+                        port = PortType.Light;   // LED Licht 88005
                     }
                 }
 

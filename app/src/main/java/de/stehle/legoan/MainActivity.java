@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         binding.ScanStartButtonTop.setOnClickListener(this::startScanning);
         binding.ScanStopButtonTop.setOnClickListener(v -> devicesManager.stopScanning());
 
+        binding.StopTrainButton.setOnClickListener(v -> devicesManager.AllTrainMotorStop());
+
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
         devicesManager.setBluetoothManager(bluetoothManager);

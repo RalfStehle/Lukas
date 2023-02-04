@@ -63,7 +63,7 @@ public final class DevicesManager extends ViewModel {
     }
 
     public boolean isTesting() {
-        return true;
+        return false;
     }
 
     public boolean isBluetoothEnabled() {
@@ -171,6 +171,16 @@ public final class DevicesManager extends ViewModel {
         }
 
         devices.postValue(deviceList);
+    }
+
+    public void AllTrainMotorStop() {
+        List<Device> deviceList = Objects.requireNonNull(devices.getValue());
+
+        for (Device device : deviceList) {
+            if (device instanceof TrainHub) {
+                ((TrainHub) device).motorStop();
+            }
+        }
     }
 
     @SuppressWarnings("unused")

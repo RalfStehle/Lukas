@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.content.Context;
 import android.view.View;
@@ -15,7 +15,7 @@ import androidx.lifecycle.Transformations;
 
 import java.util.List;
 
-import de.stehle.legoan.model.RemoteController;
+import de.project.lukas.model.RemoteController;
 
 class RemoteControllerListAdapter extends ArrayAdapter<RemoteController> {
     public RemoteControllerListAdapter(@NonNull Context context, int resource, List<RemoteController> objects) {

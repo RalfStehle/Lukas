@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import de.stehle.legoan.R;
+import de.project.lukas.R;
+
 
 public class ConfirmBuilder {
     private final Activity activity;

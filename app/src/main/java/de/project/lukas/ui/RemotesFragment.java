@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
-import de.stehle.legoan.databinding.FragmentRemotesBinding;
-import de.stehle.legoan.model.Device;
-import de.stehle.legoan.model.DevicesManager;
-import de.stehle.legoan.model.Remote;
+import de.project.lukas.databinding.FragmentRemotesBinding;
+import de.project.lukas.model.Device;
+import de.project.lukas.model.DevicesManager;
+import de.project.lukas.model.Remote;
 
 public class RemotesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();

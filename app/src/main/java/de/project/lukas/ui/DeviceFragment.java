@@ -1,11 +1,11 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import de.stehle.legoan.model.Device;
+import de.project.lukas.model.Device;
 
 public abstract class DeviceFragment extends Fragment {
     private final MutableLiveData<Device> device = new MutableLiveData<>();

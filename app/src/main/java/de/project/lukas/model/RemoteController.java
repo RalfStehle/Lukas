@@ -1,6 +1,5 @@
-package de.stehle.legoan.model;
+package de.project.lukas.model;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;

@@ -1,4 +1,4 @@
-package de.stehle.legoan.utils;
+package de.project.lukas.utils;
 
 import java.util.ArrayList;
 

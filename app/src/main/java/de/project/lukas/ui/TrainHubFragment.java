@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,12 +12,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.nio.charset.StandardCharsets;
-
-import de.stehle.legoan.R;
-import de.stehle.legoan.databinding.LayoutTrainItemBinding;
-import de.stehle.legoan.model.DevicesManager;
-import de.stehle.legoan.model.TrainHub;
+import de.project.lukas.R;
+import de.project.lukas.databinding.LayoutTrainItemBinding;
+import de.project.lukas.model.DevicesManager;
+import de.project.lukas.model.TrainHub;
 
 public class TrainHubFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();

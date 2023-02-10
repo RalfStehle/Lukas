@@ -1,6 +1,6 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
-import de.stehle.legoan.model.Device;
+import de.project.lukas.model.Device;
 
 public interface DeviceFilter {
     boolean shouldUse(Device device);

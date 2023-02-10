@@ -1,4 +1,4 @@
-package de.stehle.legoan;
+package de.project.lukas;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,12 +21,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import de.stehle.legoan.databinding.ActivityMainBinding;
-import de.stehle.legoan.model.DevicesManager;
-import de.stehle.legoan.model.Remote;
-import de.stehle.legoan.model.Switch;
-import de.stehle.legoan.model.TrainHub;
-import de.stehle.legoan.ui.SectionsPagerAdapter;
+import de.project.lukas.databinding.ActivityMainBinding;
+import de.project.lukas.model.DevicesManager;
+import de.project.lukas.model.Remote;
+import de.project.lukas.model.Switch;
+import de.project.lukas.model.TrainHub;
+import de.project.lukas.ui.SectionsPagerAdapter;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {

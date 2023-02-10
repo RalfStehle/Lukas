@@ -1,4 +1,4 @@
-package de.stehle.legoan.model;
+package de.project.lukas.model;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;

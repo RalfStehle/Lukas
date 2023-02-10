@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,14 +16,14 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.stehle.legoan.R;
-import de.stehle.legoan.databinding.LayoutRemoteItemBinding;
-import de.stehle.legoan.model.Device;
-import de.stehle.legoan.model.DevicesManager;
-import de.stehle.legoan.model.Remote;
-import de.stehle.legoan.model.RemoteController;
-import de.stehle.legoan.model.Switch;
-import de.stehle.legoan.model.TrainHub;
+import de.project.lukas.R;
+import de.project.lukas.databinding.LayoutRemoteItemBinding;
+import de.project.lukas.model.Device;
+import de.project.lukas.model.DevicesManager;
+import de.project.lukas.model.Remote;
+import de.project.lukas.model.RemoteController;
+import de.project.lukas.model.Switch;
+import de.project.lukas.model.TrainHub;
 
 public class RemoteFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();

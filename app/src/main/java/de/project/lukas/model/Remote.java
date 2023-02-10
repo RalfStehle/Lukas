@@ -1,4 +1,4 @@
-package de.stehle.legoan.model;
+package de.project.lukas.model;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -14,8 +14,8 @@ import android.os.ParcelUuid;
 
 import java.util.UUID;
 
-import de.stehle.legoan.utils.LegoHelper;
-import de.stehle.legoan.utils.LegoWriterQueue;
+import de.project.lukas.utils.LegoHelper;
+import de.project.lukas.utils.LegoWriterQueue;
 
 @SuppressLint("MissingPermission")
 public class Remote extends Device {

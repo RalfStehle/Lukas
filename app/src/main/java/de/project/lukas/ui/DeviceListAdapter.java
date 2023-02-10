@@ -1,4 +1,4 @@
-package de.stehle.legoan.ui;
+package de.project.lukas.ui;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
 
-import de.stehle.legoan.model.Device;
-import de.stehle.legoan.model.Remote;
-import de.stehle.legoan.model.TrainHub;
+import de.project.lukas.model.Device;
+import de.project.lukas.model.Remote;
+import de.project.lukas.model.TrainHub;
 
 public class DeviceListAdapter extends BaseAdapter {
     private final List<Device> devices;

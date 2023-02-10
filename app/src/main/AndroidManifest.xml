@@ -25,13 +25,13 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Legoan"
+        android:theme="@style/Theme.Lukas"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Legoan.NoActionBar">
+            android:theme="@style/Theme.Lukas.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

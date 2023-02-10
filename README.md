@@ -33,7 +33,7 @@ Besonderer Dank gilt:<br>
 <br>
 
 <H2>Lego-Weichen mit Arduino ESP32 über Bluetooth steuern</H2>
-<A HREF="https://github.com/RalfStehle/Lego-Weichensteuerung" target="_blank">github.com/RalfStehle/Lego-Weichensteuerung</A><br>
+<A HREF="https://github.com/RalfStehle/Lego-Weichensteuerung#readme" target="_blank">github.com/RalfStehle/Lego-Weichensteuerung</A><br>
 
 <br>
 

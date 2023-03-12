@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.LinkedList;
 import java.util.Queue;
 
+// Guarantees that writes are sent sequentially and not in parallel.
 public class LegoWriterQueue {
     private final BluetoothGatt bluetoothGatt;
     private final BluetoothGattCharacteristic bluetoothCharacteristic;

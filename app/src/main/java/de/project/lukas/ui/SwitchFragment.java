@@ -27,9 +27,6 @@ public class SwitchFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();
     private final int setServoMenuItemId = View.generateViewId();
     private LayoutSwitchItemBinding binding;
-    private String servopos1 = "0";
-    private String servopos2 = "120";
-
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -80,7 +77,7 @@ public class SwitchFragment extends DeviceFragment {
     }
 
     // Ergänzung von Ralf
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     private void setServoSetting() {
         ServoDialogBinding binding = ServoDialogBinding.inflate(getLayoutInflater());
 
@@ -94,15 +91,15 @@ public class SwitchFragment extends DeviceFragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.R.color.background_light));
 
         binding.Position1.setInputType(InputType.TYPE_CLASS_NUMBER);
+        binding.Position1.setText(Integer.toString(getSwitch().getServoLow()));
         binding.Position2.setInputType(InputType.TYPE_CLASS_NUMBER);
+        binding.Position2.setText(Integer.toString(getSwitch().getServoHigh()));
 
         binding.OkButton.setOnClickListener(view -> {
-            servopos1 = binding.Position1.getText().toString();
-            servopos2 = binding.Position2.getText().toString();
+            String servoLow = binding.Position1.getText().toString();
+            String servoHigh = binding.Position2.getText().toString();
 
-            String servoSetting = servopos1 + "#" + servopos2;
-
-            getSwitch().send(servoSetting.getBytes(StandardCharsets.UTF_8));
+            getSwitch().adjustServo(Integer.parseInt(servoLow), Integer.parseInt(servoHigh));
             dialog.cancel();
         });
         binding.CancelButton.setOnClickListener(view -> dialog.cancel());

@@ -5,16 +5,22 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.preference.Preference;
+import android.provider.Settings;
+import android.util.Log;
 
 import java.util.Objects;
 import java.util.UUID;
 
+import de.project.lukas.utils.LegoHelper;
 import de.project.lukas.utils.LegoWriterQueue;
 
 @SuppressLint("MissingPermission")
@@ -25,10 +31,20 @@ public class Switch extends Device {
     private final BluetoothGatt bluetoothGatt;
     private final RemoteController controller;
     private LegoWriterQueue writerQueue;
+    private int servoLow;
+    private int servoHigh;
 
     @Override
     public String getAddress() {
         return bluetoothDevice.getAddress();
+    }
+
+    public int getServoLow() {
+        return servoLow;
+    }
+
+    public int getServoHigh() {
+        return servoHigh;
     }
 
     public RemoteController getController() {
@@ -73,11 +89,28 @@ public class Switch extends Device {
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                 writerQueue.confirmWrite();
             }
+
+            @Override
+            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                byte[] bytes = characteristic.getValue();
+                int battery = (bytes[0] & 0xFF)
+                        | ((bytes[1] & 0xFF) << 8)
+                        | ((bytes[1] & 0xFF) << 16)
+                        | ((bytes[1] & 0xFF) << 24);
+
+                setBattery(battery);
+            }
         };
 
         bluetoothDevice = device;
         bluetoothGatt = bluetoothDevice.connectGatt(null, true, callback);
         controller = new RemoteController.SwitchController(this);
+
+        String servoLowKey = String.format("%s_ServoLow", getAddress());
+        String servoHighKey = String.format("%s_ServoHigh", getAddress());
+
+        servoLow = GlobalPreferences.preference.getInt(servoLowKey, 0);
+        servoHigh = GlobalPreferences.preference.getInt(servoHighKey, 120);
     }
 
     @Override
@@ -88,11 +121,11 @@ public class Switch extends Device {
     }
 
     public void toggle1() {
-        send(new byte[]{(byte) 0x31});
+        send(new byte[]{(byte)servoLow});
     }
 
     public void toggle2() {
-        send(new byte[]{(byte) 0x32});
+        send(new byte[]{(byte)servoHigh});
     }
 
     public static boolean canConnect(ScanResult scanResult) {
@@ -109,6 +142,19 @@ public class Switch extends Device {
         }
 
         return false;
+    }
+
+    public void adjustServo(int low, int high) {
+        servoLow = low;
+        servoHigh = high;
+
+        String servoLowKey = String.format("%s_ServoLow", getAddress());
+        String servoHighKey = String.format("%s_ServoHigh", getAddress());
+
+        GlobalPreferences.preference.edit()
+                .putInt(servoLowKey, low)
+                .putInt(servoHighKey, high)
+                .commit();
     }
 
     public void send(byte[] data) {
@@ -143,5 +189,6 @@ public class Switch extends Device {
         }
 
         writerQueue = new LegoWriterQueue(bluetoothGatt, characteristic);
+        bluetoothGatt.setCharacteristicNotification(characteristic, true);
     }
 }

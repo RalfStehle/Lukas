@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 
 import de.project.lukas.databinding.ActivityMainBinding;
 import de.project.lukas.model.DevicesManager;
+import de.project.lukas.model.GlobalPreferences;
 import de.project.lukas.model.Remote;
 import de.project.lukas.model.Switch;
 import de.project.lukas.model.TrainHub;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         binding.StopTrainButton.setOnClickListener(v -> devicesManager.AllTrainMotorStop());
 
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+        GlobalPreferences.preference = getPreferences(MODE_PRIVATE);
 
         devicesManager.setBluetoothManager(bluetoothManager);
         devicesManager.isScanning().observe(this, isScanning -> {

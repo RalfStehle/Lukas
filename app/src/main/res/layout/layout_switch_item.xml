@@ -15,6 +15,8 @@
         android:layout_height="wrap_content"
         app:cardElevation="1pt"
         app:contentPadding="10pt"
+        app:contentPaddingBottom="3pt"
+        app:contentPaddingTop="3pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +30,7 @@
             android:background="#FFFFFF">
 
             <TableRow
-                android:layout_marginBottom="2pt">
+                android:layout_marginBottom="0pt">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -64,7 +66,8 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginBottom="2pt">
+                android:layout_marginBottom="2pt"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="0dp"
@@ -107,8 +110,7 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginTop="8pt">
-
+                android:layout_marginTop="2pt">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ToggleButton1"

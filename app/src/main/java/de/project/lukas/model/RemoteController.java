@@ -97,11 +97,9 @@ public interface RemoteController {
             device.toggle1();
         }
 
-        public void down() {
-        }
-
         public void middle() {
-            device.toggle2();
+        }
+        public void down() { device.toggle2();
         }
     }
 

@@ -125,6 +125,7 @@ public class Switch extends Device {
     }
 
     public void toggle2() {
+
         send(new byte[]{(byte)servoHigh});
     }
 

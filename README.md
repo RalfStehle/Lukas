@@ -35,7 +35,9 @@ For the switches a custom MOC has been built and Arduino ESP32 is used as a cont
 
 ## Extensions and Contributions
 
-Feel welcome to contribute to the application. Just create an issued and provide a pull request. Possible exensions are.
+Feel welcome to contribute to the application. Just create an issued and provide a pull request.
+
+Possible exensions are...
 
 * Support for color and distance sensor: 88007, e.g. to stop a train automatically when a color is detected.
 * Duplo Base Train (almost same protocol, also supports color sensor and can play sounds)

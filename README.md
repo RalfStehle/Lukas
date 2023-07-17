@@ -18,8 +18,8 @@ For emergencies there is also a button to stop all trains immediately.
 
 ## Screenshot
 
-![](https://github.com/RalfStehle/Lukas/blob/main/Screenshot_Devices.jpg)
-![](https://github.com/RalfStehle/Lukas/blob/main/Screenshot_Remotes.jpg)
+<img src="https://github.com/RalfStehle/Lukas/blob/main/Screenshot_Devices.jpg" width="300">
+<img src="https://github.com/RalfStehle/Lukas/blob/main/Screenshot_Remotes.jpg" width="300">
 
 ## Links
 

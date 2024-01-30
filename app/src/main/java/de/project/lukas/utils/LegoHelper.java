@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -61,7 +62,6 @@ public class LegoHelper {
     @SuppressLint("MissingPermission")
     public static void enableNotifications(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothCharacteristic) {
         UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
         // Use a special descriptor to enable notifications.
         BluetoothGattDescriptor bluetoothDescriptor = bluetoothCharacteristic.getDescriptor(uuid);
         bluetoothDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);

@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.project.lukas.model.Device;
 import de.project.lukas.model.Remote;
+import de.project.lukas.model.TrainBase;
 import de.project.lukas.model.TrainHub;
 
 public class DeviceListAdapter extends BaseAdapter {
@@ -34,7 +35,6 @@ public class DeviceListAdapter extends BaseAdapter {
                 count++;
             }
         }
-
         return count;
     }
 
@@ -101,6 +101,11 @@ public class DeviceListAdapter extends BaseAdapter {
                 trainHubFragment.setDevice(device);
 
                 transaction.replace(view.getId(), trainHubFragment);
+            } else if (device instanceof TrainBase) {
+                TrainBaseFragment trainBaseFragment = new TrainBaseFragment();
+                trainBaseFragment.setDevice(device);
+
+                transaction.replace(view.getId(), trainBaseFragment);
             } else if (device instanceof Remote) {
                 RemoteFragment remoteFragment = new RemoteFragment();
                 remoteFragment.setDevice(device);
@@ -134,6 +139,8 @@ public class DeviceListAdapter extends BaseAdapter {
     private boolean IsCorrectFragment(Device device, Fragment fragment) {
         if (device instanceof TrainHub) {
             return fragment.getClass() == TrainHubFragment.class;
+        } else if (device instanceof TrainBase) {
+            return fragment.getClass() == TrainBaseFragment.class;
         } else if (device instanceof Remote) {
             return fragment.getClass() == RemoteFragment.class;
         } else {

@@ -8,12 +8,17 @@ import java.util.Objects;
 
 public abstract class Device {
     private final MutableLiveData<String> name = new MutableLiveData<>("");
+    private final MutableLiveData<String> message = new MutableLiveData<>("");   // 2024-01-16
     private final MutableLiveData<Boolean> isConnected = new MutableLiveData<>(true);
     private final MutableLiveData<Integer> battery = new MutableLiveData<>(0);
 
     public LiveData<String> getName() {
         return name;
     }
+
+    public LiveData<String> getMessage() {
+        return message;
+    }                   // 2024-01-17 Ralf
 
     public LiveData<Boolean> getStatus() {
         return isConnected;
@@ -31,6 +36,10 @@ public abstract class Device {
         name.postValue(value);
     }
 
+    protected void setMessage(String value) {
+        message.postValue(value);
+    }                             // 2024-01-17 Ralf
+
     protected void setBattery(int value) {
         battery.postValue(value);
     }
@@ -42,6 +51,8 @@ public abstract class Device {
     public abstract String getAddress();
 
     public abstract void disconnect();
+
+    public void switchOff() {};
 
     @NonNull
     @Override

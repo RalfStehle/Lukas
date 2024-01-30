@@ -9,34 +9,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import de.project.lukas.R;
-import de.project.lukas.databinding.LayoutTrainItemBinding;
-
+import de.project.lukas.databinding.LayoutTrainBaseItemBinding;
 import de.project.lukas.model.DevicesManager;
-import de.project.lukas.model.TrainHub;
+import de.project.lukas.model.TrainBase;
 
 
-public class TrainHubFragment extends DeviceFragment {
+public class TrainBaseFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();
     private final int switchOffMenuItemId = View.generateViewId();
     private final int renameMenuItemId = View.generateViewId();
-    private LayoutTrainItemBinding binding;
-
+    private LayoutTrainBaseItemBinding binding;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = LayoutTrainItemBinding.inflate(inflater, container, false);
+        binding = LayoutTrainBaseItemBinding.inflate(inflater, container, false);
 
         binding.MotorSlowerButton.setOnClickListener(view1 -> getTrain().motorSlower());
         binding.MotorStopButton.setOnClickListener(view1 -> getTrain().motorStop());
         binding.MotorFasterButton.setOnClickListener(view1 -> getTrain().motorFaster());
         binding.LedColorButton.setOnClickListener(view1 -> getTrain().setLedColorHub());
-        binding.LightBrighterButton.setOnClickListener(view1 -> getTrain().lightBrighter());
-        binding.LightDarkerButton.setOnClickListener(view1 -> getTrain().lightDarker());
+        binding.sound1.setOnClickListener(view1 -> getTrain().sound1());
+        binding.sound2.setOnClickListener(view1 -> getTrain().sound2());
+        binding.sound3.setOnClickListener(view1 -> getTrain().sound3());
+        binding.sound4.setOnClickListener(view1 -> getTrain().sound4());
+        binding.sound1.setOnLongClickListener(view1 -> {
+            getTrain().sound1();
+            return true;
+        });
+
 
         getName().observe(getViewLifecycleOwner(),
                 value -> binding.NameContent.setText(value));
@@ -63,7 +69,6 @@ public class TrainHubFragment extends DeviceFragment {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
-        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
         menu.add(Menu.NONE, switchOffMenuItemId, 0, R.string.menu_switchoff);
         menu.add(Menu.NONE, renameMenuItemId, 0, R.string.rename);
     }
@@ -71,6 +76,7 @@ public class TrainHubFragment extends DeviceFragment {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+
 
         if (itemId == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
@@ -97,7 +103,7 @@ public class TrainHubFragment extends DeviceFragment {
                 });
     }
 
-    private TrainHub getTrain() {
-        return (TrainHub) getDevice();
+    private TrainBase getTrain() {
+        return (TrainBase) getDevice();
     }
 }

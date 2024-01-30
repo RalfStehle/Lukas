@@ -23,7 +23,7 @@ import java.util.Objects;
 @SuppressLint("MissingPermission")
 public final class DevicesManager extends ViewModel {
     private static final DevicesManager instance = new DevicesManager();
-    private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Device>> devices = new MutableLiveData<>(new ArrayList<>());   // verbundene Devices
     private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
@@ -41,6 +41,8 @@ public final class DevicesManager extends ViewModel {
             if (!hasDevice(device.getAddress())) {
                 if (TrainHub.canConnect(result)) {
                     addDevice(new TrainHub(device));
+                } else if (TrainBase.canConnect(result)) {
+                    addDevice(new TrainBase(device));
                 } else if (Remote.canConnect(result)) {
                     addDevice(new Remote(device));
                 } else if (Switch.canConnect(result)) {
@@ -62,9 +64,7 @@ public final class DevicesManager extends ViewModel {
         return isScanning;
     }
 
-    public boolean isTesting() {
-        return false;
-    }
+    public boolean isTesting() {   return false;    }
 
     public boolean isBluetoothEnabled() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
@@ -73,10 +73,11 @@ public final class DevicesManager extends ViewModel {
     @SuppressLint("DefaultLocale")
     private DevicesManager() {
         if (isTesting()) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 6; i++) {
                 addDevice(new Switch(String.format("Switch #%d", i)));
                 addDevice(new Remote(String.format("Remote #%d", i)));
                 addDevice(new TrainHub(String.format("Train Hub #%d", i)));
+                addDevice(new TrainBase(String.format("Train Base #%d", i)));
             }
         }
     }
@@ -163,6 +164,18 @@ public final class DevicesManager extends ViewModel {
         devices.postValue(deviceList);
     }
 
+    public void switchOffDevice(Device device) {
+        device.switchOff();
+
+        List<Device> deviceList = Objects.requireNonNull(devices.getValue());
+
+        if (!deviceList.remove(device)) {
+            return;
+        }
+
+        devices.postValue(deviceList);
+    }
+
     private void sortDevices() {
         List<Device> deviceList = devices.getValue();
 
@@ -179,6 +192,9 @@ public final class DevicesManager extends ViewModel {
         for (Device device : deviceList) {
             if (device instanceof TrainHub) {
                 ((TrainHub) device).motorStop();
+            }
+            if (device instanceof TrainBase) {
+                ((TrainBase) device).motorStop();
             }
         }
     }

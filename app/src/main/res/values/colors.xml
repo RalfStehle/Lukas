@@ -9,6 +9,11 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
 
+    <color name="TrainhubBackground">#e1f2fa</color>
+    <color name="TrainbaseBackground">#fff0d9</color>
+    <color name="SwitchBackground">#e1f7ea</color>
+    <color name="RemoteBackground">#f5edf4</color>
+
     <color name="White">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>

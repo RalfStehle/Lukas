@@ -24,9 +24,12 @@ import de.project.lukas.model.Remote;
 import de.project.lukas.model.RemoteController;
 import de.project.lukas.model.Switch;
 import de.project.lukas.model.TrainHub;
+import de.project.lukas.model.TrainBase;
+
 
 public class RemoteFragment extends DeviceFragment {
     private final int disconnectMenuItemId = View.generateViewId();
+    private final int switchOffMenuItemId = View.generateViewId();
     private final int renameMenuItemId = View.generateViewId();
     private final List<RemoteController> controllers = new ArrayList<>();
     private LayoutRemoteItemBinding binding;
@@ -47,6 +50,9 @@ public class RemoteFragment extends DeviceFragment {
                 if (device instanceof TrainHub) {
                     controllers.add(((TrainHub) device).getMotorController());
                     controllers.add(((TrainHub) device).getLightController());
+                } else if ((device instanceof TrainBase)) {
+                    controllers.add(((TrainBase) device).getMotorController());
+                    controllers.add(((TrainBase) device).getLightController());
                 } else if (device instanceof Switch) {
                     controllers.add(((Switch) device).getController());
                 }
@@ -108,6 +114,7 @@ public class RemoteFragment extends DeviceFragment {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
+        menu.add(Menu.NONE, switchOffMenuItemId, 0, R.string.menu_switchoff);
         menu.add(Menu.NONE, renameMenuItemId, 0, R.string.rename);
     }
 
@@ -117,6 +124,9 @@ public class RemoteFragment extends DeviceFragment {
 
         if (itemId == disconnectMenuItemId) {
             DevicesManager.getInstance().removeDevice(getDevice());
+            return true;
+        } else if (itemId == switchOffMenuItemId) {
+            DevicesManager.getInstance().switchOffDevice(getDevice());
             return true;
         } else if (itemId == renameMenuItemId) {
             rename();

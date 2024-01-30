@@ -13,6 +13,7 @@
         android:id="@+id/Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/RemoteBackground"
         app:cardElevation="1pt"
         app:contentPadding="10pt"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +26,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FFFFFF">
+            android:background="@color/RemoteBackground">
 
             <TableRow android:layout_marginBottom="2pt">
 
@@ -118,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="2pt"
-                        android:background="@color/Tomato"/>
+                        android:background="#ecd8e9"/>
 
                     <Spinner
                         android:id="@+id/TrainBSpinner"
@@ -126,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="2pt"
-                        android:background="@color/Tomato" />
+                        android:background="#d8b1d4" />
                 </LinearLayout>
 
             </TableRow>
@@ -134,3 +135,9 @@
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--
+    Plum     MediumPurple  Violet
+    Violet   #ecd8e9  #d8b1d4  #c38bbf  #ad66a9  #973e95  #800080
+    Grau     #e6e9ec  #ced3d9  #b6bdc6  #9ea9b4  #8794a2  #708090
+    -->

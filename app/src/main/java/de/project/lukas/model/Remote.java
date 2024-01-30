@@ -106,19 +106,19 @@ public class Remote extends Device {
 
                 if (buttonSide == 0) {
                     if (buttonMode == 1) {
-                        controllerA.up();
+                        controllerA.up(getThis());
                     } else if (buttonMode == -1) {
-                        controllerA.down();
+                        controllerA.down(getThis());
                     } else if (buttonMode == 127) {
-                        controllerA.middle();
+                        controllerA.middle(getThis());
                     }
                 } else {
                     if (buttonMode == 1) {
-                        controllerB.up();
+                        controllerB.up(getThis());
                     } else if (buttonMode == -1) {
-                        controllerB.down();
+                        controllerB.down(getThis());
                     } else if (buttonMode == 127) {
-                        controllerB.middle();
+                        controllerB.middle(getThis());
                     }
                 }
             }
@@ -141,6 +141,13 @@ public class Remote extends Device {
     @Override
     public void disconnect() {
         // Switch Off Hub  (Hub Actions = 0x02)
+        send(new byte[]{0x02, 0x02});
+        bluetoothGatt.close();
+        //bluetoothGatt.disconnect();
+    }
+
+    public void switchOff() {
+        // Switch Off Hub  (Hub Actions = 0x01)
         send(new byte[]{0x02, 0x01});
         bluetoothGatt.close();
         //bluetoothGatt.disconnect();
@@ -169,6 +176,10 @@ public class Remote extends Device {
     public void rename(String name) {
         setName(name);
         send(LegoHelper.createRenameRequest(name));
+    }
+
+    public void setLedColorRemote(int color) {
+        send(new byte[]{(byte) 0x81, 0x34, 0x11, 0x51, 0x00, (byte) color});
     }
 
     private void send(byte[] data) {
@@ -214,5 +225,9 @@ public class Remote extends Device {
             // Activate battery reports
             send(new byte[]{0x01, 0x06, 0x02});
         }, 2000);
+    }
+
+    private Remote getThis() {
+        return this;
     }
 }

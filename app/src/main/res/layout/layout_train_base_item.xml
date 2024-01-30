@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="1pt"
         app:contentPadding="4pt"
-        app:cardBackgroundColor="@color/TrainhubBackground"
+        app:cardBackgroundColor="@color/TrainbaseBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/TrainhubBackground">
+            android:background="@color/TrainbaseBackground">
 
             <TableRow
                 android:layout_marginBottom="2pt">
@@ -49,7 +49,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_train"
+                        android:text="Duplo"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -153,12 +153,23 @@
                 android:layout_marginTop="4pt">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/LightDarkerButton"
+                    android:id="@+id/sound1"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:backgroundTint="#FFA726"
                     android:contentDescription="@string/button_brighter"
-                    app:icon="@drawable/ic_baseline_remove_24"
+                    app:icon="@drawable/baseline_horn_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sound2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4pt"
+                    android:backgroundTint="#FFA726"
+                    android:contentDescription="@string/button_brighter"
+                    app:icon="@drawable/baseline_steam_24"
                     app:iconGravity="textStart"
                     app:iconPadding="0dp" />
 
@@ -175,12 +186,23 @@
                     app:iconTint="#ffffff" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/LightBrighterButton"
+                    android:id="@+id/sound3"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
+                    android:layout_marginEnd="4pt"
+                    android:layout_weight="1"
                     android:backgroundTint="#FFA726"
                     android:contentDescription="@string/button_darker"
-                    app:icon="@drawable/ic_baseline_add_24"
+                    app:icon="@drawable/baseline_water_drop_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sound4"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFA726"
+                    android:contentDescription="@string/button_darker"
+                    app:icon="@drawable/baseline_railway_alert_24"
                     app:iconGravity="textStart"
                     app:iconPadding="0dp" />
             </TableRow>

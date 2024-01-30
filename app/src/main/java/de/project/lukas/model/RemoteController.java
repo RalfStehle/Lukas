@@ -7,11 +7,11 @@ import androidx.lifecycle.Transformations;
 import java.util.Locale;
 
 public interface RemoteController {
-    void up();
+    void up(Remote remote);
 
-    void down();
+    void down(Remote remote);
 
-    void middle();
+    void middle(Remote remote);
 
     LiveData<String> getName();
 
@@ -35,15 +35,44 @@ public interface RemoteController {
                     n -> String.format(Locale.getDefault(), "Motor %s", n));
         }
 
-        public void up() {
+        public void up(Remote remote) {
             device.motorFaster();
         }
 
-        public void down() {
+        public void down(Remote remote) {
             device.motorSlower();
         }
 
-        public void middle() {
+        public void middle(Remote remote) {
+            device.motorStop();
+        }
+    }
+
+    class BaseMotorController implements RemoteController {
+        private final TrainBase device;
+        private final LiveData<String> name;
+
+        @Override
+        public LiveData<String> getName() {
+            return name;
+        }
+
+        BaseMotorController(TrainBase device) {
+            this.device = device;
+
+            name = Transformations.map(device.getName(),
+                    n -> String.format(Locale.getDefault(), "Motor %s", n));
+        }
+
+        public void up(Remote remote) {
+            device.motorFaster();
+        }
+
+        public void down(Remote remote) {
+            device.motorSlower();
+        }
+
+        public void middle(Remote remote) {
             device.motorStop();
         }
     }
@@ -64,16 +93,46 @@ public interface RemoteController {
                     n -> String.format(Locale.getDefault(), "Light %s", n));
         }
 
-        public void up() {
+        public void up(Remote remote) {
             device.lightBrighter();
         }
 
-        public void down() {
-            device.lightDarker();
+        public void down(Remote remote) {
+            device.setLedColorHub();
+            remote.setLedColorRemote(device.getCurrentColor());
         }
 
-        public void middle() {
-            device.ledRandom();
+        public void middle(Remote remote) {
+            device.lightOff();
+        }
+    }
+
+    class BaseLightController implements RemoteController {
+        private final TrainBase device;
+        private final LiveData<String> name;
+
+        @Override
+        public LiveData<String> getName() {
+            return name;
+        }
+
+        BaseLightController(TrainBase device) {
+            this.device = device;
+
+            name = Transformations.map(device.getName(),
+                    n -> String.format(Locale.getDefault(), "Light %s", n));
+        }
+
+        public void up(Remote remote) {
+            // device.lightBrighter();
+        }
+
+        public void down(Remote remote) {
+            // device.lightDarker();
+        }
+
+        public void middle(Remote remote) {
+            device.setLedColorHub();
         }
     }
 
@@ -93,13 +152,13 @@ public interface RemoteController {
                     n -> String.format(Locale.getDefault(), "Switch %s", n));
         }
 
-        public void up() {
+        public void up(Remote remote) {
             device.toggle1();
         }
 
-        public void middle() {
+        public void middle(Remote remote) {
         }
-        public void down() { device.toggle2();
+        public void down(Remote remote) { device.toggle2();
         }
     }
 
@@ -120,13 +179,13 @@ public interface RemoteController {
             name.setValue("None");
         }
 
-        public void up() {
+        public void up(Remote remote) {
         }
 
-        public void down() {
+        public void down(Remote remote) {
         }
 
-        public void middle() {
+        public void middle(Remote remote) {
         }
     }
 }

@@ -17,6 +17,7 @@
         app:contentPadding="10pt"
         app:contentPaddingBottom="3pt"
         app:contentPaddingTop="3pt"
+        app:cardBackgroundColor="@color/SwitchBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +28,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FFFFFF">
+            android:background="@color/SwitchBackground">
 
             <TableRow
                 android:layout_marginBottom="0pt">
@@ -117,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:backgroundTint="#4CAF50"
+                    android:backgroundTint="@color/DarkSeaGreen"
                     android:text="Switch 1"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
@@ -131,14 +132,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:backgroundTint="#4CAF50"
+                    android:backgroundTint="@color/SeaGreen"
                     android:text="Switch 2"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
                     app:iconGravity="textStart"
                     app:iconTint="#FFFFFF" />
-
-
+                <!-- #4CAF50  -->
             </TableRow>
         </TableLayout>
 

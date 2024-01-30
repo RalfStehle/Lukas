@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         if (devicesManager.isTesting()) {
             menu.add(Menu.NONE, menuAddTrain, 0, R.string.add_train);
             menu.add(Menu.NONE, menuAddRemote, 0, R.string.add_remote);
-            menu.add(Menu.NONE, menuAddTrain, 0, R.string.add_switch);
+            menu.add(Menu.NONE, menuAddSwitch, 0, R.string.add_switch);
         }
     }
 
@@ -126,12 +126,13 @@ public class MainActivity extends AppCompatActivity {
 
         int itemId = item.getItemId();
 
+        // only use if "isTesting() return true" in DevicesManager.java
         if (itemId == menuAddTrain) {
-            devicesManager.addDevice(new TrainHub(String.format("Train %d", addedDevices)));
+            devicesManager.addDevice(new TrainHub(String.format("Train Hub #%d", addedDevices)));
         } else if (itemId == menuAddRemote) {
-            devicesManager.addDevice(new Remote(String.format("Train %d", addedDevices)));
+            devicesManager.addDevice(new Remote(String.format("Remote #%d", addedDevices)));
         } else if (itemId == menuAddSwitch) {
-            devicesManager.addDevice(new Switch(String.format("Train %d", addedDevices)));
+            devicesManager.addDevice(new Switch(String.format("Switch #%d", addedDevices)));
         }
 
         return false;
@@ -188,4 +189,5 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasPermission(String id) {
         return ActivityCompat.checkSelfPermission(this, id) == PackageManager.PERMISSION_GRANTED;
     }
+
 }

@@ -16,6 +16,9 @@ public abstract class DeviceFragment extends Fragment {
     private final LiveData<Integer> battery =
             Transformations.switchMap(device, device -> device != null ? device.getBattery() : null);
 
+    private final LiveData<String> message =
+            Transformations.switchMap(device, device -> device != null ? device.getMessage() : null);    // 2024-01-17 Ralf
+
     protected Device getDevice() {
         return device.getValue();
     }
@@ -27,6 +30,10 @@ public abstract class DeviceFragment extends Fragment {
     protected LiveData<String> getName() {
         return name;
     }
+
+    protected LiveData<String> getMessage() {
+        return message;
+    }                           // 2024-01-17 Ralf
 
     protected LiveData<Integer> getBattery() {
         return battery;

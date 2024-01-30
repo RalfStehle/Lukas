@@ -31,4 +31,19 @@ public class HexUtils {
 
         return result;
     }
+
+    // nur für Logcat
+    public static String byteToHexString(byte[] bytes) {
+        StringBuilder stringBuilder = new StringBuilder(bytes.length);
+        for (byte byteChar : bytes) {
+            stringBuilder.append(String.format("%02X ", byteChar));
+        }
+        return(stringBuilder.toString());
+    }
+
+    public static Integer hexToDec(String hex) {
+        return Integer.parseInt(hex.substring(2),16);
+    }
+
+
 }

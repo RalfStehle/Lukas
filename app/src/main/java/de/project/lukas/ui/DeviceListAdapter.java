@@ -68,11 +68,6 @@ public class DeviceListAdapter extends BaseAdapter {
             view.setId(View.generateViewId());
             view.setTag(i);
 
-            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-            layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            layoutParams.width = GridLayout.LayoutParams.MATCH_PARENT;
-            view.setLayoutParams(layoutParams);
-
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View view) {
@@ -154,5 +149,4 @@ public class DeviceListAdapter extends BaseAdapter {
             return fragment.getClass() == SwitchFragment.class;
         }
     }
-
 }

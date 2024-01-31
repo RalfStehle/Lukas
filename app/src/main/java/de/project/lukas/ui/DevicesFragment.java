@@ -33,12 +33,12 @@ public class DevicesFragment extends Fragment {
 
         List<Device> devices = devicesManager.getDevices().getValue();
 
-        if (binding.ListViewRight != null) {
+        if (binding.GridViewTop != null) {
             devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof TrainHub);
             devicesAdapterRight = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof Switch);
 
-            binding.ListViewLeft.setAdapter(devicesAdapterLeft);
-            binding.ListViewRight.setAdapter(devicesAdapterRight);
+            binding.GridViewTop.setAdapter(devicesAdapterLeft);
+            binding.GridViewBottom.setAdapter(devicesAdapterRight);
         } else {
             devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> !(d instanceof Remote));
 
@@ -65,5 +65,4 @@ public class DevicesFragment extends Fragment {
             devicesAdapterRight.notifyDataSetChanged();
         }
     }
-
 }

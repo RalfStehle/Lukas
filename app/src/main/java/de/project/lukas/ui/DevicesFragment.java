@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.project.lukas.MainActivity;
 import de.project.lukas.databinding.FragmentDevicesBinding;
@@ -37,12 +38,12 @@ public class DevicesFragment extends Fragment {
             devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof TrainHub);
             devicesAdapterRight = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof Switch);
 
-            binding.GridViewTop.setAdapter(devicesAdapterLeft);
-            binding.GridViewBottom.setAdapter(devicesAdapterRight);
+            Objects.requireNonNull(binding.GridViewTop).setAdapter(devicesAdapterLeft);
+            Objects.requireNonNull(binding.GridViewBottom).setAdapter(devicesAdapterRight);
         } else {
             devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> !(d instanceof Remote));
 
-            binding.ListViewLeft.setAdapter(devicesAdapterLeft);
+            Objects.requireNonNull(binding.ListViewLeft).setAdapter(devicesAdapterLeft);
         }
 
         devicesManager.getDevices().observe(getViewLifecycleOwner(), this::updateDevices);

@@ -9,13 +9,13 @@
     android:paddingEnd="4pt"
     android:clipToPadding="false">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardElevation="1pt"
-        app:contentPadding="4pt"
-        app:cardBackgroundColor="@color/TrainbaseBackground"
+        app:contentPadding="7pt"
+        app:contentPaddingBottom="5pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +25,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/TrainbaseBackground">
+            android:layout_height="match_parent">
 
             <TableRow
                 android:layout_marginBottom="2pt">
@@ -49,7 +48,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Duplo"
+                        android:text="@string/duplo"
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -58,6 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:text="@string/label_name"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
             </TableRow>
@@ -208,5 +209,5 @@
             </TableRow>
         </TableLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

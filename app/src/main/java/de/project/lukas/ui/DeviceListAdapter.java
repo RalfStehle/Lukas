@@ -2,7 +2,9 @@ package de.project.lukas.ui;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.GridLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
@@ -65,6 +67,11 @@ public class DeviceListAdapter extends BaseAdapter {
             view = new FragmentContainerView(viewGroup.getContext());
             view.setId(View.generateViewId());
             view.setTag(i);
+
+            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+            layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+            layoutParams.width = GridLayout.LayoutParams.MATCH_PARENT;
+            view.setLayoutParams(layoutParams);
 
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override

@@ -9,15 +9,13 @@
     android:paddingEnd="4pt"
     android:clipToPadding="false">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardElevation="1pt"
-        app:contentPadding="10pt"
-        app:contentPaddingBottom="3pt"
-        app:contentPaddingTop="3pt"
-        app:cardBackgroundColor="@color/SwitchBackground"
+        app:contentPadding="7pt"
+        app:contentPaddingBottom="5pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,11 +25,9 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/SwitchBackground">
+            android:layout_height="match_parent">
 
-            <TableRow
-                android:layout_marginBottom="0pt">
+            <TableRow android:layout_marginBottom="0pt">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -53,6 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_switch"
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -62,13 +59,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="@string/label_name"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
             </TableRow>
 
             <TableRow
                 android:layout_marginBottom="2pt"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="0dp"
@@ -110,30 +108,29 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_marginTop="2pt">
+            <TableRow android:layout_marginTop="4pt">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ToggleButton1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginEnd="2pt"
                     android:backgroundTint="@color/DarkSeaGreen"
-                    android:text="Switch 1"
+                    android:text="1"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
                     app:iconGravity="textStart"
                     app:iconTint="#FFFFFF" />
-                <Space
-                    android:layout_width="15dp"
-                    android:layout_height="wrap_content" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ToggleButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="2pt"
                     android:layout_weight="1"
                     android:backgroundTint="@color/SeaGreen"
-                    android:text="Switch 2"
+                    android:text="2"
                     android:textColor="#FFFFFF"
                     app:icon="@drawable/ic_baseline_switch_right_24"
                     app:iconGravity="textStart"
@@ -142,5 +139,5 @@
             </TableRow>
         </TableLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

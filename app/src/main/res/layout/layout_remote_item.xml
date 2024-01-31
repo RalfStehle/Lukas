@@ -9,13 +9,12 @@
     android:paddingEnd="0pt"
     android:paddingBottom="4pt">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/Card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/RemoteBackground"
         app:cardElevation="1pt"
-        app:contentPadding="10pt"
+        app:contentPadding="5pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +24,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/RemoteBackground">
+            android:layout_height="match_parent">
 
             <TableRow android:layout_marginBottom="2pt">
 
@@ -50,6 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_remote"
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -59,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="@string/label_name"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="20sp" />
 
             </TableRow>
@@ -105,7 +105,7 @@
 
             </TableRow>
 
-            <TableRow android:layout_marginTop="8pt">
+            <TableRow android:layout_marginTop="4pt">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -113,27 +113,41 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <Spinner
-                        android:id="@+id/TrainASpinner"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="2pt"
-                        android:background="#ecd8e9"/>
+                        android:background="#eee"
+                        android:padding="4pt">
 
-                    <Spinner
-                        android:id="@+id/TrainBSpinner"
+                        <Spinner
+                            android:id="@+id/TrainASpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2pt" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="2pt"
-                        android:background="#d8b1d4" />
+                        android:background="#eee"
+                        android:padding="4pt">
+
+                        <Spinner
+                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                            android:id="@+id/TrainBSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                 </LinearLayout>
 
             </TableRow>
         </TableLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--

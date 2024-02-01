@@ -73,7 +73,7 @@ public final class DevicesManager extends ViewModel {
     @SuppressLint("DefaultLocale")
     private DevicesManager() {
         if (isTesting()) {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 5; i++) {
                 addDevice(new Remote(String.format("Remote #%d", i)));
                 addDevice(new TrainHub(String.format("Train Hub #%d", i)));
                 addDevice(new TrainBase(String.format("Train Base #%d", i)));

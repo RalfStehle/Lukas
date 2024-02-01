@@ -1,32 +1,29 @@
 package de.project.lukas.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
-import java.util.Objects;
 
-import de.project.lukas.MainActivity;
 import de.project.lukas.databinding.FragmentDevicesBinding;
 import de.project.lukas.model.Device;
 import de.project.lukas.model.DevicesManager;
 import de.project.lukas.model.Remote;
-import de.project.lukas.model.Switch;
-import de.project.lukas.model.TrainHub;
 
+@SuppressLint("NotifyDataSetChanged")
 public class DevicesFragment extends Fragment {
     private final DevicesManager devicesManager = DevicesManager.getInstance();
     private FragmentDevicesBinding binding;
-    private DeviceListAdapter devicesAdapterLeft;
-    private DeviceListAdapter devicesAdapterRight;
+    private DeviceListAdapter devicesAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,19 +31,24 @@ public class DevicesFragment extends Fragment {
 
         List<Device> devices = devicesManager.getDevices().getValue();
 
-        if (binding.GridViewTop != null) {
-            devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof TrainHub);
-            devicesAdapterRight = new DeviceListAdapter(devices, getParentFragmentManager(), d -> d instanceof Switch);
+        devicesAdapter = new DeviceListAdapter(devices, d -> !(d instanceof Remote));
+        devicesAdapter.notifyDataSetChanged();;
 
-            Objects.requireNonNull(binding.GridViewTop).setAdapter(devicesAdapterLeft);
-            Objects.requireNonNull(binding.GridViewBottom).setAdapter(devicesAdapterRight);
-        } else {
-            devicesAdapterLeft = new DeviceListAdapter(devices, getParentFragmentManager(), d -> !(d instanceof Remote));
+        if (binding.GridView != null) {
+            GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
 
-            Objects.requireNonNull(binding.ListViewLeft).setAdapter(devicesAdapterLeft);
+
+            binding.GridView.setLayoutManager(layoutManager);
+            binding.GridView.setAdapter(devicesAdapter);
+        } else if (binding.ListView != null) {
+            GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.VERTICAL, false);
+
+            binding.ListView.setLayoutManager(layoutManager);
+            binding.ListView.setAdapter(devicesAdapter);
         }
 
-        devicesManager.getDevices().observe(getViewLifecycleOwner(), this::updateDevices);
+        devicesManager.getDevices().observe(getViewLifecycleOwner(),
+                this::updateDevices);
 
         return binding.getRoot();
     }
@@ -58,12 +60,8 @@ public class DevicesFragment extends Fragment {
     }
 
     private void updateDevices(List<Device> devices) {
-        if (devicesAdapterLeft != null) {
-            devicesAdapterLeft.notifyDataSetChanged();
-        }
-
-        if (devicesAdapterRight != null) {
-            devicesAdapterRight.notifyDataSetChanged();
+        if (devicesAdapter != null) {
+            devicesAdapter.refresh();
         }
     }
 }

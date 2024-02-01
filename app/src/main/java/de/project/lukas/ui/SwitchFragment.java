@@ -1,21 +1,18 @@
 package de.project.lukas.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.nio.charset.StandardCharsets;
 
 import de.project.lukas.R;
 import de.project.lukas.databinding.LayoutSwitchItemBinding;
@@ -23,70 +20,56 @@ import de.project.lukas.databinding.ServoDialogBinding;
 import de.project.lukas.model.DevicesManager;
 import de.project.lukas.model.Switch;
 
-public class SwitchFragment extends DeviceFragment {
-    private final int disconnectMenuItemId = View.generateViewId();
-    private final int setServoMenuItemId = View.generateViewId();
-    private LayoutSwitchItemBinding binding;
+public class SwitchFragment extends DeviceFragment implements View.OnCreateContextMenuListener {
+    @NonNull
+    private final LayoutSwitchItemBinding binding;
+
+    public static SwitchFragment create(LayoutInflater inflater, @Nullable ViewGroup container) {
+        return new SwitchFragment(LayoutSwitchItemBinding.inflate(inflater, container, false));
+    }
 
     @SuppressLint("SetTextI18n")
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = LayoutSwitchItemBinding.inflate(inflater, container, false);
+    private SwitchFragment(LayoutSwitchItemBinding binding) {
+        super(binding.getRoot());
+        this.binding = binding;
 
+        binding.Card.setOnCreateContextMenuListener(this);
         binding.ToggleButton1.setOnClickListener(view1 -> getSwitch().toggle1());
         binding.ToggleButton2.setOnClickListener(view1 -> getSwitch().toggle2());
 
-        getName().observe(getViewLifecycleOwner(),
-                value -> binding.NameContent.setText(value));
+        getName().observeForever(
+                binding.NameContent::setText);
 
-        getBattery().observe(getViewLifecycleOwner(),
+        getBattery().observeForever(
                 value -> binding.BatteryContent.setText(Integer.toString(value)));
-
-        registerForContextMenu(binding.Card);
-
-        return binding.getRoot();
     }
 
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(Menu.NONE, View.generateViewId(), 0, R.string.menu_disconnect)
+                .setOnMenuItemClickListener(item -> {
+                    DevicesManager.getInstance().switchOffDevice(getDevice());
+                    return true;
+                });
 
-        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
-        menu.add(Menu.NONE, setServoMenuItemId, 0, R.string.menu_servo);
+        menu.add(Menu.NONE, View.generateViewId(), 0, R.string.menu_servo)
+                .setOnMenuItemClickListener(item -> {
+                    setServoSetting();
+                    return true;
+                });
     }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == disconnectMenuItemId) {
-            DevicesManager.getInstance().removeDevice(getDevice());
-            return true;
-        } else if (itemId == setServoMenuItemId) {
-            setServoSetting();
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    // Ergänzung von Ralf
     @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     private void setServoSetting() {
-        ServoDialogBinding binding = ServoDialogBinding.inflate(getLayoutInflater());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+        ServoDialogBinding binding = ServoDialogBinding.inflate(inflater);
+
+        int width = (int)(getActivity().getResources().getDisplayMetrics().widthPixels*0.90);
+        int height = (int)(getActivity().getResources().getDisplayMetrics().heightPixels*0.50);
 
         final Dialog dialog = new Dialog(getActivity());
+
         dialog.setContentView(binding.getRoot());
-
-        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
-        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.50);
-
         dialog.getWindow().setLayout(width, height);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.R.color.background_light));
 
@@ -95,6 +78,7 @@ public class SwitchFragment extends DeviceFragment {
         binding.Position2.setInputType(InputType.TYPE_CLASS_NUMBER);
         binding.Position2.setText(Integer.toString(getSwitch().getServoHigh()));
 
+        binding.CancelButton.setOnClickListener(view -> dialog.cancel());
         binding.OkButton.setOnClickListener(view -> {
             String servoLow = binding.Position1.getText().toString();
             String servoHigh = binding.Position2.getText().toString();
@@ -102,8 +86,12 @@ public class SwitchFragment extends DeviceFragment {
             getSwitch().adjustServo(Integer.parseInt(servoLow), Integer.parseInt(servoHigh));
             dialog.cancel();
         });
-        binding.CancelButton.setOnClickListener(view -> dialog.cancel());
+
         dialog.show();
+    }
+
+    private Activity getActivity() {
+        return (Activity) binding.getRoot().getContext();
     }
 
     private Switch getSwitch() {

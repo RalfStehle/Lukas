@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="9"
     android:background="#eceff1">
 
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/GridView"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:paddingBottom="4pt"
-        android:paddingTop="4pt">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <de.project.lukas.ui.WrappingGridView
-                android:id="@+id/GridViewTop"
-                android:verticalSpacing="4pt"
-                android:layout_width="match_parent"
-                android:layout_height="0pt"
-                android:layout_marginBottom="4pt"
-                android:numColumns="2"/>
-
-            <de.project.lukas.ui.WrappingGridView
-                android:id="@+id/GridViewBottom"
-                android:verticalSpacing="4pt"
-                android:layout_width="match_parent"
-                android:layout_height="0pt"
-                android:numColumns="2"/>
-
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

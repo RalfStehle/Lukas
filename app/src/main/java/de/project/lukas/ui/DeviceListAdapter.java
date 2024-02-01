@@ -1,152 +1,114 @@
 package de.project.lukas.ui;
 
+import android.annotation.SuppressLint;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
-import android.widget.GridLayout;
+import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import de.project.lukas.databinding.FragmentBlankBinding;
 import de.project.lukas.model.Device;
 import de.project.lukas.model.Remote;
+import de.project.lukas.model.Switch;
 import de.project.lukas.model.TrainBase;
 import de.project.lukas.model.TrainHub;
 
-public class DeviceListAdapter extends BaseAdapter {
+public class DeviceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int TYPE_REMOTE = 1;
+    private static final int TYPE_SWITCH = 2;
+    private static final int TYPE_TRAIN_BASE = 3;
+    private static final int TYPE_TRAIN_HUB = 4;
     private final List<Device> devices;
-    private final FragmentManager fragmentManager;
     private final DeviceFilter filter;
+    private final List<Object> items = new ArrayList<>();
 
-    public DeviceListAdapter(List<Device> devices, FragmentManager fragmentManager, DeviceFilter filter) {
+    static final class Dummy {
+
+    }
+
+    public DeviceListAdapter(List<Device> devices, DeviceFilter filter) {
         this.devices = devices;
-        this.fragmentManager = fragmentManager;
         this.filter = filter;
+
+        refresh();
     }
 
-    @Override
-    public int getCount() {
-        int count = 0;
+    @SuppressLint("NotifyDataSetChanged")
+    public void refresh() {
+        items.clear();
+
+        Device prevDevice = null;
         for (Device device : devices) {
             if (filter == null || filter.shouldUse(device)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        int index = -1;
-        for (Device device : devices) {
-            if (filter == null || filter.shouldUse(device)) {
-                index++;
-
-                if (index == i) {
-                    return device;
+                if (items.size() % 2 == 1 &&
+                    prevDevice != null &&
+                    prevDevice.getClass() != device.getClass()) {
+                    items.add(new Dummy());
                 }
+
+                items.add(device);
+                prevDevice = device;
             }
         }
 
-        return null;
+        notifyDataSetChanged();
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = new FragmentContainerView(viewGroup.getContext());
-            view.setId(View.generateViewId());
-            view.setTag(i);
-
-            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(View view) {
-                    handleAttachedItem(view);
-                }
-
-                @Override
-                public void onViewDetachedFromWindow(View view) {
-
-                }
-            });
-        }
-
-        view.setTag(i);
-
-        if (view.isAttachedToWindow()) {
-            handleAttachedItem(view);
-        }
-
-        return view;
+    public int getItemCount() {
+        return items.size();
     }
 
-    private void handleAttachedItem(View view) {
-        Device device = (Device) getItem((int) view.getTag());
+    @Override
+    public int getItemViewType(int position) {
+        Object device = items.get(position);
 
-        Fragment fragment = getFragment(view);
-
-        if (fragment == null || !IsCorrectFragment(device, fragment)) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-            if (device instanceof TrainHub) {
-                TrainHubFragment trainHubFragment = new TrainHubFragment();
-                trainHubFragment.setDevice(device);
-
-                transaction.replace(view.getId(), trainHubFragment);
-            } else if (device instanceof TrainBase) {
-                TrainBaseFragment trainBaseFragment = new TrainBaseFragment();
-                trainBaseFragment.setDevice(device);
-
-                transaction.replace(view.getId(), trainBaseFragment);
-            } else if (device instanceof Remote) {
-                RemoteFragment remoteFragment = new RemoteFragment();
-                remoteFragment.setDevice(device);
-
-                transaction.replace(view.getId(), remoteFragment);
-            } else {
-                SwitchFragment switchFragment = new SwitchFragment();
-                switchFragment.setDevice(device);
-
-                transaction.replace(view.getId(), switchFragment);
-            }
-
-            transaction.commit();
-        }
-
-        fragment = getFragment(view);
-
-        if (fragment instanceof DeviceFragment) {
-            ((DeviceFragment) fragment).setDevice(device);
-        }
-    }
-
-    private Fragment getFragment(View view) {
-        try {
-            return fragmentManager.findFragmentById(view.getId());
-        } catch (IllegalStateException ex) {
-            return null;
-        }
-    }
-
-    private boolean IsCorrectFragment(Device device, Fragment fragment) {
-        if (device instanceof TrainHub) {
-            return fragment.getClass() == TrainHubFragment.class;
-        } else if (device instanceof TrainBase) {
-            return fragment.getClass() == TrainBaseFragment.class;
+        if (device == null) {
+            return 0;
         } else if (device instanceof Remote) {
-            return fragment.getClass() == RemoteFragment.class;
+            return TYPE_REMOTE;
+        } else if (device instanceof Switch) {
+            return TYPE_SWITCH;
+        } else if (device instanceof TrainBase) {
+            return TYPE_TRAIN_BASE;
+        } else if (device instanceof TrainHub) {
+            return TYPE_TRAIN_HUB;
         } else {
-            return fragment.getClass() == SwitchFragment.class;
+            return 0;
+        }
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
+        if (viewType == TYPE_REMOTE) {
+            return RemoteFragment.create(inflater, parent);
+        } else if (viewType == TYPE_SWITCH) {
+            return SwitchFragment.create(inflater, parent);
+        } else if (viewType == TYPE_TRAIN_BASE) {
+            return TrainBaseFragment.create(inflater, parent);
+        } else if (viewType == TYPE_TRAIN_HUB) {
+            return TrainHubFragment.create(inflater, parent);
+        } else {
+            return PlaceholderFragment.create(inflater, parent);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Object item = items.get(position);
+
+        if (item instanceof Device) {
+            ((DeviceFragment)holder).setDevice((Device)item);
         }
     }
 }

@@ -1,11 +1,10 @@
 package de.project.lukas.ui;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
+import android.app.Activity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,26 +22,26 @@ import de.project.lukas.model.DevicesManager;
 import de.project.lukas.model.Remote;
 import de.project.lukas.model.RemoteController;
 import de.project.lukas.model.Switch;
-import de.project.lukas.model.TrainHub;
 import de.project.lukas.model.TrainBase;
+import de.project.lukas.model.TrainHub;
 
-
-public class RemoteFragment extends DeviceFragment {
-    private final int disconnectMenuItemId = View.generateViewId();
-    private final int switchOffMenuItemId = View.generateViewId();
-    private final int renameMenuItemId = View.generateViewId();
+public class RemoteFragment extends DeviceFragment implements View.OnCreateContextMenuListener {
     private final List<RemoteController> controllers = new ArrayList<>();
-    private LayoutRemoteItemBinding binding;
-    private RemoteControllerListAdapter spinnerAdapter;
+    private final LayoutRemoteItemBinding binding;
+    private final RemoteControllerListAdapter spinnerAdapter;
+
+    public static RemoteFragment create(LayoutInflater inflater, @Nullable ViewGroup container) {
+        return new RemoteFragment(LayoutRemoteItemBinding.inflate(inflater, container, false));
+    }
 
     @SuppressLint("SetTextI18n")
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = LayoutRemoteItemBinding.inflate(inflater, container, false);
+    private RemoteFragment(LayoutRemoteItemBinding binding) {
+        super(binding.getRoot());
+        this.binding = binding;
 
-        spinnerAdapter = new RemoteControllerListAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
+        spinnerAdapter = new RemoteControllerListAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, controllers);
 
-        DevicesManager.getInstance().getDevices().observe(getViewLifecycleOwner(), value -> {
+        DevicesManager.getInstance().getDevices().observeForever(value -> {
             controllers.clear();
             controllers.add(RemoteController.noop());
 
@@ -61,13 +60,14 @@ public class RemoteFragment extends DeviceFragment {
             spinnerAdapter.notifyDataSetChanged();
         });
 
-        getLiveDevice().observe(getViewLifecycleOwner(), device -> {
+        getLiveDevice().observeForever(device -> {
             Remote remote = (Remote) device;
 
             binding.TrainASpinner.setSelection(controllers.indexOf(remote.getControllerA()));
             binding.TrainBSpinner.setSelection(controllers.indexOf(remote.getControllerB()));
         });
 
+        binding.Card.setOnCreateContextMenuListener(this);
         binding.TrainASpinner.setAdapter(spinnerAdapter);
         binding.TrainASpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -92,52 +92,37 @@ public class RemoteFragment extends DeviceFragment {
             }
         });
 
-        getName().observe(getViewLifecycleOwner(),
-                value -> binding.NameContent.setText(value));
+        getName().observeForever(
+                binding.NameContent::setText);
 
-        getBattery().observe(getViewLifecycleOwner(),
+        getBattery().observeForever(
                 value -> binding.BatteryContent.setText(Integer.toString(value)));
 
-        registerForContextMenu(binding.Card);
-
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(Menu.NONE, View.generateViewId(), 0, R.string.menu_disconnect)
+                .setOnMenuItemClickListener(item -> {
+                    DevicesManager.getInstance().removeDevice(getDevice());
+                    return true;
+                });
 
-        menu.add(Menu.NONE, disconnectMenuItemId, 0, R.string.menu_disconnect);
-        menu.add(Menu.NONE, switchOffMenuItemId, 0, R.string.menu_switchoff);
-        menu.add(Menu.NONE, renameMenuItemId, 0, R.string.rename);
-    }
+        menu.add(Menu.NONE, View.generateViewId(), 0, R.string.menu_switchoff)
+                .setOnMenuItemClickListener(item -> {
+                    DevicesManager.getInstance().switchOffDevice(getDevice());
+                    return true;
+                });
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-
-        if (itemId == disconnectMenuItemId) {
-            DevicesManager.getInstance().removeDevice(getDevice());
-            return true;
-        } else if (itemId == switchOffMenuItemId) {
-            DevicesManager.getInstance().switchOffDevice(getDevice());
-            return true;
-        } else if (itemId == renameMenuItemId) {
-            rename();
-            return true;
-        }
-
-        return false;
+        menu.add(Menu.NONE, View.generateViewId(), 0, R.string.rename)
+                .setOnMenuItemClickListener(item -> {
+                    rename();
+                    return true;
+                });
     }
 
     private void rename() {
-        new ConfirmBuilder(requireActivity())
+        new ConfirmBuilder(getActivity())
                 .setTitle(R.string.rename)
                 .setConfirmText(R.string.rename)
                 .setValue(getName().getValue())
@@ -145,6 +130,10 @@ public class RemoteFragment extends DeviceFragment {
                 .show(value -> {
                     getRemote().rename(value);
                 });
+    }
+
+    private Activity getActivity() {
+        return (Activity) binding.getRoot().getContext();
     }
 
     private Remote getRemote() {

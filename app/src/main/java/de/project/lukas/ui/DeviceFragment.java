@@ -1,13 +1,16 @@
 package de.project.lukas.ui;
 
+import android.view.View;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+import androidx.recyclerview.widget.RecyclerView;
 
 import de.project.lukas.model.Device;
 
-public abstract class DeviceFragment extends Fragment {
+public abstract class DeviceFragment extends RecyclerView.ViewHolder {
     private final MutableLiveData<Device> device = new MutableLiveData<>();
 
     private final LiveData<String> name =
@@ -33,10 +36,14 @@ public abstract class DeviceFragment extends Fragment {
 
     protected LiveData<String> getMessage() {
         return message;
-    }                           // 2024-01-17 Ralf
+    }
 
     protected LiveData<Integer> getBattery() {
         return battery;
+    }
+
+    protected DeviceFragment(View view) {
+        super(view);
     }
 
     public void setDevice(Device newDevice) {

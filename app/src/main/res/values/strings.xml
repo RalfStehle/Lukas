@@ -18,7 +18,7 @@
     <string name="menu_header">Options</string>
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_switchoff">Switch Off</string>
-    <string name="menu_servo">Servo justieren</string>
+    <string name="menu_servo">Servo Settings</string>
     <string name="permission_warning_title">Functionality limited</string>
     <string name="permission_warning_text">Please give the bluetooth permission to connect to the hub.</string>
     <string name="label_none">No Train</string>

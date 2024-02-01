@@ -6,17 +6,10 @@
     android:layout_height="match_parent"
     android:background="#eceff1">
 
-    <ListView
-        android:id="@+id/ListViewLeft"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ListView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:choiceMode="singleChoice"
-        android:clipToPadding="false"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0pt"
-        android:paddingBottom="4pt"
-        android:paddingTop="4pt"
-        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

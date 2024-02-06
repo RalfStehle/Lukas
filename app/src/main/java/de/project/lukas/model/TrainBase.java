@@ -31,6 +31,7 @@ public class TrainBase extends Device {
     private LegoWriterQueue writerQueue;
     private int currentSpeed;
     private int currentColor;
+    private String colorValues;
     private long lastTime;    // Color sensor should switch at most once per second
     private TrainHub.PortType portA = TrainHub.PortType.None;
     private TrainHub.PortType portB = TrainHub.PortType.None;
@@ -108,7 +109,7 @@ public class TrainBase extends Device {
                 } else if ((value[0] == (byte)0x45) && (value[1] == (byte)0x12)) {
                     parseColorInfo(value);
                 } else if ((value[0] == (byte)0x45) && (value[1] == (byte)0x13)) {
-                    Log.i("Duplo", "parseSpeedInfo(value)"+ "\t" + HexUtils.byteToHexString(value) );
+                    Log.i("TrainBase", "parseSpeedInfo: value=" + "\t" + HexUtils.byteToHexString(value) );
                     parseSpeedInfo(value);
                 }
             }
@@ -148,53 +149,65 @@ public class TrainBase extends Device {
             }
 
             private void parseColorInfo(byte[] value) {
-                Log.i("Duplo", HexUtils.byteToHexString(value) + "\t" + (System.currentTimeMillis() - lastTime));
+                Log.i("TrainBase", "parseColorInfo: value=" + "\t" + HexUtils.byteToHexString(value) + "\t" + (System.currentTimeMillis() - lastTime));
                 //  0 "black", 1 "pink", 2 "purple", 3 "blue", 4 "lightblue", 5 "cyan", 6 "green", 7 "yellow", 8 "orange", 9 "red", 10 "white", "none"
 
-                if (System.currentTimeMillis() < (lastTime + 1000))  {    /* Sonst gibt es von einer Farbleiste gleich mehrere Ereignisse */
+                colorValues = "" + String.format("%02d", value[2])  + " " + colorValues;
+
+                if (System.currentTimeMillis() < (lastTime + 500))  {    // Sonst gibt es von einer Farbleiste gleich mehrere Ereignisse
                     return;
                 };
-
-                if (value[2] == 0x03) {                               /* blau 0x03 = Water Refill */
-                    lastTime = System.currentTimeMillis();
+                // blau 0x03 = Pause & Water Refill
+                if (value[2] == 0x03) {
+                    lastTime = System.currentTimeMillis() + 3000;
+                    colorValues = "";
                     setMessage("Blue (0x03)");
                     playSound((byte)0x07);  // Water_Refill
-                    // int lastSpeed = currentSpeed;  currentSpeed = 0;  updateSpeed();
-                    // currentSpeed = lastSpeed; updateSpeed();
+                    // int lastSpeed = currentSpeed;  currentSpeed = 0;  updateSpeed();   try { Thread.sleep(3000);   } catch (InterruptedException e) {   throw new RuntimeException(e);    }   currentSpeed = lastSpeed; updateSpeed();
+                    return;
                 }
-
-                if (value[2] == 0x06) {                          /* Green 0x06 = Richung umkehren */
+                // Red 0x09 = Motor Stop
+                if (value[2] == 0x09) {
                     lastTime = System.currentTimeMillis();
-                    setMessage("Green (0x06)");
-                    playTone((byte)0x09);
-                    int lastSpeed = currentSpeed;               // Geschwindigkeit zwischenspeichern
-                    currentSpeed = 0; updateSpeed();            // erst anhalten
-                    currentSpeed = -lastSpeed; updateSpeed();   // dann Minus lastSpeed = Umkehren
-                }
-
-                if (value[2] == 0x09) {                           /* Red 0x09 = Motor Stop */
-                    lastTime = System.currentTimeMillis();
+                    colorValues = "";
                     setMessage("Red (0x09)");
                     playTone((byte)0x03);
-                    /* Funktioniert nicht, da ständig falsche Stops auftreten */
-                    // time = System.currentTimeMillis(); currentSpeed = 0; updateSpeed();
+                    return;
                 }
-
-                if (value[2] == 0x0A) {                           /* White 10 = LED-Farbe ändern */
+                // Green 0x06 oder 0x05 = Richtung umkehren
+                if (colorValues.indexOf("05 10") > 0) {
                     lastTime = System.currentTimeMillis();
-                    setMessage("White (0x0A)");
+                    colorValues = "";
+                    setMessage("Green (05 10)" + "\t" + colorValues );
+                    playTone((byte)0x09);
+                    // int lastSpeed = currentSpeed;               // Geschwindigkeit zwischenspeichern
+                    // currentSpeed = 0; updateSpeed();            // erst anhalten
+                    // currentSpeed = -lastSpeed; updateSpeed();   // dann Minus lastSpeed = Umkehren
+                    return;
+                }
+                // Yellow 07 = Horn
+                if (colorValues.indexOf("07 05") > 0) {
+                    lastTime = System.currentTimeMillis();
+                    colorValues = "";
+                    setMessage("Yellow (07 0)" + "\t" + colorValues );
+                    playSound((byte)0x09);
+                    return;
+                }
+                // White 10 = LED-Farbe ändern
+                if (colorValues.indexOf("07 10 05") > 0) {
+                    lastTime = System.currentTimeMillis();
+                    colorValues = "";
+                    setMessage("White (07 10 05)" + "\t" + colorValues );
                     playTone((byte)0x05);
                     setLedColorHub();
+                    return;
                 }
-
             }
 
             private void parseSpeedInfo(byte[] value) {
-                //Log.i("Duplo", HexUtils.byteToHexString(value) + "\t" + (System.currentTimeMillis() - time));
                 if (System.currentTimeMillis() < (lastTime + 1000))  {    /* motorStop() kann sonst nicht anhalten */
                     return;
                 };
-                lastTime = System.currentTimeMillis();
 
                 if ((currentSpeed == 0) && (value[2] > 10)) {
                     if  (value[3] == 0) {
@@ -271,7 +284,7 @@ public class TrainBase extends Device {
         if (currentSpeed > -80) {
             currentSpeed -= 20;
         }
-        Log.i("Speed", "currentSpeed=" + currentSpeed);
+        Log.i("TrainBase", "currentSpeed=" + "\t" + currentSpeed);
         updateSpeed();
     }
 
@@ -279,7 +292,7 @@ public class TrainBase extends Device {
         if (currentSpeed < 80) {
             currentSpeed += 20;
         }
-        Log.i("Speed", "currentSpeed=" + currentSpeed);
+        Log.i("TrainBase", "currentSpeed=" + "\t" + currentSpeed);
         updateSpeed();
     }
 

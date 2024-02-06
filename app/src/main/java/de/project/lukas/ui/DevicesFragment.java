@@ -32,11 +32,10 @@ public class DevicesFragment extends Fragment {
         List<Device> devices = devicesManager.getDevices().getValue();
 
         devicesAdapter = new DeviceListAdapter(devices, d -> !(d instanceof Remote));
-        devicesAdapter.notifyDataSetChanged();;
+        devicesAdapter.notifyDataSetChanged();
 
         if (binding.GridView != null) {
             GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
-
 
             binding.GridView.setLayoutManager(layoutManager);
             binding.GridView.setAdapter(devicesAdapter);

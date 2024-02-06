@@ -64,7 +64,7 @@ public final class DevicesManager extends ViewModel {
         return isScanning;
     }
 
-    public boolean isTesting() {   return true;    }
+    public boolean isTesting() {   return false;    }
 
     public boolean isBluetoothEnabled() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();

@@ -2,18 +2,14 @@ package de.project.lukas.ui;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import de.project.lukas.databinding.FragmentBlankBinding;
 import de.project.lukas.model.Device;
 import de.project.lukas.model.Remote;
 import de.project.lukas.model.Switch;
@@ -29,7 +25,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final DeviceFilter filter;
     private final List<Object> items = new ArrayList<>();
 
-    static final class Dummy {
+    static final class Placeholder {
 
     }
 
@@ -50,7 +46,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (items.size() % 2 == 1 &&
                     prevDevice != null &&
                     prevDevice.getClass() != device.getClass()) {
-                    items.add(new Dummy());
+                    items.add(new Placeholder());
                 }
 
                 items.add(device);

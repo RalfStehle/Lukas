@@ -1,25 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Lukas" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
-        <item name="colorOnPrimary">@color/Black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
-        <item name="colorOnSecondary">@color/Black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launch/window theme only. All in-app colours come from the Compose LukasTheme. -->
+    <style name="Theme.Lukas" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.Lukas.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Lukas.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Lukas.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Lukas.NoActionBar" parent="Theme.Lukas" />
 </resources>

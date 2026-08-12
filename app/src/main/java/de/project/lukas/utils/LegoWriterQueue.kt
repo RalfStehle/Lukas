@@ -15,7 +15,7 @@ import java.util.Queue
 @SuppressLint("MissingPermission")
 class LegoWriterQueue(
     private val gatt: BluetoothGatt,
-    private val characteristic: BluetoothGattCharacteristic,
+    private val characteristic: BluetoothGattCharacteristic
 ) {
     private val queue: Queue<ByteArray> = LinkedList()
     private var writeUnconfirmed = false
@@ -51,7 +51,7 @@ class LegoWriterQueue(
             gatt.writeCharacteristic(
                 characteristic,
                 data,
-                BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE,
+                BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
             ) == BluetoothGatt.GATT_SUCCESS
         } else {
             @Suppress("DEPRECATION")

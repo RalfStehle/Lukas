@@ -22,8 +22,7 @@ object LegoHelper {
     }
 
     /** Strips the 2-byte envelope from an incoming message. */
-    fun envelopeToData(envelope: ByteArray): ByteArray =
-        envelope.copyOfRange(2, envelope.size)
+    fun envelopeToData(envelope: ByteArray): ByteArray = envelope.copyOfRange(2, envelope.size)
 
     fun mapSpeed(speed: Int): Byte = when {
         speed == 0 -> 127 // stop motor

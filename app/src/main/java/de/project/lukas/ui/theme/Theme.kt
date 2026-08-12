@@ -29,21 +29,18 @@ val StopAllRed = Color(0xFF8B0000) // DarkRed
 
 private val LightColors = lightColorScheme(
     primary = RoyalBlue,
-    secondary = Coral,
+    secondary = Coral
 )
 
 private val DarkColors = darkColorScheme(
     primary = SteelBlue,
-    secondary = Coral,
+    secondary = Coral
 )
 
 @Composable
-fun LukasTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
-) {
+fun LukasTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
-        content = content,
+        content = content
     )
 }

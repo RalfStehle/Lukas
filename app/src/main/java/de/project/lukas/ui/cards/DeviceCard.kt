@@ -57,39 +57,42 @@ fun DeviceCardFrame(
     battery: Int?,
     message: String?,
     menu: @Composable (dismiss: () -> Unit) -> Unit,
-    body: @Composable ColumnScope.() -> Unit,
+    body: @Composable ColumnScope.() -> Unit
 ) {
     var menuOpen by remember { mutableStateOf(false) }
 
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
                 .widthIn(max = 450.dp)
+                .fillMaxWidth()
                 .combinedClickable(onClick = {}, onLongClick = { menuOpen = true }),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(
                 containerColor = Color.White,
-                contentColor = Color(0xFF1B1B1B),
+                contentColor = Color(0xFF1B1B1B)
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column(Modifier.padding(start = 14.dp, end = 6.dp, top = 6.dp, bottom = 14.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = typeLabel,
                         fontSize = 20.sp,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(2f),
+                        modifier = Modifier.weight(2f)
                     )
                     Box {
                         IconButton(onClick = { menuOpen = true }) {
-                            Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.menu_header))
+                            Icon(
+                                Icons.Filled.MoreVert,
+                                contentDescription = stringResource(R.string.menu_header)
+                            )
                         }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             menu { menuOpen = false }
@@ -125,15 +128,18 @@ fun RowScope.CardButton(
     container: Color,
     modifier: Modifier = Modifier,
     weight: Float = 2f,
-    content: @Composable RowScope.() -> Unit,
+    content: @Composable RowScope.() -> Unit
 ) {
     Button(
         onClick = onClick,
         modifier = modifier.weight(weight),
         shape = RoundedCornerShape(4.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = container, contentColor = Color.White),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = container,
+            contentColor = Color.White
+        ),
         contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
-        content = content,
+        content = content
     )
 }
 
@@ -144,7 +150,7 @@ fun CardButtonRow(content: @Composable RowScope.() -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically,
-        content = content,
+        content = content
     )
 }
 
@@ -153,6 +159,6 @@ fun CardIcon(@DrawableRes res: Int, contentDescription: String?) {
     Icon(
         painter = painterResource(res),
         contentDescription = contentDescription,
-        modifier = Modifier.size(20.dp),
+        modifier = Modifier.size(20.dp)
     )
 }

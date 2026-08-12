@@ -32,7 +32,9 @@ class Remote(context: Context, private val device: BluetoothDevice) : Device() {
                 BluetoothGatt.STATE_DISCONNECTED -> setConnected(false)
                 BluetoothGatt.STATE_CONNECTED -> {
                     setConnected(true)
-                    Handler(Looper.getMainLooper()).postDelayed({ this@Remote.gatt?.discoverServices() }, 500)
+                    Handler(
+                        Looper.getMainLooper()
+                    ).postDelayed({ this@Remote.gatt?.discoverServices() }, 500)
                     initializeService()
                 }
             }
@@ -40,16 +42,27 @@ class Remote(context: Context, private val device: BluetoothDevice) : Device() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) = initializeService()
 
-        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            status: Int
+        ) {
             writerQueue?.confirmWrite()
         }
 
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            value: ByteArray
+        ) {
             handleNotification(LegoHelper.envelopeToData(value))
         }
 
         @Deprecated("Deprecated in API 33, still delivered on older devices")
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic
+        ) {
             @Suppress("DEPRECATION")
             handleNotification(LegoHelper.envelopeToData(characteristic.value))
         }

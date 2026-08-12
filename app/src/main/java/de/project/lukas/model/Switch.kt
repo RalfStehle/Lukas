@@ -36,7 +36,9 @@ class Switch(context: Context, private val device: BluetoothDevice) : Device() {
                 BluetoothGatt.STATE_DISCONNECTED -> setConnected(false)
                 BluetoothGatt.STATE_CONNECTED -> {
                     setConnected(true)
-                    Handler(Looper.getMainLooper()).postDelayed({ this@Switch.gatt?.discoverServices() }, 500)
+                    Handler(
+                        Looper.getMainLooper()
+                    ).postDelayed({ this@Switch.gatt?.discoverServices() }, 500)
                     initializeService()
                 }
             }
@@ -44,16 +46,27 @@ class Switch(context: Context, private val device: BluetoothDevice) : Device() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) = initializeService()
 
-        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            status: Int
+        ) {
             writerQueue?.confirmWrite()
         }
 
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            value: ByteArray
+        ) {
             handleBattery(value)
         }
 
         @Deprecated("Deprecated in API 33, still delivered on older devices")
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic
+        ) {
             @Suppress("DEPRECATION")
             handleBattery(characteristic.value)
         }

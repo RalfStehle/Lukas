@@ -11,7 +11,7 @@
     <string name="label_battery">Battery</string>
     <string name="label_connected">Status</string>
     <string name="label_scan">Scan &amp; Connect</string>
-    <string name="label_scan_stop">Stop</string>
+    <string name="label_scan_stop">Stop Scanning</string>
     <string name="label_train">Train</string>
     <string name="label_remote">Remote</string>
     <string name="label_switch">Switch</string>

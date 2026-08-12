@@ -46,7 +46,9 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
                 BluetoothGatt.STATE_DISCONNECTED -> setConnected(false)
                 BluetoothGatt.STATE_CONNECTED -> {
                     setConnected(true)
-                    Handler(Looper.getMainLooper()).postDelayed({ this@TrainBase.gatt?.discoverServices() }, 500)
+                    Handler(
+                        Looper.getMainLooper()
+                    ).postDelayed({ this@TrainBase.gatt?.discoverServices() }, 500)
                     initializeService()
                 }
             }
@@ -54,16 +56,27 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) = initializeService()
 
-        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            status: Int
+        ) {
             Handler(Looper.getMainLooper()).postDelayed({ writerQueue?.confirmWrite() }, 100)
         }
 
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            value: ByteArray
+        ) {
             handleNotification(LegoHelper.envelopeToData(value))
         }
 
         @Deprecated("Deprecated in API 33, still delivered on older devices")
-        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+        override fun onCharacteristicChanged(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic
+        ) {
             @Suppress("DEPRECATION")
             handleNotification(LegoHelper.envelopeToData(characteristic.value))
         }
@@ -113,7 +126,12 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
     }
 
     private fun parseColorInfo(value: ByteArray) {
-        Log.i("TrainBase", "parseColorInfo: value=\t${HexUtils.byteToHexString(value)}\t${System.currentTimeMillis() - lastTime}")
+        Log.i(
+            "TrainBase",
+            "parseColorInfo: value=\t${HexUtils.byteToHexString(
+                value
+            )}\t${System.currentTimeMillis() - lastTime}"
+        )
         // 0 black, 1 pink, 2 purple, 3 blue, 4 lightblue, 5 cyan, 6 green, 7 yellow, 8 orange, 9 red, 10 white
 
         colorValues = String.format(Locale.ROOT, "%02d", value[2]) + " " + colorValues

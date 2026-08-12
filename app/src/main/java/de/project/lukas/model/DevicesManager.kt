@@ -119,7 +119,7 @@ class DevicesManager(application: Application) : AndroidViewModel(application) {
     private fun hasDevice(address: String) = _devices.value.any { it.address == address }
 
     private fun List<Device>.sortedForDisplay(): List<Device> = sortedWith(
-        compareByDescending<Device> { it.javaClass.name }.thenBy { it.name.value },
+        compareByDescending<Device> { it.javaClass.name }.thenBy { it.name.value }
     )
 
     override fun onCleared() {

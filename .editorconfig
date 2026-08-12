@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{kt,kts}]
+ktlint_code_style = android_studio
+# Long lines (button rows, string byte arrays) are common here; don't fail on them.
+ktlint_standard_max-line-length = disabled
+# Jetpack Compose @Composable functions are PascalCase by convention.
+ktlint_standard_function-naming = disabled
+ktlint_function_naming_ignore_when_annotated_with = Composable, Preview
+
+[*.{xml,yml,yaml,json}]
+indent_size = 2

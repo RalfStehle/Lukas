@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +34,7 @@ import de.project.lukas.model.Switch
 import de.project.lukas.model.TrainBase
 import de.project.lukas.model.TrainHub
 import de.project.lukas.ui.RenameDialog
+import de.project.lukas.ui.theme.ListBackground
 import de.project.lukas.ui.theme.LukasTheme
 
 @Composable
@@ -51,8 +51,14 @@ fun RemoteCard(remote: Remote, allDevices: List<Device>, viewModel: DevicesManag
             add(RemoteController.Noop)
             allDevices.forEach { device ->
                 when (device) {
-                    is TrainHub -> { add(device.motorController); add(device.lightController) }
-                    is TrainBase -> { add(device.motorController); add(device.lightController) }
+                    is TrainHub -> {
+                        add(device.motorController)
+                        add(device.lightController)
+                    }
+                    is TrainBase -> {
+                        add(device.motorController)
+                        add(device.lightController)
+                    }
                     is Switch -> add(device.controller)
                 }
             }
@@ -65,18 +71,27 @@ fun RemoteCard(remote: Remote, allDevices: List<Device>, viewModel: DevicesManag
         controllers = controllers,
         selectedA = controllerA,
         selectedB = controllerB,
-        onSelectA = { controllerA = it; remote.controllerA = it },
-        onSelectB = { controllerB = it; remote.controllerB = it },
+        onSelectA = {
+            controllerA = it
+            remote.controllerA = it
+        },
+        onSelectB = {
+            controllerB = it
+            remote.controllerB = it
+        },
         onDisconnect = { viewModel.removeDevice(remote) },
         onSwitchOff = { viewModel.switchOffDevice(remote) },
-        onRename = { showRename = true },
+        onRename = { showRename = true }
     )
 
     if (showRename) {
         RenameDialog(
             current = name,
             onDismiss = { showRename = false },
-            onConfirm = { remote.rename(it); showRename = false },
+            onConfirm = {
+                remote.rename(it)
+                showRename = false
+            }
         )
     }
 }
@@ -92,7 +107,7 @@ fun RemoteCardContent(
     onSelectB: (RemoteController) -> Unit,
     onDisconnect: () -> Unit,
     onSwitchOff: () -> Unit,
-    onRename: () -> Unit,
+    onRename: () -> Unit
 ) {
     DeviceCardFrame(
         typeLabel = stringResource(R.string.label_remote),
@@ -100,23 +115,32 @@ fun RemoteCardContent(
         battery = battery,
         message = null,
         menu = { dismiss ->
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_disconnect)) }, onClick = { dismiss(); onDisconnect() })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_switchoff)) }, onClick = { dismiss(); onSwitchOff() })
-            DropdownMenuItem(text = { Text(stringResource(R.string.rename)) }, onClick = { dismiss(); onRename() })
-        },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_disconnect)) }, onClick = {
+                dismiss()
+                onDisconnect()
+            })
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_switchoff)) }, onClick = {
+                dismiss()
+                onSwitchOff()
+            })
+            DropdownMenuItem(text = { Text(stringResource(R.string.rename)) }, onClick = {
+                dismiss()
+                onRename()
+            })
+        }
     ) {
         CardButtonRow {
             ControllerDropdown(
                 controllers = controllers,
                 selected = selectedA,
                 onSelect = onSelectA,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             )
             ControllerDropdown(
                 controllers = controllers,
                 selected = selectedB,
                 onSelect = onSelectB,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             )
         }
     }
@@ -127,7 +151,7 @@ private fun ControllerDropdown(
     controllers: List<RemoteController>,
     selected: RemoteController,
     onSelect: (RemoteController) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     var open by remember { mutableStateOf(false) }
     Box(modifier) {
@@ -137,14 +161,14 @@ private fun ControllerDropdown(
                 .background(Color(0xFFEEEEEE))
                 .clickable { open = true }
                 .padding(horizontal = 10.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = selected.displayName,
                 color = Color(0xFF1B1B1B),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             )
             Icon(Icons.Filled.ArrowDropDown, contentDescription = null, tint = Color(0xFF1B1B1B))
         }
@@ -152,7 +176,10 @@ private fun ControllerDropdown(
             controllers.forEach { controller ->
                 DropdownMenuItem(
                     text = { Text(controller.displayName) },
-                    onClick = { onSelect(controller); open = false },
+                    onClick = {
+                        onSelect(controller)
+                        open = false
+                    }
                 )
             }
         }
@@ -170,7 +197,25 @@ private fun RemoteCardPreview() {
             selectedA = RemoteController.Noop,
             selectedB = RemoteController.Noop,
             onSelectA = {}, onSelectB = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {},
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}
         )
+    }
+}
+
+@Preview(name = "Remote – large screen (max width)", showBackground = true, widthDp = 800)
+@Composable
+private fun RemoteCardLargeScreenPreview() {
+    LukasTheme {
+        Box(Modifier.fillMaxWidth().background(ListBackground).padding(8.dp)) {
+            RemoteCardContent(
+                name = "Remote #1",
+                battery = 92,
+                controllers = listOf(RemoteController.Noop),
+                selectedA = RemoteController.Noop,
+                selectedB = RemoteController.Noop,
+                onSelectA = {}, onSelectB = {},
+                onDisconnect = {}, onSwitchOff = {}, onRename = {}
+            )
+        }
     }
 }

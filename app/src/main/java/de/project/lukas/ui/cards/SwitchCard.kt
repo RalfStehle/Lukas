@@ -32,7 +32,7 @@ fun SwitchCard(device: Switch, viewModel: DevicesManager) {
         onToggle1 = device::toggle1,
         onToggle2 = device::toggle2,
         onSwitchOff = { viewModel.switchOffDevice(device) },
-        onServo = { showServo = true },
+        onServo = { showServo = true }
     )
 
     if (showServo) {
@@ -40,7 +40,10 @@ fun SwitchCard(device: Switch, viewModel: DevicesManager) {
             initialLow = device.servoLow,
             initialHigh = device.servoHigh,
             onDismiss = { showServo = false },
-            onConfirm = { low, high -> device.adjustServo(low, high); showServo = false },
+            onConfirm = { low, high ->
+                device.adjustServo(low, high)
+                showServo = false
+            }
         )
     }
 }
@@ -51,7 +54,7 @@ fun SwitchCardContent(
     onToggle1: () -> Unit,
     onToggle2: () -> Unit,
     onSwitchOff: () -> Unit,
-    onServo: () -> Unit,
+    onServo: () -> Unit
 ) {
     DeviceCardFrame(
         typeLabel = stringResource(R.string.label_switch),
@@ -59,18 +62,30 @@ fun SwitchCardContent(
         battery = null,
         message = null,
         menu = { dismiss ->
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_switchoff)) }, onClick = { dismiss(); onSwitchOff() })
-            DropdownMenuItem(text = { Text(stringResource(R.string.menu_servo)) }, onClick = { dismiss(); onServo() })
-        },
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_switchoff)) }, onClick = {
+                dismiss()
+                onSwitchOff()
+            })
+            DropdownMenuItem(text = { Text(stringResource(R.string.menu_servo)) }, onClick = {
+                dismiss()
+                onServo()
+            })
+        }
     ) {
         CardButtonRow {
             CardButton(onToggle1, Toggle1Green, weight = 1f) {
-                CardIcon(R.drawable.ic_baseline_switch_right_24, stringResource(R.string.button_toggle))
+                CardIcon(
+                    R.drawable.ic_baseline_switch_right_24,
+                    stringResource(R.string.button_toggle)
+                )
                 Spacer(Modifier.width(6.dp))
                 Text("1")
             }
             CardButton(onToggle2, Toggle2Green, weight = 1f) {
-                CardIcon(R.drawable.ic_baseline_switch_right_24, stringResource(R.string.button_toggle))
+                CardIcon(
+                    R.drawable.ic_baseline_switch_right_24,
+                    stringResource(R.string.button_toggle)
+                )
                 Spacer(Modifier.width(6.dp))
                 Text("2")
             }
@@ -84,7 +99,10 @@ private fun SwitchCardPreview() {
     LukasTheme {
         SwitchCardContent(
             name = "Switch #1",
-            onToggle1 = {}, onToggle2 = {}, onSwitchOff = {}, onServo = {},
+            onToggle1 = {},
+            onToggle2 = {},
+            onSwitchOff = {},
+            onServo = {}
         )
     }
 }

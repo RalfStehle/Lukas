@@ -22,11 +22,7 @@ import de.project.lukas.ui.theme.LukasTheme
 private const val MAX_NAME_LENGTH = 14
 
 @Composable
-fun RenameDialog(
-    current: String,
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit,
-) {
+fun RenameDialog(current: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
     var text by remember { mutableStateOf(current) }
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -35,7 +31,7 @@ fun RenameDialog(
             OutlinedTextField(
                 value = text,
                 onValueChange = { if (it.length <= MAX_NAME_LENGTH) text = it },
-                singleLine = true,
+                singleLine = true
             )
         },
         confirmButton = {
@@ -43,7 +39,7 @@ fun RenameDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        },
+        }
     )
 }
 
@@ -52,7 +48,7 @@ fun ServoDialog(
     initialLow: Int,
     initialHigh: Int,
     onDismiss: () -> Unit,
-    onConfirm: (low: Int, high: Int) -> Unit,
+    onConfirm: (low: Int, high: Int) -> Unit
 ) {
     var low by remember { mutableStateOf(initialLow.toString()) }
     var high by remember { mutableStateOf(initialHigh.toString()) }
@@ -67,14 +63,14 @@ fun ServoDialog(
                     onValueChange = { low = it.filter(Char::isDigit) },
                     label = { Text("Position 1") },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 OutlinedTextField(
                     value = high,
                     onValueChange = { high = it.filter(Char::isDigit) },
                     label = { Text("Position 2") },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
         },
@@ -82,12 +78,12 @@ fun ServoDialog(
             TextButton(
                 onClick = {
                     onConfirm(low.toIntOrNull() ?: 0, high.toIntOrNull() ?: 0)
-                },
+                }
             ) { Text(stringResource(R.string.ok)) }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        },
+        }
     )
 }
 

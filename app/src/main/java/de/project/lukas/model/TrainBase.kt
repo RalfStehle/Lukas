@@ -36,7 +36,8 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
     private var currentSpeed = 0
     private var currentColor = 0
     private var colorValues = ""
-    private var lastTime = 0L // colour sensor should switch at most once per second
+    private var lastColorTime = 0L // colour sensor should switch at most once per second
+    private var lastSpeedTime = 0L // speedometer should switch at most once per second
     private var portA = PortType.None
     private var portB = PortType.None
 
@@ -130,49 +131,52 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
             "TrainBase",
             "parseColorInfo: value=\t${HexUtils.byteToHexString(
                 value
-            )}\t${System.currentTimeMillis() - lastTime}"
+            )}\t${System.currentTimeMillis() - lastColorTime}"
         )
         // 0 black, 1 pink, 2 purple, 3 blue, 4 lightblue, 5 cyan, 6 green, 7 yellow, 8 orange, 9 red, 10 white
 
-        colorValues = String.format(Locale.ROOT, "%02d", value[2]) + " " + colorValues
+        // The Duplo colour sensor under-reports green/purple by one index; correct it like
+        // the reference legoino library does (Lpf2Hub::parseColor).
+        val raw = value[2].toInt() and 0xFF
+        val color = if (raw == 1 || raw == 5) raw + 1 else raw
+        colorValues = String.format(Locale.ROOT, "%02d", color) + " " + colorValues
 
-        if (System.currentTimeMillis() < lastTime + 500) return
+        if (System.currentTimeMillis() < lastColorTime + 500) return
 
-        val color = value[2].toInt() and 0xFF
         when {
             // Blue 0x03 = Pause & Water Refill
             color == 0x03 -> {
-                lastTime = System.currentTimeMillis() + 3000
+                lastColorTime = System.currentTimeMillis() + 3000
                 colorValues = ""
                 setMessage("Blue (0x03)")
                 playSound(0x07) // Water_Refill
             }
             // Red 0x09 = Motor Stop
             color == 0x09 -> {
-                lastTime = System.currentTimeMillis()
+                lastColorTime = System.currentTimeMillis()
                 colorValues = ""
                 setMessage("Red (0x09)")
                 playTone(0x03)
             }
-            // Green (05 10) = reverse direction
-            colorValues.indexOf("05 10") > 0 -> {
-                lastTime = System.currentTimeMillis()
+            // Green (06 10) = reverse direction
+            colorValues.indexOf("06 10") >= 0 -> {
+                lastColorTime = System.currentTimeMillis()
                 colorValues = ""
-                setMessage("Green (05 10)")
+                setMessage("Green (06 10)")
                 playTone(0x09)
             }
-            // Yellow (07 05) = Horn
-            colorValues.indexOf("07 05") > 0 -> {
-                lastTime = System.currentTimeMillis()
+            // Yellow (07 06) = Horn
+            colorValues.indexOf("07 06") >= 0 -> {
+                lastColorTime = System.currentTimeMillis()
                 colorValues = ""
-                setMessage("Yellow (07 05)")
+                setMessage("Yellow (07 06)")
                 playSound(0x09)
             }
-            // White (07 10 05) = change LED colour
-            colorValues.indexOf("07 10 05") > 0 -> {
-                lastTime = System.currentTimeMillis()
+            // White (07 10 06) = change LED colour
+            colorValues.indexOf("07 10 06") >= 0 -> {
+                lastColorTime = System.currentTimeMillis()
                 colorValues = ""
-                setMessage("White (07 10 05)")
+                setMessage("White (07 10 06)")
                 playTone(0x05)
                 setLedColorHub()
             }
@@ -180,7 +184,7 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
     }
 
     private fun parseSpeedInfo(value: ByteArray) {
-        if (System.currentTimeMillis() < lastTime + 1000) return // else motorStop() cannot hold at 0
+        if (System.currentTimeMillis() < lastSpeedTime + 1000) return // else motorStop() cannot hold at 0
 
         if (currentSpeed == 0 && value[2].toInt() > 10) {
             currentSpeed = if (value[3].toInt() == 0) 50 else -50 // value[3] == FF => reverse
@@ -206,7 +210,7 @@ class TrainBase(context: Context, private val device: BluetoothDevice) : Device(
     fun sound4() = playSound(0x05) // Station_Departure
 
     fun motorStop() {
-        lastTime = System.currentTimeMillis() // speedometer would otherwise restart while decelerating
+        lastSpeedTime = System.currentTimeMillis() // speedometer would otherwise restart while decelerating
         playSound(0x03) // Brake
         currentSpeed = 0
         updateSpeed()

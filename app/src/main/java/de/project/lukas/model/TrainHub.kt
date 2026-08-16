@@ -90,7 +90,7 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
 
     init {
         setName(device.name ?: "")
-        gatt = device.connectGatt(context, true, callback)
+        gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
     }
 
     private fun handleNotification(value: ByteArray) {

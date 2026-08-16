@@ -74,7 +74,7 @@ class Switch(context: Context, private val device: BluetoothDevice) : Device() {
 
     init {
         setName(device.name ?: "")
-        gatt = device.connectGatt(context, true, callback)
+        gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
         servoLow = preferences.getInt("${address}_ServoLow", 0)
         servoHigh = preferences.getInt("${address}_ServoHigh", 120)
     }

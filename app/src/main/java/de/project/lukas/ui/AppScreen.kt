@@ -228,10 +228,10 @@ private fun SampleDevices() {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         TrainHubCardContent(
-            name = "Train Hub #1", battery = 87, message = "Blue (3)",
+            name = "Train Hub #1", battery = 87, message = "Blue (3)", speedLimited = false,
             onSlower = {}, onStop = {}, onFaster = {},
             onDarker = {}, onLedColor = {}, onBrighter = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {}
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onToggleSpeedLimit = {}
         )
         SwitchCardContent(name = "Switch #1", onToggle1 = {
         }, onToggle2 = {}, onSwitchOff = {}, onServo = {})

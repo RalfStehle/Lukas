@@ -14,6 +14,9 @@ import de.project.lukas.utils.HexUtils
 import de.project.lukas.utils.LegoHelper
 import de.project.lukas.utils.LegoProtocol
 import de.project.lukas.utils.LegoWriterQueue
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 
 /** A LEGO Powered Up train hub (88009), incl. motor, LED light and optional colour sensor. */
@@ -27,12 +30,16 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
     var currentColor: Int = 0
         private set
 
+    private val _speedLimited = MutableStateFlow(false)
+    val speedLimited: StateFlow<Boolean> = _speedLimited.asStateFlow()
+
     val motorController: RemoteController = MotorController(this)
     val lightController: RemoteController = LightController(this)
 
     private var gatt: BluetoothGatt? = null
     private var writerQueue: LegoWriterQueue? = null
     private var currentSpeed = 0
+    private var maxSpeed = 100
     private var currentBrightness = 0
     private var lastColorTime = 0L // colour sensor must not trigger more than once per second
     private var portA = PortType.None
@@ -195,16 +202,24 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
     }
 
     fun motorSlower() {
-        if (currentSpeed > -100) currentSpeed -= 25
+        if (currentSpeed > -maxSpeed) currentSpeed -= 20
         updateSpeed()
     }
 
     fun motorFaster() {
-        if (currentSpeed < 100) currentSpeed += 25
+        if (currentSpeed < maxSpeed) currentSpeed += 20
+        updateSpeed()
+    }
+
+    fun toggleSpeedLimit() {
+        _speedLimited.value = !_speedLimited.value
+        maxSpeed = if (_speedLimited.value) 60 else 100
+        currentSpeed = currentSpeed.coerceIn(-maxSpeed, maxSpeed)
         updateSpeed()
     }
 
     private fun updateSpeed() {
+        setMessage("Speed: $currentSpeed")
         val speed = LegoHelper.mapSpeed(currentSpeed)
         if (portA == PortType.Motor) send(LegoProtocol.setSpeed(0x00, speed))
         if (portB == PortType.Motor) send(LegoProtocol.setSpeed(0x01, speed))

@@ -2,7 +2,10 @@ package de.project.lukas.ui.cards
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,12 +32,14 @@ fun TrainHubCard(device: TrainHub, viewModel: DevicesManager) {
     val name by device.name.collectAsStateWithLifecycle()
     val battery by device.battery.collectAsStateWithLifecycle()
     val message by device.message.collectAsStateWithLifecycle()
+    val speedLimited by device.speedLimited.collectAsStateWithLifecycle()
     var showRename by remember { mutableStateOf(false) }
 
     TrainHubCardContent(
         name = name,
         battery = battery,
         message = message,
+        speedLimited = speedLimited,
         onSlower = device::motorSlower,
         onStop = device::motorStop,
         onFaster = device::motorFaster,
@@ -43,7 +48,8 @@ fun TrainHubCard(device: TrainHub, viewModel: DevicesManager) {
         onBrighter = device::lightBrighter,
         onDisconnect = { viewModel.removeDevice(device) },
         onSwitchOff = { viewModel.switchOffDevice(device) },
-        onRename = { showRename = true }
+        onRename = { showRename = true },
+        onToggleSpeedLimit = device::toggleSpeedLimit
     )
 
     if (showRename) {
@@ -63,6 +69,7 @@ fun TrainHubCardContent(
     name: String,
     battery: Int,
     message: String,
+    speedLimited: Boolean,
     onSlower: () -> Unit,
     onStop: () -> Unit,
     onFaster: () -> Unit,
@@ -71,7 +78,8 @@ fun TrainHubCardContent(
     onBrighter: () -> Unit,
     onDisconnect: () -> Unit,
     onSwitchOff: () -> Unit,
-    onRename: () -> Unit
+    onRename: () -> Unit,
+    onToggleSpeedLimit: () -> Unit
 ) {
     DeviceCardFrame(
         typeLabel = stringResource(R.string.label_train),
@@ -91,6 +99,14 @@ fun TrainHubCardContent(
                 dismiss()
                 onRename()
             })
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.menu_speed_limit)) },
+                trailingIcon = { if (speedLimited) Icon(Icons.Filled.Check, contentDescription = null) },
+                onClick = {
+                    dismiss()
+                    onToggleSpeedLimit()
+                }
+            )
         }
     ) {
         CardButtonRow {
@@ -133,9 +149,10 @@ private fun TrainHubCardPreview() {
             name = "Train Hub #1",
             battery = 87,
             message = "Blue (3)",
+            speedLimited = false,
             onSlower = {}, onStop = {}, onFaster = {},
             onDarker = {}, onLedColor = {}, onBrighter = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {}
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onToggleSpeedLimit = {}
         )
     }
 }
@@ -148,9 +165,10 @@ private fun TrainHubCardPreviewNoMessage() {
             name = "Train Hub #1",
             battery = 87,
             message = "",
+            speedLimited = true,
             onSlower = {}, onStop = {}, onFaster = {},
             onDarker = {}, onLedColor = {}, onBrighter = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {}
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onToggleSpeedLimit = {}
         )
     }
 }

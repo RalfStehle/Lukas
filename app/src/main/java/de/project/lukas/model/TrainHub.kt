@@ -30,8 +30,8 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
     var currentColor: Int = 0
         private set
 
-    private val _speedLimited = MutableStateFlow(false)
-    val speedLimited: StateFlow<Boolean> = _speedLimited.asStateFlow()
+    private val _maxSpeed = MutableStateFlow(100)
+    val maxSpeed: StateFlow<Int> = _maxSpeed.asStateFlow()
 
     val motorController: RemoteController = MotorController(this)
     val lightController: RemoteController = LightController(this)
@@ -39,7 +39,6 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
     private var gatt: BluetoothGatt? = null
     private var writerQueue: LegoWriterQueue? = null
     private var currentSpeed = 0
-    private var maxSpeed = 100
     private var currentBrightness = 0
     private var lastColorTime = 0L // colour sensor must not trigger more than once per second
     private var portA = PortType.None
@@ -202,19 +201,22 @@ class TrainHub(context: Context, private val device: BluetoothDevice) : Device()
     }
 
     fun motorSlower() {
-        if (currentSpeed > -maxSpeed) currentSpeed -= 20
+        if (currentSpeed > -_maxSpeed.value) currentSpeed -= 20
         updateSpeed()
     }
 
     fun motorFaster() {
-        if (currentSpeed < maxSpeed) currentSpeed += 20
+        if (currentSpeed < _maxSpeed.value) currentSpeed += 20
         updateSpeed()
     }
 
-    fun toggleSpeedLimit() {
-        _speedLimited.value = !_speedLimited.value
-        maxSpeed = if (_speedLimited.value) 60 else 100
-        currentSpeed = currentSpeed.coerceIn(-maxSpeed, maxSpeed)
+    fun cycleSpeedLimit() {
+        _maxSpeed.value = when (_maxSpeed.value) {
+            100 -> 80
+            80 -> 60
+            else -> 100
+        }
+        currentSpeed = currentSpeed.coerceIn(-_maxSpeed.value, _maxSpeed.value)
         updateSpeed()
     }
 

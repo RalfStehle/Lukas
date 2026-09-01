@@ -32,14 +32,14 @@ fun TrainHubCard(device: TrainHub, viewModel: DevicesManager) {
     val name by device.name.collectAsStateWithLifecycle()
     val battery by device.battery.collectAsStateWithLifecycle()
     val message by device.message.collectAsStateWithLifecycle()
-    val speedLimited by device.speedLimited.collectAsStateWithLifecycle()
+    val maxSpeed by device.maxSpeed.collectAsStateWithLifecycle()
     var showRename by remember { mutableStateOf(false) }
 
     TrainHubCardContent(
         name = name,
         battery = battery,
         message = message,
-        speedLimited = speedLimited,
+        maxSpeed = maxSpeed,
         onSlower = device::motorSlower,
         onStop = device::motorStop,
         onFaster = device::motorFaster,
@@ -49,7 +49,7 @@ fun TrainHubCard(device: TrainHub, viewModel: DevicesManager) {
         onDisconnect = { viewModel.removeDevice(device) },
         onSwitchOff = { viewModel.switchOffDevice(device) },
         onRename = { showRename = true },
-        onToggleSpeedLimit = device::toggleSpeedLimit
+        onCycleSpeedLimit = device::cycleSpeedLimit
     )
 
     if (showRename) {
@@ -69,7 +69,7 @@ fun TrainHubCardContent(
     name: String,
     battery: Int,
     message: String,
-    speedLimited: Boolean,
+    maxSpeed: Int,
     onSlower: () -> Unit,
     onStop: () -> Unit,
     onFaster: () -> Unit,
@@ -79,7 +79,7 @@ fun TrainHubCardContent(
     onDisconnect: () -> Unit,
     onSwitchOff: () -> Unit,
     onRename: () -> Unit,
-    onToggleSpeedLimit: () -> Unit
+    onCycleSpeedLimit: () -> Unit
 ) {
     DeviceCardFrame(
         typeLabel = stringResource(R.string.label_train),
@@ -100,11 +100,14 @@ fun TrainHubCardContent(
                 onRename()
             })
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_speed_limit)) },
-                trailingIcon = { if (speedLimited) Icon(Icons.Filled.Check, contentDescription = null) },
+                text = {
+                    val label = stringResource(R.string.menu_speed_limit)
+                    Text(if (maxSpeed == 100) label else "$label ($maxSpeed%)")
+                },
+                trailingIcon = { if (maxSpeed < 100) Icon(Icons.Filled.Check, contentDescription = null) },
                 onClick = {
                     dismiss()
-                    onToggleSpeedLimit()
+                    onCycleSpeedLimit()
                 }
             )
         }
@@ -149,10 +152,10 @@ private fun TrainHubCardPreview() {
             name = "Train Hub #1",
             battery = 87,
             message = "Blue (3)",
-            speedLimited = false,
+            maxSpeed = 100,
             onSlower = {}, onStop = {}, onFaster = {},
             onDarker = {}, onLedColor = {}, onBrighter = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onToggleSpeedLimit = {}
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onCycleSpeedLimit = {}
         )
     }
 }
@@ -165,10 +168,10 @@ private fun TrainHubCardPreviewNoMessage() {
             name = "Train Hub #1",
             battery = 87,
             message = "",
-            speedLimited = true,
+            maxSpeed = 60,
             onSlower = {}, onStop = {}, onFaster = {},
             onDarker = {}, onLedColor = {}, onBrighter = {},
-            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onToggleSpeedLimit = {}
+            onDisconnect = {}, onSwitchOff = {}, onRename = {}, onCycleSpeedLimit = {}
         )
     }
 }
